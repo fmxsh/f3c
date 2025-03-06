@@ -113,7 +113,7 @@ Inline deliniation is where the data is deliniated to start and end on the same 
 
 Block deliniation is where the data is deliniated to start and end on different lines.
 
-All types of data fall into one of two categories of data format: _inline_ or _block_ format.
+All types of data fall into one of two categories of data format: _inline format_ or _block format_.
 
 | Label           | Data type | Description                                 |
 | --------------- | --------- | ------------------------------------------- |
@@ -135,7 +135,7 @@ Data can be one of two categories of data types: `literal` and `identifier`:
 
 ### Emergent data constructs
 
-The data types, _[identifier]_ and _[literal]_ can be combined with the data formats `inline` and `block` to form 4 combinations:
+The data types, _[identifier]_ and _[literal]_ can be combined with the data formats _[inline format]_ and _[block format]_ to form 4 combinations:
 
 | Label               | Description                                          |
 | ------------------- | ---------------------------------------------------- |
@@ -146,9 +146,11 @@ The data types, _[identifier]_ and _[literal]_ can be combined with the data for
 
 ## The data of each data constructs
 
+Four possible _data constructs_ were defined by combining _data format_ with _data type_. Each of them will be described in detail. 
+
 ### Inline literal
 
-A literal is identified to be such in one of two ways: the _[inline format]_, which is the syntactical context (context), and the content of the _[inline data]_ that is the syntax's subject (content). Context has precedence over content.
+Different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not  determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
 
 Possible literals are:
 
@@ -162,7 +164,7 @@ Possible literals are:
 | 6   | [terminator definition] | [1-5]    | [1-5]           |           |            | context       |
 | 7   | [terminator expression] | [1-5]    | [1-5]           |           |            | context       |
 
-1-5 is part of the data. 6 and 7 are part of the syntax as user defined syntax.
+1-5 is _data_, meaning it is _content_. 6 and 7 are part of the syntax as user defined syntax, and thus is _context_.
 
 The term _atomic_ is used, meaning the value is taken as given. A non-atomic value is a value that is not taken as given, but is processed in some way.
 
