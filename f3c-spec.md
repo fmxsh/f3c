@@ -673,6 +673,12 @@ Exception: if the empty line exists within an `[array]`; then it is treated as a
     # Extended functionality mode:
     # cc	::[directive]
 
+# Single line identifier with single line literal
+
+# icl identifier: literal
+# fruit: apple
+
+
     # Single line identifier with multi-line assignment with single-line assignment as VT.
     # iclc	identifier "assignment" :
     readonly MAPPING_ias=3
@@ -749,6 +755,8 @@ Exception: if the empty line exists within an `[array]`; then it is treated as a
     # ic	identifier:	# Empty assignment
     # cl	:"assignment"	# Empty identifier, just prints the value in an array same as "assignment" would
     # cl	:assignment	# would print it as object (a trimmed version).
+
+
 ```
 
 ## Comment rules
