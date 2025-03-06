@@ -2,4 +2,4 @@
 
 This project is under development.
 
-(F3C specification)[/f3c-spec.md]
+[F3C specification](/f3c-spec.md)
