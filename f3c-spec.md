@@ -5,7 +5,7 @@
 
 ## TODO
 
-TODO: what about array elements existing outside array. The are given implicit keys but because you can not mix array and object entries, if should fail
+TODO: what about array elements existing outside array. They are given implicit keys but because you can not mix array and object entries, it should fail
 
 TODO: blank line in multi line value that is processed, should be ignored, only "" adds empty line to output (applies to ml identifers too)
 
@@ -23,27 +23,35 @@ This document outlines the `f3c`; an easy to handle configuration and serializat
 
 This document is a reference of `f3c` in its totality, suitable for implementing _f3c_ parsers.
 
+## Porupose
+
+Define a format that is _so and so_.
+
 ## How to approach this document
 
-Despite this document being written primarily for completeness and exhaustive detail as a reference, efforts have also been made to enhance readability. For the sake of clarity, the most fundamental concept is outlined first, from which all other emergent concepts and designed syntax arise. First all concepts will be described by order of generality, with the absolute concept first and the emergent concepts by order of generality.
+Despite this document being written primarily for completeness and exhaustive detail as a reference, efforts have also been made to enhance readability. For the sake of clarity, the most fundamental concept is outlined first, from which all other emergent concepts and designed syntax arise. First all concepts will be described by order of generality, with the most concrete things first, followed by increasingly more abstract structures, where each level of abstraction builds on the previous more concrete level. The highest level of abstraction, building on all previous levels, defines yet another layer of structures, but this time a conclusive one that fulfills of the above mentioned purpose of defining a configuration format with particular characteristics.
 
 This document is structured primarily for completeness and secondarily for readability. It is adviced to skim and focus on the parts that are of interest.
 
 Besides consulting other more reader-friendly documentation [TODO: LINK HERE], it is adviced to skip to the sections with examples to get a sense of how the format works.
 
-## Things - characters and lines
+## Pre-fundamental things
 
-**Character**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
+At this level, we have not yet entered the stage where any meaning specific to this configuration format can be seen. Thus, this is a level prior to the most fundamental level of the configuration format. It is the _pre-fundamental_ level. At this level, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the percieved, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of a configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents. The contingence of meaning is a fundamental principle that will replicate itself in the relationship between each previous and each current level of abstraction, in the sense that the previous is fundamental to the meaning that emerges at the current level, as a combination of fundamental things that the current level recognizes a structure that is meaningful to the overall purpose. Any fundamental level must be well explicated to allow for the next to percieve meaningful structures among occurences of these fundamental things.
 
-**Sequence**: A sequence of characters.
+**pre-fundamental characters**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
 
-**Line**: As by POSIX. A sequence of characters, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+**pre-fundamental sequence**: A sequence of _pre-fundamental characters_
+
+**pre-fundamental line**: As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+
+These terms will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
 
 ## Things - Basic Tokens
 
-Tokens are certain characters given special meaning.
+Out of all characters of the _pre-fundamental characters_, certain ones will be given special meaning. These are called tokens and will be the most fundamental building blocks of the syntax. At this first level of abstraction, characters, that otherwise can represent anything, are given the general meaning by being tokens, where each token has a specific uniquely defined meaning. This is also called the fundamental level, as these tokens create the foudnation of the syntax.
 
-This section outlines the basic tokens making up the syntax.
+Thus, this section outlines the basic tokens making up the syntax.
 
 The tokens themselves are given names (_introducer_, _finalizer_ etc...) to strengthen the conceptual understanding of the format and the sense of the underlying logic of the syntax rules.
 
@@ -67,11 +75,11 @@ Composite tokens are built using the `basic standalone tokens`, such that changi
 
 | Token | Name                  | Description                                                                                            |
 | ----- | --------------------- | ------------------------------------------------------------------------------------------------------ |
-| `::`  | Meta level introducer | Always introduces the data associated with the left side of this operator                              |
+| `::`  | Meta level introducer | same as _introducer_ but a higher level of abstraction.                                                |
 | `""`  | Emptier               | Used to indicate that no identifier exists for the multi-line literal that follows. (Nameless element) |
 
 > [!IMPORTANT]
-> The composite token `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very use itself, we clearly see we have two separate tokens `introducer` tokens, and its even more clear by the fact we can space it out like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two characters of the composite.
+> The composite token `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very usage itself, we recognize we are dealing with two separate `introducer` tokens and not one _meta level introducer_. Its even more clear by the fact we can space out the former case like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two colons of the composite.
 
 ### Tokens for comments
 
@@ -89,9 +97,11 @@ In all other cases of syntax, the parser assigns meaning to the content, whether
 
 ## Data
 
-Besides the _basic tokens_, there is _data_. Data is a deliniated sequence of characters or no characters ('emptiness' exist within a deliniated space, and thus considered the data of that space). Data in its most general form can contain any character.
+This is still at the first level of abstraction, alongside with _basic tokens_. Now, the rest of the _pre-fundamental sequence_, which is non-syntax, is recognized, and put in different categories of meaning.
 
-A general rule applying to all data is that no character will ever be interpreted as a token, and consequently, no character is ever escaped.
+Besides the _basic tokens_, there is _data_. Data is a deliniated sequence of characters or no characters ('emptiness' exist within a deliniated space, and thus, the very absense of characters is considered to be the very data of that space). Data in its most general form can contain any character.
+
+A general rule applying to all _data_ is that no character will ever be interpreted as a token, and consequently, no character is ever escaped.
 
 Data is categorized into formats and types, which are then combined to form data constructs.
 
