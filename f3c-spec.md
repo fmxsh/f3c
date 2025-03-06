@@ -126,12 +126,20 @@ The labels _[inline data]_ and _[block data]_ refers only to the data within the
 
 ### Data types
 
-Data can be one of two categories of data types: `literal` and `identifier`:
+Data can be one of two categories of data types: _identifier_ or _literal_. 
 
 | Label        | Data type  | Description                                 |
 | ------------ | ---------- | ------------------------------------------- |
 | [identifier] | Identifier | A name used to identify a specific literal. |
 | [literal]    | Literal    | The data associated with an identifier.     |
+
+These two serve different purpose. _Identifier_ identifies a segment of data which is called a _literal_. 
+
+Two modes of identifiers are possible: _implicit identifier_ and _explicit identifier_. 
+
+In case of _implicit identifier_: _Empty_ is specified as the identifier. Then an identifier should be determined by the ordered sequence of entries, as related to a zero-based indexing, in the parent entry containing the associated literal.
+
+In case of _explicit identifier_: _something_ is specified as the identifier to associate with the literal. 
 
 ### Emergent data constructs
 
@@ -218,7 +226,7 @@ The literal _[terminator definition]_ is a type that is used to define the end o
 
 #### Terminator expression
 
-While a _[terminator definition]_ defines the terminator for a block, a _[terminator expression]_ is the actual use of the terminator to end the corresponding block. A _[terminator expressoin]_ is not a literal
+While a _[terminator definition]_ defines the terminator for a block, a _[terminator expression]_ is the actual use of the terminator to end the corresponding block. 
 
 ### Block literal and block identifier
 
@@ -236,7 +244,7 @@ An empty block that is not _[raw]_ is treated as empty array.
 
 **Raw**: The acceptable character sequence is: Any binary and non-binary character.
 
-**Array**: The acceptable character sequence is: Data is separated by _[segmenter]_ (`\n`). Each line is treated as a _[inline literal]_ and leading and trailing whitespace is trimmed
+**Array**: Must consist of only one or more literals with _implicit identifiers_.
 
 #### Terminating a block
 
