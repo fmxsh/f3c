@@ -47,7 +47,7 @@ At this level, we have not yet entered the stage where any meaning specific to t
 
 These terms will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
 
-## Things - Basic Tokens
+## Basic Tokens
 
 Out of all characters of the _pre-fundamental characters_, certain ones will be given special meaning. These are called tokens and will be the most fundamental building blocks of the syntax. At this first level of abstraction, characters, that otherwise can represent anything, are given the general meaning by being tokens, where each token has a specific uniquely defined meaning. This is also called the fundamental level, as these tokens create the foudnation of the syntax.
 
@@ -126,24 +126,24 @@ The labels _[inline data]_ and _[block data]_ refers only to the data within the
 
 ### Data types
 
-Data can be one of two categories of data types: _identifier_ or _literal_. 
+Data can be one of two categories of data types: _identifier_ or _literal_.
 
-| Label        | Data type  | Description                                 |
-| ------------ | ---------- | ------------------------------------------- |
-| [identifier] | Identifier | A name used to identify a specific literal. |
-| [literal]    | Literal    | The data associated with an identifier.     |
+| Label        | Data type  | Purpose    | Description                                 |
+| ------------ | ---------- | ---------- | ------------------------------------------- |
+| [identifier] | Identifier | Matching   | A name used to identify a specific literal. |
+| [literal]    | Literal    | Retrieving | The data associated with an identifier.     |
 
-These two serve different purpose. _Identifier_ identifies a segment of data which is called a _literal_. 
+These two serve different purpose. _Identifier_ identifies a segment of data which is called a _literal_. Functionally, _identifier_ is matched against a given identifier-construct when querying. The literal is consequently retrieved or not, depending on the match.
 
-Two modes of identifiers are possible: _implicit identifier_ and _explicit identifier_. 
+Two modes of identifiers are possible: _implicit identifier_ and _explicit identifier_.
 
 In case of _implicit identifier_: _Empty_ is specified as the identifier. Then an identifier should be determined by the ordered sequence of entries, as related to a zero-based indexing, in the parent entry containing the associated literal.
 
-In case of _explicit identifier_: _something_ is specified as the identifier to associate with the literal. 
+In case of _explicit identifier_: _something_ is specified as the identifier to associate with the literal.
 
-### Emergent data constructs
+## Data constructs
 
-The data types, _[identifier]_ and _[literal]_ can be combined with the data formats _[inline format]_ and _[block format]_ to form 4 combinations:
+The data types, _[identifier]_ and _[literal]_ can be combined with the data formats _[inline format]_ and _[block format]_ to form 4 combinations called _data constructs_.
 
 | Label               | Description                                          |
 | ------------------- | ---------------------------------------------------- |
@@ -152,27 +152,31 @@ The data types, _[identifier]_ and _[literal]_ can be combined with the data for
 | [inline literal]    | A literal that exists only inside a single line.     |
 | [block literal]     | A literal that must be multi-line data.              |
 
-## The data of each data constructs
+The possible data of each _data construct_ is described next.
 
-Four possible _data constructs_ were defined by combining _data format_ with _data type_. Each of them will be described in detail. 
+### Inline identifier
+
+The acceptable character sequence is: Any character except `[delimiter]` (`"`), and `[segmenter]` (`\n`). Also that `[introducer]` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following eachother.
+
+TODO: Make the super-enabler, remove the : inside
 
 ### Inline literal
 
-Different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not  determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
+Different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
 
 Possible literals are:
 
-| #   | Label                   | Literal  | Example         | Category  | Quality    | Determined by |
-| --- | ----------------------- | -------- | --------------- | --------- | ---------- | ------------- |
-| 1   | [string]                | String   | `"abc def"`     | String    | Atomic     | context       |
-| 2   | [fragment]              | Fragment | `ghi a123`      | String    | Non-atomic | content       |
-| 3   | [number]                | Number   | `32, 3.14, -10` | Primitive | Atomic     | content       |
-| 4   | [bool]                  | Bool     | `true, on, yes` | Primitive | Atomic     | content       |
-| 5   | [null]                  | Null     | `null, nil`     | Primitive | Atomic     | content       |
-| 6   | [terminator definition] | [1-5]    | [1-5]           |           |            | context       |
-| 7   | [terminator expression] | [1-5]    | [1-5]           |           |            | context       |
+| #   | Label                   | Literal  | Example         | Category  | Quality    | Determined by | Literal type |
+| --- | ----------------------- | -------- | --------------- | --------- | ---------- | ------------- | ------------ |
+| 1   | [string]                | String   | `"abc def"`     | String    | Atomic     | context       | value        |
+| 2   | [fragment]              | Fragment | `ghi a123`      | String    | Non-atomic | content       | value        |
+| 3   | [number]                | Number   | `32, 3.14, -10` | Primitive | Atomic     | content       | value        |
+| 4   | [bool]                  | Bool     | `true, on, yes` | Primitive | Atomic     | content       | value        |
+| 5   | [null]                  | Null     | `null, nil`     | Primitive | Atomic     | content       | value        |
+| 6   | [terminator definition] | [1-5]    | [1-5]           |           |            | context       | marker       |
+| 7   | [terminator expression] | [1-5]    | [1-5]           |           |            | context       | marker       |
 
-1-5 is _data_, meaning it is _content_. 6 and 7 are part of the syntax as user defined syntax, and thus is _context_.
+1-5 is _data_, meaning it is _content_. 6 and 7 are considered _context_; they are syntactic markers, meaning they are literals part of the syntax and not just data values.
 
 The term _atomic_ is used, meaning the value is taken as given. A non-atomic value is a value that is not taken as given, but is processed in some way.
 
@@ -224,13 +228,26 @@ The acceptable character sequence is as inferred from the example in the table a
 
 The literal _[terminator definition]_ is a type that is used to define the end of a block of data. A terminator definition is always a _literal_ type of _inline_ format. The user defines a sequence of characters that is used as the terminator for the block.
 
+Can be a _[string]_ or a _[fragment]_, and the accepted character sequence is the same as for those.
+
 #### Terminator expression
 
-While a _[terminator definition]_ defines the terminator for a block, a _[terminator expression]_ is the actual use of the terminator to end the corresponding block. 
+While a _[terminator definition]_ defines the terminator for a block, a _[terminator expression]_ is the actual use of the terminator to end the corresponding block.
 
-### Block literal and block identifier
+### Block identifier
 
-All things under this section applies to both _[block literal]_ and _[block identifier]_.
+Block identifiers can be of two types: `raw` `array` including, in a certain way, `object`. The _[object]_ is considered serialized, as the parser never parses it as an object, but only line by line as any other data. Thus, there is no use in having an object in a block identifier, because it is never treated as an object. The reason is a _[block identifier]_ is used to identify a _[literal]_ and having literals with identifiers inside an identifier serves no purpose as literals are never queried for inside identifiers.
+
+| Label   | Description                                                                 |
+| ------- | --------------------------------------------------------------------------- |
+| [raw]   | Raw data exactly as it occurs, nothing is altered.                          |
+| [array] | One or several literals. Surrounding whitespace of each literal is trimmed. |
+
+In case of _[raw]_, the data is considered as it is.
+
+In case of _[array]_, each line is considered _[inline literal]_ with _implicit identifier_, meaning it can be any of _value_, being _[string]_, _[number]_, etc..., (but of course, the markers _[terminator definition]_ and _[terminator expression]_ are not considered part of the arrays content).
+
+### Block literal
 
 Block literals can be of three types: `raw` `array` and `object`.
 
@@ -244,21 +261,34 @@ An empty block that is not _[raw]_ is treated as empty array.
 
 **Raw**: The acceptable character sequence is: Any binary and non-binary character.
 
-**Array**: Must consist of only one or more literals with _implicit identifiers_.
+**Array**: Must consist of only one or more literals with _implicit identifiers_. Can not contain any _[literal]_ with _explicit identifiers_.
 
-#### Terminating a block
+**Object**: Must consist of one or more _[literal]_ with _explicit identifiers_. Can not contain any _[literal]_ with _implicit identifiers_.
 
-A block has a start and an end in a multi-line space. The start is _[inline | block identifier]_ and the end, at a later line, is _[terminator expression]_.
+## Block
 
-To terminate a block: _[terminator expression]_ is used, which is the replication of the _[terminator definition]_.
+The different data constructs were described above. The _data construct_ refers to the structure of the actual data, but not the syntax defining the boundary of the data. A _block_ is a term used to describe both the _data construct_ and the syntax defining the boundary within which the data construct is being contained. _Data construct_ thus refers to the structure of the data itself, but tells nothing about the structure containing it. A _block_ defines the very outer structure, and also refers to its content.
 
-The _[terminator expression]_ can occur in two ways: a) `[terminator expression]` on a line of its own at the end of the block data, and b) `_[literalizer] [terminator expression]` after the intended end of the data, meaning it can occur at the same line as the last data (thus the data will not end with a newline, as it is taken literally as it it occurs within the block span).
+### Block syntax
+
+Having defined the marker literals _[terminator definition]_ and _[terminator expression]_, we can now define a block.
+
+A block has a start and an end in a multi-line space. The start is either of _[explicit inline identifier]_ and _[implicit | explicit block identifier]_. In either case, an associated _[terminator definition]_ is given or assumed, and the end, at a later line, is _[terminator expression]_.
+
+To terminate a block: _[terminator expression]_ is used, which is the replication of the _[terminator definition]_ where the block is desired to end.
+
+A block can be terminated in one of two ways:
+
+| Type             | Description                                                                  |
+| ---------------- | ---------------------------------------------------------------------------- |
+| soft termination | `[terminator expression]` on a line of its own at the end of the block data. |
+| hard termination | `[literalizer] [terminator expression]` after the intended end of the data.  |
+
+The _[terminator expression]_ can occur in two ways: a) `[terminator expression]` on a line of its own at the end of the block data, and b) `[literalizer] [terminator expression]` after the intended end of the data, meaning it can occur at the same line as the last data (thus the data will not end with a newline, as it is taken literally as it it occurs within the block span).
 
 In case _a_, the block is treated as _[array]_ or _[object]_ depending on the content. In case _b_, the block is treated as _[raw]_.
 
 A terminator definition is always _inline_. Because a terminator definition is part of the syntax to define the boundary of a block, the terminator definition itself can not be a block. It would conceptually lead to endless recursion if every nested _block terminator definition_ in turn define a _block terminator definition_ to define the end of the parent _block terminator definition_.
-
-#### Definition and expression together to deliniate a block
 
 The _[terminator definition]_ is defined at the start boundary of the block, where the _[terminator expression]_ is used at the end boundary of the block, such that:
 
@@ -270,21 +300,7 @@ The _[terminator definition]_ is defined at the start boundary of the block, whe
 
 The use of the two literal types _[terminator definition]_ and _[terminator expression]_ makes it clear they are entierly dependent on context (where and how they are used) to be identified as such literals and not fall back on other forms of literals. The _[inline data]_ of these two literal types is never evaluated like to determine its type.
 
-### Inline identifier
-
-The acceptable character sequence is: Any character except `[delimiter]` (`"`), and `[segmenter]` (`\n`). Also that `[introducer]` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following eachother.
-
-TODO: Make the super-enabler, remove the : inside
-
-### Block identifier
-
-Can be _[raw]_ or _[array]_. It can contain data that matches the definition of _[object]_, but each line of the object will then be parsed as a _[fragment]_ of an array.
-
-### Inline terminator definition
-
-Can be a _[string]_ or a _[fragment]_, and the accepted character sequence is the same as for those.
-
-## Binding structures - the highest organizing structures
+## Binding structures
 
 _Basic tokens_ and _data_ the highest organizing structures are built. They are called _binding structure_.
 
