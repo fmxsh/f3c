@@ -29,7 +29,7 @@ Define a format that is _so and so_.
 
 ## How to approach this document
 
-While this document is written primarily for completeness and exhaustive detail as a reference, efforts focus on enhanced readability. For the sake of clarity, the most fundamental concept is outlined first, from which all other emergent concepts and designed syntax arise.
+This document is written primarily for completeness and exhaustive detail as a reference. For the sake of clarifying the order of emergence of relevant concepts, from concrete to abstract, the most fundamental concept is outlined first, from which all other emergent concepts and designed syntax arise.
 
 First all concepts will be described by order of generality, with the most concrete things first, followed by increasingly more abstract structures, where each level of abstraction builds on the previous more concrete level. The second highest level of abstraction, building on all previous levels, defines yet another layer of structures, but this time a conclusive one that fulfills in its entirity, the above mentioned purpose, of defining a configuration format with particular characteristics.
 
