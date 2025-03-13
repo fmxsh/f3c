@@ -248,10 +248,10 @@ While a _[terminator definition]_ defines the terminator for a block, a _[termin
 
 Block identifiers can be of two types: `raw` `array` including, in a certain way, `object`. The _[object]_ is considered serialized, as the parser never parses it as an object, but only line by line as any other data. Thus, there is no use in having an object in a block identifier, because it is never treated as an object. The reason is a _[block identifier]_ is used to identify a _[literal]_ and having literals with identifiers inside an identifier serves no purpose as literals are never queried for inside identifiers.
 
-| Label   | Description                                                                 |
-| ------- | --------------------------------------------------------------------------- |
-| [raw]   | Raw data exactly as it occurs, nothing is altered.                          |
-| [array] | One or several literals. Surrounding whitespace of each literal is trimmed. |
+| Label   | Description                                                                  |
+| ------- | ---------------------------------------------------------------------------- |
+| [raw]   | Raw data exactly as it occurs, nothing is altered. Any character is allowed. |
+| [array] | One or several literals. Surrounding whitespace of each literal is trimmed.  |
 
 In case of _[raw]_, the data is considered as it is.
 
@@ -263,7 +263,7 @@ Block literals can be of three types: `raw` `array` and `object`.
 
 | Label    | Description                                                                 |
 | -------- | --------------------------------------------------------------------------- |
-| [raw]    | Raw data exactly as it occurs, nothing is altered.                          |
+| [raw]    | Raw data exactly as it occurs, nothing is altered. Any character is allowed |
 | [array]  | One or several literals. Surrounding whitespace of each literal is trimmed. |
 | [object] | One or several identifier-literal pairs.                                    |
 
@@ -278,12 +278,6 @@ An empty block that is not _[raw]_ is treated as empty array.
 ## Inline syntax
 
 _Inline_ syntax is mostly built using the _basic tokens_ and will be understod in its fullness in the _binding structures_ section.
-
-For inline syntax, the _[meta level introducer]_ is used to define directives. A directive is a command that is used to control the parser. The syntax for this is called _[operator]_, and is used to separate the directive from the associated data that comes after.
-
-| Label      | From basic token        | Block syntax | Description                |
-| ---------- | ----------------------- | ------------ | -------------------------- |
-| [operator] | [meta level introducer] | `::`         | Used to define directives. |
 
 ## Block syntax
 
@@ -329,7 +323,7 @@ The use of the two literal types _[terminator definition]_ and _[terminator expr
 
 ## Binding structures
 
-_Basic tokens_ and _data_ the highest organizing structures are built. They are called _binding structure_.
+Based in _basic tokens_ and _data_ the highest organizing structures are built. They are called _binding structure_.
 
 ### Binding codes
 
@@ -622,15 +616,24 @@ term
 
 From the tokens, a core syntax is created.
 
-## Operator syntax
+## Directive syntax
 
-Operator syntax add functional and structural properties to the format.
+A directive is a command that is used to control the parser. A the structure of a directive is based on the highest organizing structure of the format, the _binding structure_. From this, as is the case for any other binding, a directive involves a kind of identifier bound to a kind of literal. The syntax in its most general form is `[field] [meta level introducer] [field]`.
 
-| Label           |                  | Description                                                    |
-| --------------- | ---------------- | -------------------------------------------------------------- |
-| [directive]     | [directive name] | Name of the directive. Predefined.                             |
-| [operator]      | `::`             | Separates directive from associated data that what comes after |
-| [operator data] | rest of line     | Data associated with the directive.                            |
+To define the directive syntax, the _[operator]_ is introduced. The _[operator]_ is a _[meta level introducer]_ gaining a certain function and purpose.
+
+| Label      | From basic token        | Block syntax | Description                |
+| ---------- | ----------------------- | ------------ | -------------------------- |
+| [operator] | [meta level introducer] | `::`         | Used to define directives. |
+
+With the _[operator]_, the two surrounding _[field]_ are then defined as follows:
+
+| type            | Allowed characters                                                        | Description            |
+| --------------- | ------------------------------------------------------------------------- | ---------------------- |
+| [directive]     | `a-z0-9_-`                                                                | Name of the directive. |
+| [operator data] | Any possible binary and non-binary character except `[segmenter]` (`\n`). | Data associated.       |
+
+With the above, the directive syntax is defined as: `[directive] [operator] [operator data]`.
 
 Use: `[directive] [operator] (...)`
 
