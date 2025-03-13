@@ -281,7 +281,7 @@ _Inline_ syntax is mostly built using the _basic tokens_ and will be understod i
 
 ## Block syntax
 
-Unlike _inline_ data, for which its span can be determined by applying the _pre-fundamental_ concept of _line_ and the fundamental token of _[separator]_ (`\n`), _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those artifacts are _[terminator definition]_ and _[terminator expression]_, as defined earlier. With these, the structure of a block can be defined.
+Unlike _inline_ data, for which the span can be easily determined by recognizing the _pre-fundamental_ structure of a _line_, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those artifacts are _[terminator definition]_ and _[terminator expression]_, as defined earlier. With these, the structure of a block can be defined.
 
 Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional things for its syntax to be possible.
 
