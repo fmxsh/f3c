@@ -29,9 +29,10 @@ Define a format that is _so and so_.
 
 ## How to approach this document
 
-This document is written primarily for completeness and exhaustive detail as a reference. For the sake of clarifying the order of emergence of relevant concepts, from concrete to abstract, the most fundamental concept is outlined first, from which all other emergent concepts and designed syntax arise.
+This document is written primarily for completeness and exhaustive detail as a reference.
 
-First all concepts will be described by order of generality, with the most concrete things first, followed by increasingly more abstract structures, where each level of abstraction builds on the previous more concrete level. The second highest level of abstraction, building on all previous levels, defines yet another layer of structures, but this time a conclusive one that fulfills in its entirity, the above mentioned purpose, of defining a configuration format with particular characteristics.
+Fundamental things of the configuration format are clearly defined, followed by a level of abstraction where relations among these things are defined, forming the very complex structures defining the configuration format. The act process of recognizing and defining things, their relations and structures, is then an iterative process, where each level of abstraction builds on the previous more concrete level, and where each iteration increases the level of abstraction. The iterative process yielding emerging structures of increasing abstraction, finally arrive at a final conclusive abstraction, that fulfills, in its entirity, the above mentioned purpose of defining a configuration format with particular characteristics.
+
 
 Besides consulting other more reader-friendly documentation [TODO: LINK HERE], it is adviced to skip to the sections with examples to get a sense of how the format works.
 
