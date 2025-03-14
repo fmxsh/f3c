@@ -33,8 +33,40 @@ This document is written primarily for completeness and exhaustive detail as a r
 
 Fundamental things of the configuration format are clearly defined, followed by a level of abstraction where relations among these things are defined, forming the very complex structures defining the configuration format. The act process of recognizing and defining things, their relations and structures, is then an iterative process, where each level of abstraction builds on the previous more concrete level, and where each iteration increases the level of abstraction. The iterative process yielding emerging structures of increasing abstraction, finally arrive at a final conclusive abstraction, that fulfills, in its entirity, the above mentioned purpose of defining a configuration format with particular characteristics.
 
-
 Besides consulting other more reader-friendly documentation [TODO: LINK HERE], it is adviced to skip to the sections with examples to get a sense of how the format works.
+
+TODO: its not abstractions, but emergence. Higher levels create new properties that are not present in the lower levels.
+To form the highest emergent property _binding structure_, there needs to be:
+
+- _pre-fundamental things_
+- _basic tokens_
+- _data_
+- _data constructs_
+
+Use word emergence not abstraciton. Emergence describes new properties arising from interactions, which cannot be reduced to or predicted from the lower levels alone.
+
+## Overview of the process of creating the format
+
+This overview briefly shows the chain of creation from basic artifacts to the emergent property that fulfills the purpose of defining a configuration format.
+
+### Pre-fundamental things
+
+Pre-fundamentals are the relevant things in the environment, things that already exist, serving as artifacts for us to build the configuration format according to our purpose.
+
+### Emergent fundamental things
+
+From pre-fundamentals, the emergent fundamental things arise.
+
+The emergent fundamental things are:
+
+- basic tokens
+- data
+- data constructs
+- syntax
+
+### Singular emergence
+
+Combining the emergent fundamental things, the singular emergence of the emergent property _binding structure_ arises. This is the answer to the purpose of defining a configuration format.
 
 ## Pre-fundamental things
 
@@ -62,15 +94,17 @@ The tokens themselves are given names (_introducer_, _finalizer_ etc...) to stre
 
 All syntax depends on these.
 
-| Token | Name       | Description                                     |
-| ----- | ---------- | ----------------------------------------------- |
-| `:`   | Introducer | Always precedes something being defined.        |
-| `.`   | Finalizer  | Always puts an end to multi-line data.          |
-| `"`   | Delimiter  | Always delimits single-line data.               |
-| `\n`  | Segmenter  | Separates elements and parts within an element. |
+| Token         | Name       | Description                                     |
+| ------------- | ---------- | ----------------------------------------------- |
+| `:`           | Introducer | Always precedes something being defined.        |
+| `.`           | Finalizer  | Always puts an end to multi-line data.          |
+| `"`           | Delimiter  | Always delimits single-line data.               |
+| `\n` or `EOF` | Segmenter  | Separates elements and parts within an element. |
 
 > [!NOTE]
-> The `segmenter`, `\n`, refers strictly to syntax and is part of the syntax. It does not refer to the data contained by the syntax, like the data of a multi-line literal.
+> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to the data contained by the syntax, like the data of a multi-line literal.
+
+In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax.
 
 ### Basic composite tokens
 
@@ -99,6 +133,8 @@ To human perception, it appears that the comment syntax relates to the comment-t
 In all other cases of syntax, the parser assigns meaning to the content, whether it is empty or not. In the case of a comment, no meaning is assigned to any contained data or to the comment syntax itself.
 
 ## Data
+
+(Data is abstraction above tokens, tokens needed to recognize identify data)
 
 This is still at the first level of abstraction, alongside with _basic tokens_. Now, the rest of the _pre-fundamental sequence_, which is non-syntax, is recognized, and put in different categories of meaning.
 
@@ -276,11 +312,15 @@ An empty block that is not _[raw]_ is treated as empty array.
 
 **Object**: Must consist of one or more _[literal]_ with _explicit identifiers_. Can not contain any _[literal]_ with _implicit identifiers_.
 
-## Inline syntax
+## Syntax
 
-_Inline_ syntax is mostly built using the _basic tokens_ and will be understod in its fullness in the _binding structures_ section.
+### Inline syntax
 
-## Block syntax
+_Inline_ syntax is mostly built using the _basic tokens_ (and to a small degree _composite tokens_) and will be understod in its fullness in the _binding structures_ section.
+
+The _inline_ syntax centers around _[introducer]_ such that `[identifier] [introducer] [literal] [segmenter]` and `[identifier] [meta level introducer] [literal] [segmenter]`.
+
+### Block syntax
 
 Unlike _inline_ data, for which the span can be easily determined by recognizing the _pre-fundamental_ structure of a _line_, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those artifacts are _[terminator definition]_ and _[terminator expression]_, as defined earlier. With these, the structure of a block can be defined.
 
