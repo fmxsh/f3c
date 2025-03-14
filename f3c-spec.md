@@ -1786,21 +1786,30 @@ A _feature_ of the format is defined as anything that the specification explicit
 
 ### **Faithful Mode**
 
+When the environment allows for full implementation.
+
 - Faithful Adapted - Lesser features than _standard_, but implements them exactly as defined in _standard_.
 - Faithful Standard - Exactly as _standard_.
-- Faithful Complete - Exactly as _complete_.
+
+~~Faithful Complete - Exactly as _complete_.~~
 
 ### **Functional Mode**
 
+When the environment puts constraints.
+
 - Functional Adapted - Some features of _standard_ are excluded because they are not supported by the target environment. Additionally, features of _standard_ that can be implemented, are not required to be implemented. However, any _standard_ feature that are implemented must be implemented exactly as defined in _standard_.
-- Functional Standard - Features of _standard_ are implemented exactly as defined in _standard_, but only to the extent that the target environment supports. Features of _standard_ that can be implemented must be implemented.
-- Functional Complete - Features of _complete_ are implemented exactly as defined in _complete_, but only to the extent that the target environment supports. Features of _complete_ that can be implemented must be implemented.
+- Functional Standard - Features of _standard_ are implemented exactly as defined in _standard_, but only to the extent that the target environment supports. All features of _standard_ that can be implemented must be implemented.
+
+~~Functional Complete - Features of _complete_ are implemented exactly as defined in _complete_, but only to the extent that the target environment supports. Features of _complete_ that can be implemented must be implemented.~~
 
 ### **Preferred Mode**
 
+When the environment allows for full implementation or not, but with modifications and additions.
+
 - Preferred Adapted - Lesser features than _standard_, and with modification of those features possible, and additions of other features possible, as preferred.
 - Preferred Standard - All features of _standard_, with modifications of those features possible, and with additions possible, as prefered.
-- Preferred Complete - All features of _complete_, with modifications of those features possible, and with additions possible, as prefered.
+
+~~Preferred Complete - All features of _complete_, with modifications of those features possible, and with additions possible, as prefered.~~
 
 ### Note on supported characters
 
@@ -1809,14 +1818,8 @@ It is up to the specific implementation to determine which characters are suppor
 - A **Bash-based implementation** supports **all binary and textual characters**, except for the **null byte (`\x00`)**, as Bash cannot handle data containing null bytes.
 - A **C-based implementation**, however, **can fully support null bytes (`\x00`)**, as well as all other possible byte values.
 
-### Purely binary parser
-
-A parser designed to process data as binary considers all data binary, and does not need to consider any newline characters. Newline characters are treated as any other byte. However, the newline character that is part of multi-line syntax itself, telling where the literal-content starts, is still used, and, is, by definition, not part of the data being contained).
-
-It always only have `[literalizer] [default | custom terminator]` as the end of a multi-line value (not only `[default | custom terminator]`).
-
 ### Redefining syntax
 
-An implementation can redefine all `basic standalone tokens`. These make up the all possible syntax. The defaults are `:`, `.`, and `"`.
+An implementation can change the characters making up the `basic standalone tokens`. `:` can be changed to `-` for example.
 
 The reason for the ability to redefine the `basic standalone tokens` is because, for example, a dedicated network transmission format may desire to use other characters, such as binary ones for the syntax.
