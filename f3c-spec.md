@@ -3,150 +3,64 @@
 > [!NOTE]
 > This project is under development. Do not expect finished order.
 
-## TODO
-
-TODO: what about array elements existing outside array. They are given implicit keys but because you can not mix array and object entries, it should fail
-
-TODO: blank line in multi line value that is processed, should be ignored, only "" adds empty line to output (applies to ml identifers too)
-
-NOTE: No, empty key "" will make implicit identifier for block literal. for inline literal, no "" is given, no nothing is given, just the value.
-
-NOTE: When including a declared block, it it adds a newline at the end where it is included, regardless if the block is having explicit literal terminator that excludes a newline.
-
-NOTE: Chained includes are possible
-
-TODO: Is it so: The unprocessed literal terminator must be at end of line with no other data after (wherever it is used).,
-
-TODO: Include the _super-enabler_
-
-This document outlines the `f3c`; an easy to handle configuration and serialization format, designed with the goal of minimal syntax and maximal functionality.
-
-This document is a reference of `f3c` in its totality, suitable for implementing _f3c_ parsers.
-
 ## Porupose
 
-Define a format that is _so and so_.
+Define a configuration format with the following properties:
 
-## How to approach this document
+- with minimal set of tokens, support as much functionality as possible,
+- key-value pairs,
+- nesting,
+- escapeless - no escaping of characters,
+- allow for data serialization,
+- allow for custom type checking,
+- ...
+
+## Introduction
 
 This document is written primarily for completeness and exhaustive detail as a reference.
 
-Fundamental things of the configuration format are clearly defined, followed by a level of abstraction where relations among these things are defined, forming the very complex structures defining the configuration format. The act process of recognizing and defining things, their relations and structures, is then an iterative process, where each level of abstraction builds on the previous more concrete level, and where each iteration increases the level of abstraction. The iterative process yielding emerging structures of increasing abstraction, finally arrive at a final conclusive abstraction, that fulfills, in its entirity, the above mentioned purpose of defining a configuration format with particular characteristics.
+We start with defining semantics. That is a set of particular meanings useful to define this configuration format. Thus we first concern ourselves with the concepts and structure among concepts of this configuration format, and only later with how these concepts and structures map to actual characters to form the concrete syntax that is the concrete representation of this configuration format.
 
-Besides consulting other more reader-friendly documentation [TODO: LINK HERE], it is adviced to skip to the sections with examples to get a sense of how the format works.
+Following the intended appraoch, conceptual definitions are introduced for _basic tokens_ and _data_. The conceptual definitions of _basic tokens_ and _data_ will give rise to a higher set of emergent conceptual definitions called _binding structures_. The prior things of _basic tokens_, _data_ and their relations, forms the possibility for this. These _binding structures_ represents the overarching property of the configuration format, which is to bind one field to another (an identifier to a literal). The conceptual outlining then undergoes a process of semantic attribution, where the conceptual definitions, the semantics that have been created, are mapped concrete representations; to specific characters (such as `:`, `.` and `"`), and to sequences of characters (data).
 
-TODO: its not abstractions, but emergence. Higher levels create new properties that are not present in the lower levels.
-To form the highest emergent property _binding structure_, there needs to be:
+## Basic Tokens (conceptual definitions)
 
-- _pre-fundamental things_
-- _basic tokens_
-- _data_
-- _data constructs_
-
-Use word emergence not abstraciton. Emergence describes new properties arising from interactions, which cannot be reduced to or predicted from the lower levels alone.
-
-## Overview of the process of creating the format
-
-This overview briefly shows the chain of creation from basic artifacts to the emergent property that fulfills the purpose of defining a configuration format.
-
-### Pre-fundamental things
-
-Pre-fundamentals are the relevant things in the environment, things that already exist, serving as artifacts for us to build the configuration format according to our purpose.
-
-### Emergent fundamental things
-
-From pre-fundamentals, the emergent fundamental things arise.
-
-The emergent fundamental things are:
-
-- basic tokens
-- data
-- data constructs
-- syntax
-
-### Singular emergence
-
-Combining the emergent fundamental things, the singular emergence of the emergent property _binding structure_ arises. This is the answer to the purpose of defining a configuration format.
-
-## Pre-fundamental things
-
-At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ that has meaning relating to our purpose. At that level, things are defined and named as suitable building blocks of our purpose.
-
-At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived material, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of a configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents. The contingence of meaning is a fundamental principle that will replicate itself in the relationship between each previous and each current level of abstraction, in the sense that the previous is fundamental to the meaning that emerges at the current level, as a combination of fundamental things that the current level recognizes a structure that is meaningful to the overall purpose. Any fundamental level must be well explicated to allow for the next level of abstraction to percieve meaningful structures among occurences of these fundamental things. _The abstraction _ is the very definition of the structure—referred to by its newly created name—that is seen among the particular occurrence of the fundamentals.
-
-**pre-fundamental characters**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
-
-**pre-fundamental sequence**: A sequence of _pre-fundamental characters_
-
-**pre-fundamental line**: As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
-
-These terms will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
-
-## Basic Tokens
-
-Out of all characters of the _pre-fundamental characters_, certain ones will be given special meaning. These are called tokens and will be the most fundamental building blocks of the syntax. At this first level of abstraction, characters, that otherwise can represent anything, are given the general meaning by being tokens, where each token has a specific uniquely defined meaning. This is also called the fundamental level, as these tokens create the foudnation of the syntax.
-
-Thus, this section outlines the basic tokens making up the syntax.
-
-The tokens themselves are given names (_introducer_, _finalizer_ etc...) to strengthen the conceptual understanding of the format and the sense of the underlying logic of the syntax rules.
+These are called _basic tokens_ and aret he most fundamental building blocks of the format.
 
 ### Basic standalone tokens
 
 All syntax depends on these.
 
-| Token         | Name       | Description                                     |
-| ------------- | ---------- | ----------------------------------------------- |
-| `:`           | Introducer | Always precedes something being defined.        |
-| `.`           | Finalizer  | Always puts an end to multi-line data.          |
-| `"`           | Delimiter  | Always delimits single-line data.               |
-| `\n` or `EOF` | Segmenter  | Separates elements and parts within an element. |
-
-> [!NOTE]
-> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to the data contained by the syntax, like the data of a multi-line literal.
-
-In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax.
+| Label        | description                                     |
+| ------------ | ----------------------------------------------- |
+| [introducer] | Always indicates something follows.             |
+| [finalizer]  | Always puts an end to multi-line data.          |
+| [delimiter]  | Always delimits single-line data.               |
+| [segmenter]  | Separates elements and parts within an element. |
 
 ### Basic composite tokens
 
 Composite tokens are built using the `basic standalone tokens`, such that changing a standalone token would change the related composite token.
 
-| Token | Name                  | Description                                                                                            |
-| ----- | --------------------- | ------------------------------------------------------------------------------------------------------ |
-| `::`  | Meta level introducer | same as _introducer_ but a higher level of abstraction.                                                |
-| `""`  | Emptier               | Used to indicate that no identifier exists for the multi-line literal that follows. (Nameless element) |
+| Label                   | Composition               | Description                                                                                            |
+| ----------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [meta level introducer] | [introducer] [introducer] | Same as _introducer_ but a higher level of abstraction.                                                |
+| [emptier]               | [delimiter] [delimiter]   | Used to indicate that no identifier exists for the multi-line literal that follows. (Nameless element) |
 
 > [!IMPORTANT]
-> The composite token `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very usage itself, we recognize we are dealing with two separate `introducer` tokens and not one _meta level introducer_. Its even more clear by the fact we can space out the former case like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two colons of the composite.
+> The composite token `[meta level introducer]` is not the same as two individual `introducers` in a row (`[introducer] [introducer]`), but they may seem identical. [metal level introducer] is considered its own indivisible unit.
 
-### Tokens for comments
-
-`--`
-`/-`
-`-/`
-
-Comments are considered **ghost-tokens**, forming a **ghost-syntax**, because they exist to human perception but do not exist in the parsed structure.
-
-A comment token is a **token that is never interpreted as a token** in the sense of relating to data.
-
-To human perception, it appears that the comment syntax relates to the comment-text itself—i.e., the syntax _contains_ the comment. However, the parser does not merely ignore the comment-text; it also ignores the comment syntax.
-
-In all other cases of syntax, the parser assigns meaning to the content, whether it is empty or not. In the case of a comment, no meaning is assigned to any contained data or to the comment syntax itself.
-
-## Data
-
-(Data is abstraction above tokens, tokens needed to recognize identify data)
-
-This is still at the first level of abstraction, alongside with _basic tokens_. Now, the rest of the _pre-fundamental sequence_, which is non-syntax, is recognized, and put in different categories of meaning.
+## Data (conceptual definitions)
 
 Besides the _basic tokens_, there is _data_. Data is a deliniated sequence of characters or no characters ('emptiness' exist within a deliniated space, and thus, the very absense of characters is considered to be the very data of that space). Data in its most general form can contain any character.
 
 A general rule applying to all _data_ is that no character will ever be interpreted as a token, and consequently, no character is ever escaped.
 
-Data is categorized into formats and types, which are then combined to form data constructs.
+Data is categorized into _fields_. A _field_ can be one of several _data constructs_. What particular _data constructs_ a that a particular _filed_ consists of, is determined by analyzing the field by aspects of _data formats_ and _data types_. Combining _data formats_ and _data types_ in different ways, yields different _data constructs_ which then defines the type of field.
 
 ### Fields
 
-A _field_ is a deliniated space that contains data. Fields can have different purposes. _Field_ thus is thus a term to refer to, more specifically, a field of data, meaning a deliniated sequence of characters or no characters.
+A _field_ is a deliniated space that contains data. Fields can have different purposes. _Field_ thus is a term to refer to, more specifically, a field of data, meaning a deliniated sequence of characters or no characters.
 
 In order to determine the type of a field, the data is analyzed by _data formats_ and _data types_.
 
@@ -158,12 +72,16 @@ Inline deliniation is where the data is deliniated to start and end on the same 
 
 Block deliniation is where the data is deliniated to start and end on different lines.
 
-All types of data fall into one of two categories of data format: _inline format_ or _block format_.
+All types of data fall into one of two categories of data format: _inline_ or _block_.
 
-| Label           | Data type | Description                                 |
-| --------------- | --------- | ------------------------------------------- |
-| [inline format] | Inline    | Data that exists only inside a single line. |
-| [block format]  | Block     | Data that must be multi-line data.          |
+| Label    | Data type | Description                                 |
+| -------- | --------- | ------------------------------------------- |
+| [inline] | Inline    | Data that exists only inside a single line. |
+| [block]  | Block     | Data that must be multi-line data.          |
+
+More precicely:
+
+[inline] assumes [inline format] and [block] assumes [block format].
 
 The labels _[inline format]_ and _[block format]_ refers to the corresponding structure as made up by the syntax including the specific data being contained by the syntax.
 
@@ -178,17 +96,17 @@ Data can be one of two categories of data types: _identifier_ or _literal_.
 | [identifier] | Identifier | Matching   | A name used to identify a specific literal. |
 | [literal]    | Literal    | Retrieving | The data associated with an identifier.     |
 
-These two serve different purpose. _Identifier_ identifies a segment of data which is called a _literal_. Functionally, _identifier_ is matched against a given identifier-construct when querying. The literal is consequently retrieved or not, depending on the match.
+These two serve different purpose. _Identifier_ identifies a segment of data which is called a _literal_. Functionally, _identifier_ is matched against an user-given identifier-construct when querying. The literal is consequently retrieved or not, depending on the match.
 
 Two modes of identifiers are possible: _implicit identifier_ and _explicit identifier_.
 
-In case of _implicit identifier_: _Empty_ is specified as the identifier. Then an identifier should be determined by the ordered sequence of entries, as related to a zero-based indexing, in the parent entry containing the associated literal.
+In case of _implicit identifier_: _empty_ is specified as the identifier. Then an identifier should be determined by the ordered sequence of entries, as related to a zero-based indexing, in the parent entry containing the associated literal.
 
 In case of _explicit identifier_: _something_ is specified as the identifier to associate with the literal.
 
 ## Data constructs
 
-The data types, _[identifier]_ and _[literal]_ can be combined with the data formats _[inline format]_ and _[block format]_ to form four combinations called _data constructs_.
+The _data types_, _[identifier]_ and _[literal]_, can be combined with the data formats _[inline]_ and _[block]_ to form four combinations called _data constructs_.
 
 A _data construct_ refers to the structure of the actual data itself, but not the syntax defining the boundary of the data and tells nothing about the structure containing the _data construct_.
 
@@ -203,9 +121,7 @@ The possible data of each _data construct_ is described next.
 
 ### Inline identifier
 
-The acceptable character sequence is: Any character except `[delimiter]` (`"`), and `[segmenter]` (`\n`). Also that `[introducer]` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following eachother.
-
-TODO: Make the super-enabler, remove the : inside
+The acceptable character sequence is: Any character except `[delimiter]` (`"`), and `[segmenter]` (`\n`). Also that `[introducer]` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following each other.
 
 ### Inline literal
 
@@ -312,28 +228,15 @@ An empty block that is not _[raw]_ is treated as empty array.
 
 **Object**: Must consist of one or more _[literal]_ with _explicit identifiers_. Can not contain any _[literal]_ with _implicit identifiers_.
 
-## Syntax
+## Deliniation of data
 
-### Inline syntax
+### Inline data
 
 _Inline_ syntax is mostly built using the _basic tokens_ (and to a small degree _composite tokens_) and will be understod in its fullness in the _binding structures_ section.
 
 The _inline_ syntax centers around _[introducer]_ such that `[identifier] [introducer] [literal] [segmenter]` and `[identifier] [meta level introducer] [literal] [segmenter]`.
 
-### Block syntax
-
-Unlike _inline_ data, for which the span can be easily determined by recognizing the _pre-fundamental_ structure of a _line_, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those artifacts are _[terminator definition]_ and _[terminator expression]_, as defined earlier. With these, the structure of a block can be defined.
-
-Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional things for its syntax to be possible.
-
-Here the _basic tokens_ are given unique meaning, in the context of _[block format]_, to define the concept of _[block format]_.
-
-| Label                | From basic token | Block syntax | Description                                                |
-| -------------------- | ---------------- | ------------ | ---------------------------------------------------------- |
-| [identifier proxy]   | [introducer]     | `:`          | To make block identifier.                                  |
-| [literalizer]        | [finalizer]      | `.`          | Makes terminator explicit for block literal or identifier. |
-| [default terminator] | [finalizer]      | `.`          | Default terminator for block literal or identifier.        |
-| [empty identifier]   | [emptier]        | `""`         | Empty identifier when used in place of identifier.         |
+### Block deliniation
 
 A block has a start and an end in a multi-line space. The start is either of _[explicit inline identifier]_ and _[implicit | explicit block identifier]_. In either case, an associated _[terminator definition]_ is given or assumed, and the end, at a later line, is _[terminator expression]_.
 
@@ -362,59 +265,96 @@ The _[terminator definition]_ is defined at the start boundary of the block, whe
 
 The use of the two literal types _[terminator definition]_ and _[terminator expression]_ makes it clear they are entierly dependent on context (where and how they are used) to be identified as such literals and not fall back on other forms of literals. The _[inline data]_ of these two literal types is never evaluated like to determine its type.
 
+## Semantic attribution
+
+### Pre-fundamental things
+
+At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ that has meaning relating to our purpose. At that level, things are defined and named as suitable building blocks of our purpose.
+
+At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived material, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of a configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents. The contingence of meaning is a fundamental principle that will replicate itself in the relationship between each previous and each current level of abstraction, in the sense that the previous is fundamental to the meaning that emerges at the current level, as a combination of fundamental things that the current level recognizes a structure that is meaningful to the overall purpose. Any fundamental level must be well explicated to allow for the next level of abstraction to percieve meaningful structures among occurences of these fundamental things. _The abstraction _ is the very definition of the structure—referred to by its newly created name—that is seen among the particular occurrence of the fundamentals.
+
+**pre-fundamental characters**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
+
+**pre-fundamental sequence**: A sequence of _pre-fundamental characters_
+
+**pre-fundamental line**: As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+
+These terms will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
+
+### Basic Tokens
+
+Out of all characters of the _pre-fundamental characters_, certain ones will be given special meaning. These are called tokens and will be the most fundamental building blocks of the syntax. Characters, that otherwise can represent anything, are given the general meaning of being tokens, where each token has a specific uniquely defined meaning.
+
+Thus, this section outlines the basic tokens making up the syntax.
+
+#### Basic standalone tokens
+
+All syntax depends on these.
+
+| Token         | Name       | Description                                     |
+| ------------- | ---------- | ----------------------------------------------- |
+| `:`           | Introducer | Always precedes something being defined.        |
+| `.`           | Finalizer  | Always puts an end to multi-line data.          |
+| `"`           | Delimiter  | Always delimits single-line data.               |
+| `\n` or `EOF` | Segmenter  | Separates elements and parts within an element. |
+
+> [!NOTE]
+> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to the data contained by the syntax, like the data of a multi-line literal.
+
+In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax.
+
+#### Basic composite tokens
+
+Composite tokens are built using the `basic standalone tokens`, such that changing a standalone token would change the related composite token.
+
+| Token | Name                  | Description                                                                                            |
+| ----- | --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `::`  | Meta level introducer | same as _introducer_ but a higher level of abstraction.                                                |
+| `""`  | Emptier               | Used to indicate that no identifier exists for the multi-line literal that follows. (Nameless element) |
+
+> [!IMPORTANT]
+> The composite token `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very usage itself, we recognize we are dealing with two separate `introducer` tokens and not one _meta level introducer_. Its even more clear by the fact we can space out the former case like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two colons of the composite.
+
+#### Tokens for comments
+
+`--`
+`/-`
+`-/`
+
+Comments are considered **ghost-tokens**, forming a **ghost-syntax**, because they exist to human perception but do not exist in the parsed structure.
+
+A comment token is a **token that is never interpreted as a token** in the sense of relating to data.
+
+To human perception, it appears that the comment syntax relates to the comment-text itself—i.e., the syntax _contains_ the comment. However, the parser does not merely ignore the comment-text; it also ignores the comment syntax.
+
+In all other cases of syntax, the parser assigns meaning to the content, whether it is empty or not. In the case of a comment, no meaning is assigned to any contained data or to the comment syntax itself.
+
+### Inline deliniation syntax
+
+The _inline_ syntax centers around _[introducer]_ (`:`) such that `[identifier] [introducer] [literal] [segmenter]` gives, for example, `id: my literal` and `[identifier] [meta level introducer] [literal] [segmenter]` gives, for example, `id:: my literal`.
+
+### Block deliniation syntax
+
+Unlike _inline_ data, for which the span can be easily determined by recognizing the _pre-fundamental_ structure of a _line_, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those higher level artifacts are _[terminator definition]_ and _[terminator expression]_, as defined earlier. With these, the structure of a block can be defined.
+
+Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional things for its syntax to be possible.
+
+Here the _basic tokens_ are given unique meaning, in the context of _[block]_, to define the concept of _[block]_.
+
+| Label                | From basic token | Block syntax | Description                                                |
+| -------------------- | ---------------- | ------------ | ---------------------------------------------------------- |
+| [identifier proxy]   | [introducer]     | `:`          | To make block identifier.                                  |
+| [literalizer]        | [finalizer]      | `.`          | Makes terminator explicit for block literal or identifier. |
+| [default terminator] | [finalizer]      | `.`          | Default terminator for block literal or identifier.        |
+| [empty identifier]   | [emptier]        | `""`         | Empty identifier when used in place of identifier.         |
+
 ## Binding structures
 
 Based in _basic tokens_ and _data_ the highest organizing structures are built. They are called _binding structure_.
 
-### Binding codes
+This section will show both the conceptual definitions of _binding structures_ and the concrete syntax that is the representation of these _binding structures_. Thus, wehereas concept and representation were separated in earlier outlinings, both are outlined together in this section.
 
-For sake of implementing a parser, these codes are suggested, but must not be used.
-
-| Code | Description        |
-| ---- | ------------------ |
-| i    | Identifier         |
-| l    | Literal            |
-| c    | introducer (colon) |
-| e    | empty              |
-
-#### Inline format
-
-| Token  | Identifier Type | Terminator Definition | Example             |
-| ------ | --------------- | --------------------- | ------------------- |
-| `icl`  | Explicit        |                       | `fruit: apple`      |
-| `ice`  | Explicit        |                       | `fruit:`            |
-| `l`    | Implicit        |                       | `apple`             |
-| `iclc` | Explicit        | Custom                | `fruit:term: apple` |
-| `icc`  | Explicit        | Default               | `fruit::`           |
-| `ecc`  | Implicit        | Default               | `""::`              |
-| `eclc` | Implicit        | Custom                | `"":term:`          |
-
-#### Block identifiers
-
-| Token  | Identifier Type | Terminator Definition | Example   |
-| ------ | --------------- | --------------------- | --------- |
-| `ccc`  | Explicit        | Default               | `:::`     |
-| `cclc` | Explicit        | Custom                | `::term:` |
-
-#### Literals following block identifiers
-
-| Token | Identifier Type | Terminator Definition | Example   |
-| ----- | --------------- | --------------------- | --------- |
-| `cl`  | Explicit        |                       | `: apple` |
-| `cc`  | Explicit        | Default               | `::`      |
-| `clc` | Explicit        | Custom                | `:term:`  |
-
-#### Directives
-
-| Token  | Identifier Type | Example             |
-| ------ | --------------- | ------------------- |
-| `i::l` | Explicit        | `file::/etc/global` |
-
-#### Comments
-
-Inline comment `--`, and block comment start `/-` and end `-/`. No code exist for this, and should either, as a prior step of the parser strips them out.
-
-### The _binding structure_
+### What is a _binding structure_
 
 A binding structure binds an _[identifier]_ to a _[literal]_ into an _[entry]_. All entries must have an identifier to separate it from another entyry. We can not use the data itself as entry, because then the same data can not occur twice. Thus we identify each separate literal by an identifier that is bound to it. An identifier can be both _implicit_ and _explicit_. In the first case, no identifier is specified alongside the data, for example `The Data`, and thus the implicit identity is zero-based indexed in sequential order of occurence. An _explicit_ identifier is one that is specified alongside the data, for example `The key: The data`.
 
@@ -433,13 +373,7 @@ The following structures of binding are recognized:
 | [bbb]     | Block-Block Binding   | Block           | Block        |
 | [bib]     | Block-Inline Binding  | Block           | Inline       |
 
-Nesting is a natural function of this strucutre, as a literal can contain any data, including one or several other bindings.
-
 An identifier is always to the left, and a literal is always to the right.
-
-At a conceptual level,
-
-Because, by definition, a literal can be a block of data that can contain one or several other bindings, the fundamental structure allows for recursion and thus nesting of bindings.
 
 The _binding structure_ binds _[identifier]_ to _[literal]_, not purely for organization of data, but to support the function of querying and fetching data within the heirarchy of structures. It is at this level—where the binding structure is recognized—that the format attains functionality. Percieving _binding structure_ allows for querying and fetching.
 
@@ -447,23 +381,27 @@ What follows is how different _binding structures_ are recognized.
 
 #### Nesting
 
+Because, by definition, a literal can be a block of data that can contain one or several other bindings, the fundamental structure allows for recursion and thus nesting of bindings.
+
 Nesting of entries is a feature possible because of the _binding structure_. One entry can be contained within another, and so on.
 
 It is the [literal] part of the `[identifier] [introducer] [literal]` that holds nested entries. The question is if a block identifiers can contain nested entries? An identifier can a contain nested structures, but those structures will never be analyzed as binding structures, but only taken line by line and will be seen as either _[raw]_ or as _strings_ or _primitives_ of _[array]_. A _[block literal]_ on the other hand, has its content analyzed for the purpose of fetching nested data. In the case _[block identifier]_, on the previous hand, data is never fetched from an identifier, only compared. Thus, nesting serves no purpose in identifiers.
 
-_[identifier]_ and _[literal]_ serves different purposes. The identifier is used merly for identification of literal, while the literal is the data itself that can be of a type that can contain other entries meaningful for a parser that may be looking for one entry within another, but the parser will never look within an identifier for the sake of finding a part of it. The parser always uses the whole identifier in matching against a target given identifier for sake of determining if the current entry is desired for futher consideration.
+_[identifier]_ and _[literal]_ serves different purposes. The identifier is used merely for identification of literal, while the literal is the data itself that can be of a type that can contain other entries meaningful for a parser that may be looking for one entry within another, but the parser will never look within an identifier for the sake of finding a part of it. The parser always uses the whole identifier in matching against a target given identifier for sake of determining if the current entry is desired for futher consideration.
 
 If an identifier can have nested structures that are meaningful as such, it technically could have another entry with another nested identifier and so on for eternal recursion.
 
 ### Note on _[inline terminator definition]_
 
-The _[inline terminator definition]_ is recognized by the same principle as any other _binding structure_. An _[inline terminator definition]_ always follows the format of `[identifier] [introducer] [literal]`. Thus, identifier has its ordinary place to the left, and to the right a literal is found.
+The _[inline terminator definition]_ is recognized by the same principle as any other _binding structure_. An _[inline terminator definition]_ always follows the format of `[identifier] [introducer] [literal]`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an [introducer] is added at the end: `[identifier] [introducer] [literal] [introducer]`, example: `id: term:`.
 
 ### Inline-Inline Binding (iib)
 
 Identifier and literal both exist within the same line, and are thus _[inline format]_.
 
 #### With identifier
+
+Concept: `[identifier] [introducer] [literal]`
 
 Code: `icl`
 
@@ -472,6 +410,8 @@ Example: `fruit: apple`
 #### With empty identifier
 
 To state _implicit identifier_ for _[inline literal]_, the _[empty identifier]_ is not used, unlike in the case of _[block literal]_.
+
+Concept: `[literal]`
 
 Code: `l`
 
@@ -484,6 +424,8 @@ Example: `apple`
 > It is not said _without identifier_. It is said _with empty identifier_. It means it is empty of explicit identifier, but it will have an _implicit identifier_, which is the zero-based index of the entry in the parent entry.
 
 #### With empty literal
+
+Concept: `[identifier] [introducer]`
 
 Code: `ic`
 
@@ -503,6 +445,8 @@ Identifier exists within the same line, but the literal is _[block format]_ mean
 
 #### With custom terminator definition
 
+Concept: `[identifier] [introducer] [literal] [introducer]`
+
 Code: `iclc`
 
 Example:
@@ -515,6 +459,8 @@ vt
 ```
 
 #### With default terminator definition
+
+Concept: `[identifier] [introducer] [introducer]`
 
 Code: `icc`
 
@@ -531,6 +477,8 @@ id::
 
 To state _implicit identifier_ in _[inline identifier]_, the _[empty identifier]_ is used.
 
+Concept: `[empty identifier] [introducer] [introducer]`
+
 Code: `ecc`
 
 Example:
@@ -543,6 +491,8 @@ Example:
 ```
 
 #### With implicit identifier with custom terminator definition
+
+Concept: `[empty identifier] [introducer] [literal] [introducer]`
 
 Code: `eclc`
 
@@ -565,6 +515,8 @@ The identifier is always without identifier, as the identifier is the identifier
 
 #### With default terminator definition for block identifier
 
+Concept: `[introducer] [introducer] [introducer]`
+
 Code: `ccc`
 
 Example:
@@ -581,6 +533,8 @@ Thus, the case `:::` is understood as: `[identifier proxy] [assignment] (termina
 #### With custom terminator definition for block identifier
 
 Same as previous case, but with a custom terminator definition for the literal.
+
+Concept: `[introducer] [introducer] [literal] [introducer]`
 
 Code: `cclc`
 
@@ -607,6 +561,8 @@ Thus, the literals, both _[block literal]_ and _[inline literal]_, are defined i
 
 #### Block-Inline Binding
 
+Concept: `[introducer] [literal]`
+
 Code: `cl`
 
 Example:
@@ -620,6 +576,8 @@ Example:
 ```
 
 #### Block-Block Binding with default terminator definition
+
+Concept: `[introducer] [introducer]`
 
 Code: `cc`
 
@@ -637,6 +595,8 @@ Example:
 ```
 
 #### Block-Block binding with custom terminator definition
+
+Concept: `[introducer] [literal] [introducer]`
 
 Code: `clc`
 
@@ -722,6 +682,52 @@ The following can be one or more characters.
 | `[tc-dash]`  | `tcd`     | `--`    | Comment dash.        |
 | `[tc-start]` | `tcs`     | `/-`    | Comment block start. |
 | `[tc-end]`   | `tce`     | `-/`    | Comment block end.   |
+
+## Implementation
+
+### Binding codes
+
+For sake of implementing a parser, these codes are suggested, but must not be used.
+
+| Code | Description        |
+| ---- | ------------------ |
+| i    | Identifier         |
+| l    | Literal            |
+| c    | introducer (colon) |
+| e    | empty              |
+
+#### Inline format
+
+| Token  | Identifier Type | Terminator Definition | Example             |
+| ------ | --------------- | --------------------- | ------------------- |
+| `icl`  | Explicit        |                       | `fruit: apple`      |
+| `ice`  | Explicit        |                       | `fruit:`            |
+| `l`    | Implicit        |                       | `apple`             |
+| `iclc` | Explicit        | Custom                | `fruit:term: apple` |
+| `icc`  | Explicit        | Default               | `fruit::`           |
+| `ecc`  | Implicit        | Default               | `""::`              |
+| `eclc` | Implicit        | Custom                | `"":term:`          |
+
+#### Block identifiers
+
+| Token  | Identifier Type | Terminator Definition | Example   |
+| ------ | --------------- | --------------------- | --------- |
+| `ccc`  | Explicit        | Default               | `:::`     |
+| `cclc` | Explicit        | Custom                | `::term:` |
+
+#### Literals following block identifiers
+
+| Token | Identifier Type | Terminator Definition | Example   |
+| ----- | --------------- | --------------------- | --------- |
+| `cl`  | Explicit        |                       | `: apple` |
+| `cc`  | Explicit        | Default               | `::`      |
+| `clc` | Explicit        | Custom                | `:term:`  |
+
+#### Directives
+
+| Token  | Identifier Type | Example             |
+| ------ | --------------- | ------------------- |
+| `i::l` | Explicit        | `file::/etc/global` |
 
 ### Syntax for data types
 
@@ -1864,3 +1870,23 @@ It is up to the specific implementation to determine which characters are suppor
 An implementation can change the characters making up the `basic standalone tokens`. `:` can be changed to `-` for example.
 
 The reason for the ability to redefine the `basic standalone tokens` is because, for example, a dedicated network transmission format may desire to use other characters, such as binary ones for the syntax.
+
+## TODO
+
+TODO: what about array elements existing outside array. They are given implicit keys but because you can not mix array and object entries, it should fail
+
+TODO: blank line in multi line value that is processed, should be ignored, only "" adds empty line to output (applies to ml identifers too)
+
+NOTE: No, empty key "" will make implicit identifier for block literal. for inline literal, no "" is given, no nothing is given, just the value.
+
+NOTE: When including a declared block, it it adds a newline at the end where it is included, regardless if the block is having explicit literal terminator that excludes a newline.
+
+NOTE: Chained includes are possible
+
+TODO: Is it so: The unprocessed literal terminator must be at end of line with no other data after (wherever it is used).,
+
+TODO: Include the _super-enabler_
+
+This document outlines the `f3c`; an easy to handle configuration and serialization format, designed with the goal of minimal syntax and maximal functionality.
+
+This document is a reference of `f3c` in its totality, suitable for implementing _f3c_ parsers.
