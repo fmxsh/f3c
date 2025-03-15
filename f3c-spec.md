@@ -19,9 +19,9 @@ Define a configuration format with the following properties:
 
 This document is written primarily for completeness and exhaustive detail as a reference.
 
-We start with defining semantics. That is a set of particular meanings useful to define this configuration format. Thus we first concern ourselves with the concepts and structure among concepts of this configuration format, and only later with how these concepts and structures map to actual characters to form the concrete syntax that is the concrete representation of this configuration format.
+We start by defining semantics. Semantics are the particular units of meaning, or conceptual definitions, used to further define this configuration format. Thus we first concern ourselves with the concepts and structure among concepts of this configuration format, and only later with how these concepts and structures map to actual characters to form the concrete syntax that is the concrete representation of this configuration format.
 
-Following the intended appraoch, conceptual definitions are introduced for _basic tokens_ and _data_. The conceptual definitions of _basic tokens_ and _data_ will give rise to a higher set of emergent conceptual definitions called _binding structures_. The prior things of _basic tokens_, _data_ and their relations, forms the possibility for this. These _binding structures_ represents the overarching property of the configuration format, which is to bind one field to another (an identifier to a literal). The conceptual outlining then undergoes a process of semantic attribution, where the conceptual definitions, the semantics that have been created, are mapped concrete representations; to specific characters (such as `:`, `.` and `"`), and to sequences of characters (data).
+Following the intended approach, conceptual definitions are introduced for _basic tokens_ and _data_. The conceptual definitions of _basic tokens_ and _data_ will give rise to a higher set of emergent conceptual definitions called _binding structures_. The prior things of _basic tokens_, _data_ and their relations, forms the possibility for this. These _binding structures_ represents the overarching property of the configuration format, which is to bind one field to another (an identifier to a literal). The conceptual outlining then undergoes a process of semantic attribution, where the conceptual definitions, the semantics that have been created, are mapped concrete representations; to specific characters (such as `:`, `.` and `"`), and to sequences of characters (data).
 
 ## Basic Tokens (conceptual definitions)
 
@@ -125,77 +125,21 @@ The acceptable character sequence is: Any character except `[delimiter]` (`"`), 
 
 ### Inline literal
 
-Different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
-
 Possible literals are:
 
-| #   | Label                   | Literal  | Example         | Category  | Quality    | Determined by | Literal type |
-| --- | ----------------------- | -------- | --------------- | --------- | ---------- | ------------- | ------------ |
-| 1   | [string]                | String   | `"abc def"`     | String    | Atomic     | context       | value        |
-| 2   | [fragment]              | Fragment | `ghi a123`      | String    | Non-atomic | content       | value        |
-| 3   | [number]                | Number   | `32, 3.14, -10` | Primitive | Atomic     | content       | value        |
-| 4   | [bool]                  | Bool     | `true, on, yes` | Primitive | Atomic     | content       | value        |
-| 5   | [null]                  | Null     | `null, nil`     | Primitive | Atomic     | content       | value        |
-| 6   | [terminator definition] | [1-5]    | [1-5]           |           |            | context       | marker       |
-| 7   | [terminator expression] | [1-5]    | [1-5]           |           |            | context       | marker       |
+| #   | Label                   | Category  | Quality    | Determined by | Literal type |
+| --- | ----------------------- | --------- | ---------- | ------------- | ------------ |
+| 1   | [string]                | String    | Atomic     | context       | value        |
+| 2   | [fragment]              | String    | Non-atomic | content       | value        |
+| 3   | [number]                | Primitive | Atomic     | content       | value        |
+| 4   | [bool]                  | Primitive | Atomic     | content       | value        |
+| 5   | [null]                  | Primitive | Atomic     | content       | value        |
+| 6   | [terminator definition] |           |            | context       | marker       |
+| 7   | [terminator expression] |           |            | context       | marker       |
 
 1-5 is _data_, meaning it is _content_. 6 and 7 are considered _context_; they are syntactic markers, meaning they are literals part of the syntax and not just data values.
 
 The term _atomic_ is used, meaning the value is taken as given. A non-atomic value is a value that is not taken as given, but is processed in some way.
-
-Inline literals are always trimmed of whitespace, because whitespace is not part of the data.
-
-All primitive literals are case-insensitive.
-
-The data of all literals, except _[string]_, is considered to be the sequence that is with and from the first non-whitespace character to and with the last non-whitespace character. In case of _[string]_, see the section _String_ below.
-
-#### String
-
-A sequence of characters or no characters deliniated by _[delimiter]_ (`"`) such that `[delimiter] (...) [delimiter]`. The surrounding _[delimiter]_ is not part of the literal's data. `"abc"` is `abc` but `""abc""` is `"abc"`, meaning, only the uttermost surrounding _[delimiter]_ is taken as marks of the data's boundary.
-
-The acceptable character sequence is: Any binary and non-binary character except _[segmenter]_ (`\n`) as it would contradict the essence of _inline_ in _[inline literal]_.
-
-#### Fragment
-
-A sequence of characters or no characters, without surrounding _[delimiter]_, with leading and trailing whitespace is trimmed.
-
-The acceptable character sequence is: Any binary and non-binary character except, but can not start with _[delimiter]_ (`"`), or it will be an _[explicit string]_.
-
-Any unquoted literal that is not a _[number]_, _[bool]_ or _[null]_, is treated as _[fragment]_. In other words, If not a _[string]_ and not a primitive literal, then it is treated as a _[fragment]_. Thus, `&#38;`, for example, is treated as a _[fragment]_.
-
-#### Number
-
-The acceptable character sequence is as inferred from the example in the table above.
-
-#### Bool
-
-The acceptable character sequence are: `true`, `on`, `yes`, `false`, `off`, `no`, `maybe`.
-
-| Data  | Meaning       |
-| ----- | ------------- |
-| true  | true          |
-| on    | true          |
-| yes   | true          |
-| false | false         |
-| off   | false         |
-| no    | false         |
-| maybe | true or false |
-
-The _maybe_ should return true or false randomly by anything that parses the format. If serialized to another format, it may either be resolved into true or false, or it may be treated as a _[string]_ of the sequence `maybe`.
-
-#### Null
-
-The acceptable character sequence is as inferred from the example in the table above.
-
-#### Terminator definition
-
-The literal _[terminator definition]_ is a type that is used to define the end of a block of data. A terminator definition is always a _literal_ type of _inline_ format. The user defines a sequence of characters that is used as the terminator for the block.
-
-Can be a _[string]_ or a _[fragment]_, and the accepted character sequence is the same as for those.
-
-#### Terminator expression
-
-While a _[terminator definition]_ defines the terminator for a block, a _[terminator expression]_ is the actual use of the terminator to end the corresponding block.
 
 ### Block identifier
 
@@ -329,6 +273,78 @@ To human perception, it appears that the comment syntax relates to the comment-t
 
 In all other cases of syntax, the parser assigns meaning to the content, whether it is empty or not. In the case of a comment, no meaning is assigned to any contained data or to the comment syntax itself.
 
+### Data
+
+As outlined conceptually, different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
+
+Possible literals are:
+
+| #   | Label                   | Literal  | Example         |
+| --- | ----------------------- | -------- | --------------- |
+| 1   | [string]                | String   | `"abc def"`     |
+| 2   | [fragment]              | Fragment | `ghi a123`      |
+| 3   | [number]                | Number   | `32, 3.14, -10` |
+| 4   | [bool]                  | Bool     | `true, on, yes` |
+| 5   | [null]                  | Null     | `null, nil`     |
+| 6   | [terminator definition] | [1-5]    | [1-5]           |
+| 7   | [terminator expression] | [1-5]    | [1-5]           |
+
+Literal 6-7 are used to determine the end of block. They can be any of the previous 1-5.
+
+All primitive literals (number, bool, null) are case-insensitive.
+
+The data of all literals, except _[string]_, is considered to be the sequence that is with and from the first non-whitespace character to and with the last non-whitespace character. In case of [string] the data is considered that which is delinieated by the [delimiter].
+
+Inline literals are always trimmed of whitespace, because whitespace is not part of the data (in case of string: it is trimmed outside its delimiter if a delimiter is given).
+
+#### String
+
+A sequence of characters or no characters deliniated by _[delimiter]_ (`"`) such that `[delimiter] (...) [delimiter]`. The surrounding _[delimiter]_ is not part of the literal's data. `"abc"` is `abc` but `""abc""` is `"abc"`, meaning, only the uttermost surrounding _[delimiter]_ is taken as marks of the data's boundary.
+
+The acceptable character sequence is: Any binary and non-binary character except _[segmenter]_ (`\n`) as it would contradict the essence of _inline_ in _[inline literal]_.
+
+#### Fragment
+
+A sequence of characters or no characters, without surrounding _[delimiter]_, with leading and trailing whitespace is trimmed.
+
+The acceptable character sequence is: Any binary and non-binary character except, but can not start with _[delimiter]_ (`"`), or it will be an _[explicit string]_.
+
+Any unquoted literal that is not a _[number]_, _[bool]_ or _[null]_, is treated as _[fragment]_. In other words, If not a _[string]_ and not a primitive literal, then it is treated as a _[fragment]_. Thus, `&#38;`, for example, is treated as a _[fragment]_.
+
+#### Number
+
+The acceptable character sequence is as inferred from the example in the table above.
+
+#### Bool
+
+The acceptable character sequence are: `true`, `on`, `yes`, `false`, `off`, `no`, `maybe`.
+
+| Data  | Meaning       |
+| ----- | ------------- |
+| true  | true          |
+| on    | true          |
+| yes   | true          |
+| false | false         |
+| off   | false         |
+| no    | false         |
+| maybe | true or false |
+
+The _maybe_ should return true or false randomly by anything that parses the format. If serialized to another format, it may either be resolved into true or false, or it may be treated as a _[string]_ of the sequence `maybe`.
+
+#### Null
+
+The acceptable character sequence is as inferred from the example in the table above.
+
+#### Terminator definition
+
+The literal _[terminator definition]_ is a type that is used to define the end of a block of data. A terminator definition is always a _literal_ type of _inline_ format. The user defines a sequence of characters that is used as the terminator for the block.
+
+Can be a _[string]_ or a _[fragment]_, and the accepted character sequence is the same as for those.
+
+#### Terminator expression
+
+While a _[terminator definition]_ defines the terminator for a block, a _[terminator expression]_ is the actual use of the terminator to end the corresponding block.
+
 ### Inline deliniation syntax
 
 The _inline_ syntax centers around _[introducer]_ (`:`) such that `[identifier] [introducer] [literal] [segmenter]` gives, for example, `id: my literal` and `[identifier] [meta level introducer] [literal] [segmenter]` gives, for example, `id:: my literal`.
@@ -348,11 +364,9 @@ Here the _basic tokens_ are given unique meaning, in the context of _[block]_, t
 | [default terminator] | [finalizer]      | `.`          | Default terminator for block literal or identifier.        |
 | [empty identifier]   | [emptier]        | `""`         | Empty identifier when used in place of identifier.         |
 
-## Binding structures
+## Binding structuresa (conceptual definitions)
 
 Based in _basic tokens_ and _data_ the highest organizing structures are built. They are called _binding structure_.
-
-This section will show both the conceptual definitions of _binding structures_ and the concrete syntax that is the representation of these _binding structures_. Thus, wehereas concept and representation were separated in earlier outlinings, both are outlined together in this section.
 
 ### What is a _binding structure_
 
@@ -394,6 +408,8 @@ If an identifier can have nested structures that are meaningful as such, it tech
 ### Note on _[inline terminator definition]_
 
 The _[inline terminator definition]_ is recognized by the same principle as any other _binding structure_. An _[inline terminator definition]_ always follows the format of `[identifier] [introducer] [literal]`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an [introducer] is added at the end: `[identifier] [introducer] [literal] [introducer]`, example: `id: term:`.
+
+## Semantic attribution of binding structures
 
 ### Inline-Inline Binding (iib)
 
