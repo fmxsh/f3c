@@ -1906,50 +1906,7 @@ Allow for both `'` and `"`?
 
 ### Versioning
 
-About the implementation of anything that handles data in the form of this format.
-
-An implementation is classified as one, and only one, of the following:
-
-A _feature_ of the format is defined as anything that the specification explicitly states, e.g. if leading and trailing whitespace is ignored, then that is a feature, and if a newline (`\n`) is used to separate lines, then that is a feature.
-
-| Level    | Description                                                                                                     |
-| -------- | --------------------------------------------------------------------------------------------------------------- |
-| Addapted | Lesser adhearance to the format than _standard_.                                                                |
-| Standard | All features and charactersitics as defined by the format, except those explicitly stated to be for _complete_. |
-| Complete | Same as _standard_ together with all aspects explicitly stated to be for _complete_.                            |
-
-| Mode       | Description                                                                                                           |
-| ---------- | --------------------------------------------------------------------------------------------------------------------- |
-| Faithful   | An _adapted_, _standard_, or _complete_ implementation that strictly adheres to the format without any modifications. |
-| Functional | An _addapted_, _standard_ or _complete_ implementation, but only to the extent that the target environment supports.  |
-| Prefered   | An _addapted_, _standard_ or _complete_ implementation, but with additions and modifications as prefered              |
-
-#### **Faithful Mode**
-
-When the environment allows for full implementation.
-
-- Faithful Adapted - Lesser features than _standard_, but implements them exactly as defined in _standard_.
-- Faithful Standard - Exactly as _standard_.
-
-~~Faithful Complete - Exactly as _complete_.~~
-
-#### **Functional Mode**
-
-When the environment puts constraints.
-
-- Functional Adapted - Some features of _standard_ are excluded because they are not supported by the target environment. Additionally, features of _standard_ that can be implemented, are not required to be implemented. However, any _standard_ feature that are implemented must be implemented exactly as defined in _standard_.
-- Functional Standard - Features of _standard_ are implemented exactly as defined in _standard_, but only to the extent that the target environment supports. All features of _standard_ that can be implemented must be implemented.
-
-~~Functional Complete - Features of _complete_ are implemented exactly as defined in _complete_, but only to the extent that the target environment supports. Features of _complete_ that can be implemented must be implemented.~~
-
-#### **Preferred Mode**
-
-When the environment allows for full implementation or not, but with modifications and additions.
-
-- Preferred Adapted - Lesser features than _standard_, and with modification of those features possible, and additions of other features possible, as preferred.
-- Preferred Standard - All features of _standard_, with modifications of those features possible, and with additions possible, as prefered.
-
-~~Preferred Complete - All features of _complete_, with modifications of those features possible, and with additions possible, as prefered.~~
+Uses [Variable Versioning Format](https://github.com/fmxsh/vvf).
 
 ### Note on supported characters
 
