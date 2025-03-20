@@ -37,3 +37,11 @@ Knowing is the awareness of a thing to have a distinct state with an unique set 
 The parser recognizes `nothing` to be anything that is not recognized by the expected format (form).
 
 Because nothingness is the absense of form, there is no way to percieve nothingness. Form is needed to percieve absence and presence. Only by relating to a boundary, do we know if something exist or not within that boundary. Without form, boundary, we can not determine if content is present or absent. The parser can however determine if form is present or absent. This is because the parser is aware of the higher level format that dictates that a stream of bytes can be piped to the parser and that those bytes being read are exactly that--bytes being piped in a stream. The act of reading the stream is itself a structured process. Assuming the bytes are being streamed sequentially, it can conclude weather the form (syntax) exist or not, within that stream, and if the syntax exist, it can determine the presence or absence of its content, and the parser know the meaning of that content due to the form, the syntax, the boundary. The form gives meaning. Without form, the content is meaningless, nothingness. Nothingness is the absence of form, but not necessarily the absence of content. Meaningless content is percieved as content because there is a higher level form (bytes are streamed sequentially), by which we can analyze the content to determine if it is meaningless or if it falls within the syntax and thus is meaningful. Nothingness is not an absolute trancendental state, but is an assumption based in the perception of meaningless content, due to failure to have it comply to the expected format.
+
+### Emergence goes upwards
+
+Clarify why a higher-level construct cannot transgress downwards.
+
+Could specify that emergence in ontology goes upwards, where new levels are formed to solve higher-order structural constraints. (Based in reflection on the `.` as [finalizer] in _f3c_.
+
+iConceptual minimalism by removing redundant representatoins... ontological minimalism demands each representation be uniquely necessary.

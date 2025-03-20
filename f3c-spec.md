@@ -3,6 +3,144 @@
 > [!NOTE]
 > This project is under development. Do not expect finished order.
 
+# Table of Contents
+
+- [f3c - Fine Format For Configuration](#f3c---fine-format-for-configuration)
+  - [Porupose](#porupose)
+  - [Introduction](#introduction)
+  - [Terminology](#terminology)
+    - [&lt;&lt; Concept and representation](#-concept-and-representation)
+    - [&gt;&gt;](#)
+  - [Basic Definitions](#basic-definitions)
+- [Remove array object, put below](#remove-array-object-put-below)
+  - [Pre-fundamental things (substrate)](#pre-fundamental-things-substrate)
+  - [Basic Tokens (conceptual definitions)](#basic-tokens-conceptual-definitions)
+    - [Basic standalone tokens](#basic-standalone-tokens)
+    - [Basic composite tokens](#basic-composite-tokens)
+  - [Data (conceptual definitions)](#data-conceptual-definitions)
+    - [Fields](#fields)
+    - [Data formats](#data-formats)
+    - [Data types](#data-types)
+  - [Data constructs (conceptual definitions)](#data-constructs-conceptual-definitions)
+    - [Inline identifier](#inline-identifier)
+    - [Inline literal](#inline-literal)
+    - [Block identifier](#block-identifier)
+    - [Block literal](#block-literal)
+  - [Delineation of data (conceptual definitions)](#delineation-of-data-conceptual-definitions)
+    - [Inline data](#inline-data)
+    - [Block deliniation](#block-deliniation)
+  - [Binding structures (conceptual definitions)](#binding-structures-conceptual-definitions)
+    - [Inline-Inline Binding](#inline-inline-binding)
+    - [Inline-Block Binding](#inline-block-binding)
+    - [Block-Inline Binding](#block-inline-binding)
+    - [Block-Block Binding](#block-block-binding)
+  - [Emergence and compliance](#emergence-and-compliance)
+    - [Nesting](#nesting)
+    - [Note on <em>[inline terminator definition]</em>](#note-on-inline-terminator-definition)
+  - [Format overall](#format-overall)
+    - [Identifiers must be unique](#identifiers-must-be-unique)
+  - [Basic representations (semantic attribution)](#basic-representations-semantic-attribution)
+    - [Ghostspace and whitespace](#ghostspace-and-whitespace)
+    - [Basic standalone representations](#basic-standalone-representations)
+      - [Rationale for the choice of dot as finalizer](#rationale-for-the-choice-of-dot-as-finalizer)
+    - [Basic composite representations](#basic-composite-representations)
+    - [Representations for comments](#representations-for-comments)
+    - [Ghostspace and whitespace](#ghostspace-and-whitespace-1)
+  - [Data (semantic attribution)](#data-semantic-attribution)
+    - [Inline identifier](#inline-identifier-1)
+    - [Inline literal](#inline-literal-1)
+      - [String](#string)
+      - [Fragment](#fragment)
+      - [Number](#number)
+      - [Bool](#bool)
+      - [Null](#null)
+      - [Terminator definition](#terminator-definition)
+      - [Terminator expression](#terminator-expression)
+    - [Block identifier](#block-identifier-1)
+    - [Block literal](#block-literal-1)
+  - [Binding structures (conceptual definitions)](#binding-structures-conceptual-definitions-1)
+  - [Inline deliniation syntax (semantic attribution)](#inline-deliniation-syntax-semantic-attribution)
+  - [Block deliniation syntax (semantic attribution)](#block-deliniation-syntax-semantic-attribution)
+  - [Inline-Inline Binding (iib) (semantic attribution)](#inline-inline-binding-iib-semantic-attribution)
+    - [With explicit identifier](#with-explicit-identifier)
+    - [With implicit identifier](#with-implicit-identifier)
+    - [With empty literal](#with-empty-literal)
+  - [Inline-Block Binding (ibb)](#inline-block-binding-ibb)
+    - [With explicit identifier with custom terminator definition](#with-explicit-identifier-with-custom-terminator-definition)
+    - [With explicit identifier with default terminator definition](#with-explicit-identifier-with-default-terminator-definition)
+    - [With implicit identifier with default terminator definition](#with-implicit-identifier-with-default-terminator-definition)
+    - [With implicit identifier with custom terminator definition](#with-implicit-identifier-with-custom-terminator-definition)
+  - [Block identifiers generally](#block-identifiers-generally)
+    - [With default terminator definition for block identifier](#with-default-terminator-definition-for-block-identifier)
+    - [With custom terminator definition for block identifier](#with-custom-terminator-definition-for-block-identifier)
+  - [Literals following block identifiers](#literals-following-block-identifiers)
+    - [Block-Inline Binding](#block-inline-binding-1)
+    - [Block-Block Binding with default terminator definition](#block-block-binding-with-default-terminator-definition)
+    - [Block-Block binding with custom terminator definition](#block-block-binding-with-custom-terminator-definition)
+  - [Directive syntax (semantic attribution)](#directive-syntax-semantic-attribution)
+    - [x Defining types](#x-defining-types)
+    - [Operator directive](#operator-directive)
+      - [Template directives](#template-directives)
+      - [Parser controling directives](#parser-controling-directives)
+      - [Token configuration directives](#token-configuration-directives)
+  - [Parsing d](#parsing-d)
+    - [Streaming format](#streaming-format)
+    - [Identical identifiers](#identical-identifiers)
+    - [Parsing block literal that doesn't match queried identifier](#parsing-block-literal-that-doesnt-match-queried-identifier)
+  - [Implementation](#implementation)
+    - [Binding codes](#binding-codes)
+      - [Inline format](#inline-format)
+      - [Block identifiers](#block-identifiers)
+      - [Literals following block identifiers](#literals-following-block-identifiers-1)
+      - [Directives](#directives)
+    - [Custom tokens](#custom-tokens)
+  - [Entry](#entry)
+    - [Comment syntax](#comment-syntax)
+    - [Empty lines](#empty-lines)
+  - [Implementation](#implementation-1)
+  - [Comment rules](#comment-rules)
+  - [Inline identifier with inline literal](#inline-identifier-with-inline-literal)
+  - [Inline ...](#inline-)
+  - [Inline identifier (not: A Key with a Single-Line Value](#inline-identifier-not-a-key-with-a-single-line-value)
+    - [Syntax](#syntax)
+    - [Key Placement Rules](#key-placement-rules)
+    - [Value Rules](#value-rules)
+    - [Trailing Characters Rules](#trailing-characters-rules)
+    - [Whitespace rule](#whitespace-rule)
+    - [Line Validity](#line-validity)
+    - [Examples of parsing](#examples-of-parsing)
+  - [Block identifier (not: Key with Multi-Line Value](#block-identifier-not-key-with-multi-line-value)
+    - [Span of a Multi-Line Value](#span-of-a-multi-line-value)
+      - [Simple Method](#simple-method)
+      - [Advanced method](#advanced-method)
+    - [Content of a Multi-Line Value](#content-of-a-multi-line-value)
+    - [Key Rules](#key-rules)
+      - [Single-line Value Rules in Multi-Line value key](#single-line-value-rules-in-multi-line-value-key)
+    - [Span of a Multi-Line Value](#span-of-a-multi-line-value-1)
+      - [Span Defined by Value Terminator](#span-defined-by-value-terminator)
+    - [Value Terminator](#value-terminator)
+    - [Trailing Characters Rules](#trailing-characters-rules-1)
+    - [Whitespace rule](#whitespace-rule-1)
+    - [Multi-Line Value Rules](#multi-line-value-rules)
+      - [With non-literal value terminator](#with-non-literal-value-terminator)
+      - [With literal value terminator](#with-literal-value-terminator)
+  - [Error handling](#error-handling)
+  - [Parser options](#parser-options)
+    - [Row number of a key](#row-number-of-a-key)
+  - [Naming Conventions of f3c Configuration Files](#naming-conventions-of-f3c-configuration-files)
+  - [Future possible updates](#future-possible-updates)
+    - [1](#1)
+    - [2](#2)
+  - [Implementation](#implementation-2)
+    - [Versioning](#versioning)
+    - [Note on supported characters](#note-on-supported-characters)
+    - [Redefining syntax](#redefining-syntax)
+  - [TODO](#todo)
+  - [Removed](#removed)
+    - [Print all lines considered elements](#print-all-lines-considered-elements)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+
 ## Porupose
 
 Define a configuration format with the following properties:
@@ -22,6 +160,72 @@ This document is written primarily for completeness and exhaustive detail as a r
 We start by defining semantics. Semantics are the particular units of meaning, or conceptual definitions, used to fully define this configuration format. Thus we first concern ourselves with the concepts and structures among concepts of this configuration format, and only later focus on how these concepts and structures map to actual characters to form the concrete syntax that is the concrete representation of this configuration format.
 
 Following the intended approach, conceptual definitions are introduced for _basic tokens_ and _data_. The conceptual definitions of _basic tokens_ and _data_ will give rise to a higher set of emergent conceptual definitions, that are structures of meaning, called _binding structures_. These _binding structures_, providing the function of associating one field with another (binding an identifier to a literal), represents the highest level of emergent conceptual property that is the complete conceptual response to the purpose of defining this particular configuration format. The conceptual outlining then undergoes a process of semantic attribution, where the conceptual definitions, the structures of meaning, that have been created, are mapped to concrete representations; to specific characters (such as `:`, `.` and `"`), and to sequences of characters (data).
+
+## Terminology
+
+The format of this configuration format has _representational elements_ and _conceptual elements_. An _representation element_ is the character or set of characters being the concrete representation of a given concept. All given concept within this configuration format falls under the category _conceptual elements_.
+
+A _conceptual element_ is indicated by `[` and `]` like `[identifier]` or `[literal]`. A _representational element_ is that concrete data--the character or characters--that aligns with the rules outlined as the concept.
+
+A conceptual discussion may be: `[identifier] [introducer] [literal]`. The representational expression is, for example: `MyIdentifier: my literal`.
+
+### << Concept and representation
+
+The conceptual level deals with the concepts of the configuration format, the generic structures, their relations and principles, and how they respond to the purpose of defining a configuration format. Each concept is a _thing_ created by defining what it is, but without reference to concrete representatoin. As such, the concept is a self containing _thing_ within its own level, in that it neither depends on a concrete representation to be percieved, nor on something more abstract. Its medium of existence is the space of thought. These self containing things form relationships, yielding higher structures that becomes a higher level _thing_, still in the space of thought, emerging from the relationchips between the lower things in the space of thought. The representational level deals with how these _things_ in the space of thought are represented at the concrete non-thought level of characters and parsing. The representation should be in complete alignment with the conceptual.
+
+### >>
+
+When describing the format, syntax elements are written in brackets for clarity, such as `[identifier] [assignment] [literal]`. This notation indicates that the **syntax element** `identifier` is followed by `assignment`, which is followed by `literal`.
+
+However, **the spaces between and within the brackets are not part of the actual syntax**; they are included only to improve readability.
+
+For example, `[identifier] [assignment] [literal]` translates to `key:value`, meaning that the **presentation does not imply whitespace** between these elements in actual use.
+
+Either-or-statement is possible. The example `[custom | default terminator]` means either `custom terminator` or `default terminator`.
+
+`(...)` means optional, where `...` here means that content which is optional.
+
+`...` means "the rest of the expected syntax".
+
+## Basic Definitions
+
+TODO: Not all of them apply anymore...
+
+Definitions of general terms as they apply in the context of _f3c_:
+
+**Whitespace**: All characters matched by the POSIX character class `[:space:]` (e.g., space, tab, etc.), **excluding newline characters**.
+
+**Line**: As by POSIX. A sequence of characters, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character.
+
+**Character**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior. See also `Note on supported characters`.
+
+**Data**: The `f3c` format consists of several lines making up the configuration data.
+
+**Parser**: Any program that reads the `f3c` data, evaluates it and preforms desired actions.
+
+**Nesting**: One group can have a subgroup which in turn can have a subgroup, and so on. This is called nesting.
+
+**Identifier**: A identifier is used to identify a specific literal.
+
+**Literal**: A literal consists of a series of characters or no characters (empty).
+
+**Identifier-literal pair**: The identifier and its corresponding value form an identifier-literal pair. An identifier-literal pair can be one of two types: an identifier with a _single-line literal_ or a identifier with a _multi-line literal_.
+
+**Element**: A single-line literal or a multi-line literal.
+
+**Nameless element**: An element without an identifier.
+
+**Named element**: An element with an identifier.
+
+# Remove array object, put below
+
+**Array**: A multi-line literal that is a collection of `array` elements. An `array` element consists of anything but an identifier-literal pair. Thus, an `array` must not have elements classified as `object`.
+
+**Object**: A multi-line literal that is a collection of `object` elements. An `object` element is an identifier-literal pair. The identifier-literal can be a `nameless element` or a `named element`. Content of object must not have elements classified as `array elements`, meaning no content that lacks identifier (empty identifier is still considered an identifier).
+
+**Empty**: _Empty_ is a thing, syntax, that is empty of content. `""` is empty. It is absence of content, contained within `"` and `"`.
+
+**Nothing**: _Nothing_ is not even a thing that is empty. It is the absence of syntax.
 
 ## Pre-fundamental things (substrate)
 
@@ -172,8 +376,6 @@ Block identifiers can be of two types: `raw` `array` including, in a certain way
 
 In case of _[raw]_, the data is considered as it is.
 
-In case of _[array]_, each line is considered _[inline literal]_ , meaning it can be any of _value_, being _[string]_, _[number]_, etc..., (but of course, the markers _[terminator definition]_ and _[terminator expression]_ are not considered part of the arrays content).
-
 ### Block literal
 
 Represented by _[block literal]_ is a sequence of characters spaning multiple lines, that is the data associated with an identifier.
@@ -241,14 +443,32 @@ The following structures of binding are recognized:
 | --------- | --------------------- | --------------- | ------------ |
 | [iib]     | Inline-Inline Binding | Inline          | Inline       |
 | [ibb]     | Inline-Block Binding  | Inline          | Block        |
-| [bbb]     | Block-Block Binding   | Block           | Block        |
 | [bib]     | Block-Inline Binding  | Block           | Inline       |
+| [bbb]     | Block-Block Binding   | Block           | Block        |
 
 An identifier is always to the left, and a literal is always to the right.
 
 The _binding structure_ binds _[identifier]_ to _[literal]_, not purely for organization of data, but to support the function of querying and fetching data within the heirarchy of structures. It is at this level—where the binding structure is recognized—that the format attains functionality. Percieving _binding structure_ allows for querying and fetching.
 
-What follows is how different _binding structures_ are recognized.
+### Inline-Inline Binding
+
+[inline identifier] bound to [inline literal]
+
+### Inline-Block Binding
+
+[inline identifier] bound to [block literal]. A block literal can be [raw], [array] or [object]. Because it can be of [object], it allows for nesting, as an [object] contains other bindings of identifier and literal.
+
+### Block-Inline Binding
+
+[block identifier] bound to [inline literal]. The block identifier can be [raw], [array] or serialized [object]. A _serialized [object]_ has the structure of an object (looks like an literal with identifier and content that consists of only identifier-literal pairs), but is never parsed as such, because there is no utility. [object] are for querying the contained data, but no querying inside an identifier ever happens. We use identifiers to query associated data. We do not use identifiers to store data to be queried for. If we would query data inside identifiers, we could have another [object] inside that, with data inside its identifier, and so on, for endless recursion and nesting.
+
+### Block-Block Binding
+
+[block identifier] bound to [block literal]. The same principles for each block type applies as described in the two previous sections. The unique feature being that a block idenfities _data_ that is recognized as [block].
+
+## Emergence and compliance
+
+Based in all things established till this point, an emergent feature, as well as an aspect of compliance with previously defined structure, can be ovserved.
 
 ### Nesting
 
@@ -264,13 +484,33 @@ If an identifier can have nested structures that are meaningful as such, it tech
 
 ### Note on _[inline terminator definition]_
 
-The _[inline terminator definition]_ is recognized by the same principle as any other _binding structure_. An _[inline terminator definition]_ always follows the format of `[identifier] [introducer] [literal]`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an [introducer] is added at the end: `[identifier] [introducer] [literal] [introducer]`, example: `id: term:`.
+The _[inline terminator definition]_ is recognized by the same principle as any other _binding structure_. An _[inline terminator definition]_ always follows the format of `[identifier] [introducer] [literal]`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an [introducer] is added at the end: `[identifier] [introducer] [literal] [introducer]`, example: `id: term:`. In this example, the following lines comprise the [block literal] that is terminated, after those lines, by `term`.
+
+As stated, the [inline terminator definition] is recognized by the principle of _binding structures_, but, then, not treated the same as, say, a [string] literal. The aquired literal in question, the terminator definition, is not used for retrieval in a query, unlike what a [string] literal would be used for, but for the need to know where the consequtive set of lines ends, so that that set of lines can be retrieved as the queried-for literal.
+
+## Format overall
+
+The configuration format does not define any necessary beginning and end. Thus, the format is considered a stream rather than a file.
+
+### Identifiers must be unique
+
+Identifiers are considered unique identifiers of a set of data, but can still occur more than once in the same stream.
 
 ## Basic representations (semantic attribution)
 
 Out of all characters of the _pre-fundamental characters_, certain ones will be given special meaning. The selected characters will be the concrete representations of the conceptual tokens outlined earlier, and will be the most fundamental building blocks of the syntax. Characters, that otherwise can represent anything, are given the general meaning of being tokens, where each token has a specific uniquely defined meaning.
 
 Thus, this section outlines the basic concrete representation as linked with the conceptual tokens, making up the syntax.
+
+### Ghostspace and whitespace
+
+All _ghostspace_ is trimmed and ignored. Only what is defined by each _conceptual element_ and thus instantiated by the correpsonding _representational elements_ matters to the parser.
+
+Before and after any _representational element_, there can be any or no amount of ghostspace.
+
+In other words: whitespace in syntax (called _ghostspace_) does not affect the meaning of the syntax or the data (but within the boundary of a [literal] whitespace is kept).
+
+These are the same `id : 123` and `id:123` and `id: 123` and `  id :123`.
 
 ### Basic standalone representations
 
@@ -287,6 +527,16 @@ All syntax depends on these.
 > The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to the data contained by the syntax, like the data of a multi-line literal.
 
 In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax.
+
+#### Rationale for the choice of dot as finalizer
+
+The colon was choosen as it improves visual clarity and conveys the meaning of something following that which was before, and implying a relationship between the follower and the followed. Initally `:` was intended for [finalizer] to keep the representations mininmal, but would conflict with the same representation used in other context (nested objects for example, we can not determine what ends what.) The `.` also adds a visual distinction, contradicting, in sense, the `:`. The discrepancy between `:` and `.` aligns with their essence of opening `:` and `.` closing. Colon (`:`), having two dots, implies a relatoin between two things as one have to relate to the other merely by exising in the same space. It aligns with the essence of _binding structures_ which is one thing (identifier) relating (bound) to another (a literal). Following up with a dot (`.`) consequently marks the end of a space in which things stand in relation to eachother, as a dot, by its visual content as a character, convays a singular thing. The dot, in _regex_ also symbolizes _any character_ and when we end with a dot, the parser accepts any character, looking for structure again. Thus, `.` symbolizes the end of structure and \_from now on, anything follows, till new structure is recognized. All structure tus involves the `:`.
+
+Conceptually, following the above reasoning, it can be argued that; `.`, `\n` and `EOF` are all finalizers and logically we should be able to do the following all on the same line: `user: name. pwd: mypass. host: localhost.`
+
+With this in mind, why can we not put `.` in the same category as `\n` and `EOF`? Conceptually, `.` is based in a higher level concept, meant to respond to [block] which is higher than [inline]. Enough are _character_, _sequence_ and _line_ to define an inline syntax, and still knowing how to end it, without introducing any new concept. `\n` and `EOF` are fundamental representations used to define the span of the inline data. [block], on the other hand, is a higher level construct, in the sense of building on several lines, where the `\n` thus can not uniquely represent the ending of the block, or we would not be able to include the next line of the multi-line data intended to be stored. Thus, a construct at the same level of conceptual emergence, needs to be in place. For this, we have the [inline terminator definition] and [inline terminator expression]. The `.` represents a default [terminator definition], and if used like `..` or `.myterminator` it means to take the content as [raw], where the first dot is [literalizer], indicating the content does not stand in relation to any oppinion of the format, but is taken as it is (not trimmed etc).
+
+In summary, [segmenter] and [finalizer] exist at different conceptual levels. Using `.` for inline syntax, as in `user: name. pwd: mypass. host: localhost.` would not, as first thought, make effective use of an already existing representation of a higher level (block), but would spawn a new representation for the same essence of putting an end to a thing, but at a lower level (inline). It would add redundancy of an additional representation, having `\n`, `EOF` and `.` serving the same purpose, for the illusion of conceptual and representational coherence, ignoring the reality of conceptually different levels. It may seem conceptually coherent that the `.` at the higher level of [block] should work to also terminate [inline], if desired, but it is not conceptually coherent, as the `.` would transgress its conceptual domain, trying to solve a lower level thing with a hihger level construct, that in itself was made first to solve the higher level structure that was built on the very lower level things. Conceptually, it would be similar having drawers deliniated by samller peices of wood, and drawers together are collected in a cabinet, which is deliniated with bigger pieces of wood, and then expecting to deliniate a drawer with the big wodden surface of the top of the cabinet. You would have drawers with the size of the cabinet surface, obviously being antagonostic towards the cabinette that then can not contain them.
 
 ### Basic composite representations
 
@@ -322,6 +572,16 @@ To human perception, it appears that the comment syntax relates to the comment-t
 
 In all other cases of syntax, the parser assigns meaning to the content, whether it is empty or not. In the case of a comment, no meaning is assigned to any contained data or to the comment syntax itself.
 
+### Ghostspace and whitespace
+
+[whitespace] is data that may or may not have meaning. As part of the data of a literal, whitespace retains its POSIX definition. In the case it occurs outside a literal's span, it lacks meaning, as no part of the syntax is dependent on whitespace, except in case of `\n`. `\n` has meaning to the syntax of being a [segmenter]. As a [segmenter], `\n` is not considered whitespace, but considered a representation of a token. A reason to not term it _whitespace_ is because the representation of [segmenter], can by definition of this format, be redefined to something else.
+
+Whitespace as part of a literal, is having meaning, as it is part of the data. Whitespace outside a literal is considered _nothing_, as it is not part of anything the format regognizes as meaningful. Similarly to comments appearing to have meaning to human perception, but being inherently empty of meaning to the format, and thus called _ghost syntax_, the equally meaningless whitespace, indentation, may convay meaning to human perception, but is meaningless to the configuration format, and thus is called **ghost-space**.
+
+Ghostspace is not just the literal representations of white space (`\t`, ` ` etc...) but such occurence that is regarded as not meaningful to the structure or data of the configuration format, and consequently is ignored.
+
+Ghostspace is any representation (character) regognized as whitespace that is not of _conceptual element_ (eg. [segmenter], [string] etc...).
+
 ## Data (semantic attribution)
 
 ### Inline identifier
@@ -329,6 +589,8 @@ In all other cases of syntax, the parser assigns meaning to the content, whether
 The acceptable character sequence is: Any character except `[delimiter]` (`"`), and `[segmenter]` (`\n`). Also that `[introducer]` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following each other.
 
 ### Inline literal
+
+A literal value is returned as-is by the parser, without any trailing newline characters.
 
 As outlined conceptually, different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
 
@@ -357,6 +619,10 @@ Inline literals are always trimmed of whitespace, because whitespace is not part
 A sequence of characters or no characters deliniated by _[delimiter]_ (`"`) such that `[delimiter] (...) [delimiter]`. The surrounding _[delimiter]_ is not part of the literal's data. `"abc"` is `abc` but `""abc""` is `"abc"`, meaning, only the uttermost surrounding _[delimiter]_ is taken as marks of the data's boundary.
 
 The acceptable character sequence is: Any binary and non-binary character except _[segmenter]_ (`\n`) as it would contradict the essence of _inline_ in _[inline literal]_.
+
+The delimiters must be around the data, or it will be seen as part of the data. `id: "data"` gives data `data`, while `id: this "is" my data` gives as data `this "is" my data`. Works the same in all contexts where [string] can occur: [terminator definition], [terminator expression], [literal] with [explicit identifier] and with [implicit identifier].
+
+> [!NOTE] > `[string]` is trimmed left and right, but is of course not trimmed within its two `[delimiter]`, e.g. within `"   this spaced string   "`.
 
 #### Fragment
 
@@ -416,52 +682,32 @@ In case of [block literal] being [array], each contained [inline literal] has an
 
 An empty [block literal] that is not _[raw]_ is treated as empty array. If it is not [raw] it must be [object] or [array], and in case it is empty, it is treated as an empty [array] and not empty [object].
 
+> [!NOTE]
+> Block literals were introduced to avoid having to encode the data, as for example is commonly done with with base64 when a format's literal type can only store certain characters.
+
+In case of _[array]_, each line is considered _[inline literal]_ , meaning it can be any of _value_, being _[string]_, _[number]_, etc..., (but of course, the markers _[terminator definition]_ and _[terminator expression]_ are not considered part of the arrays content).
+
+If the empty line exists within an [array]; then it is treated as an [empty] [inline literal].
+
+A [block literal] of type [raw] is returned as-is, with all newline characters (and whitespace) included and none added to the output. In case of the content of [array] being returned, every line, including the last one, should end with a newline character, and only one. An empty line is seen as a literal with value [empty] and is returned as just a newline `\n` and nothing else. For this reason, it is important all lines of an [array] ends with one and only one '\n`. In case of content of [object] being returned, at least one [segmenter] ('\n') must follow each _binding structure_ that is contained, as to separate them.More [segmenters] can be added by the parser, but will not make a difference to the meaning of the content.
+
 ## Binding structures (conceptual definitions)
-
-Based in _basic tokens_ and _data_ the highest organizing structures are built. They are called _binding structure_.
-
-### What is a _binding structure_
-
-A binding structure binds an _[identifier]_ to a _[literal]_ into an _[entry]_. All entries must have an identifier to separate it from another entyry. We can not use the data itself as entry, because then the same data can not occur twice. Thus we identify each separate literal by an identifier that is bound to it. An identifier can be both _implicit_ and _explicit_. In the first case, no identifier is specified alongside the data, for example `The Data`, and thus the implicit identity is zero-based indexed in sequential order of occurence. An _explicit_ identifier is one that is specified alongside the data, for example `The key: The data`.
-
-All literals have corresponding identifiers associated, as explained. There is no literal that has no identity.
-
-All structural meaning of the format arises from this basic concept of binding the two fields of _[identifier]_ and _[literal]_ together in that particular order. All syntax center around facilitating this binding. What a binding does is to bind an identity to a given set of data which is the literal, for example this valid syntax: `fruit: banana`. The identifier is `fruit` and the literal is `banana`.
-
-The _binding structure_ is the fundamental meaning of the format. By analyzing the content and recognizing certain patterns of _basic tokens_ and _data_, meaningful structures of binding _[identifier]_ to _[literal]_ are recognized. Any other content that is not recognized is considered to be _nothing_, which means the content is in the absence of fundamentally meaningful structure.
-
-The following structures of binding are recognized:
-
-| Shorthand | Full Name             | Identifier Type | Literal Type |
-| --------- | --------------------- | --------------- | ------------ |
-| [iib]     | Inline-Inline Binding | Inline          | Inline       |
-| [ibb]     | Inline-Block Binding  | Inline          | Block        |
-| [bbb]     | Block-Block Binding   | Block           | Block        |
-| [bib]     | Block-Inline Binding  | Block           | Inline       |
-
-An identifier is always to the left, and a literal is always to the right.
-
-The _binding structure_ binds _[identifier]_ to _[literal]_, not purely for organization of data, but to support the function of querying and fetching data within the heirarchy of structures. It is at this level—where the binding structure is recognized—that the format attains functionality. Percieving _binding structure_ allows for querying and fetching.
 
 What follows is how different _binding structures_ are recognized.
 
 **A note on _[inline terminator definition]_**: The _[inline terminator definition]_ is recognized by the same principle as any other _binding structure_. An _[inline terminator definition]_ always follows the format of `[identifier] [introducer] [literal]`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an [introducer] is added at the end: `[identifier] [introducer] [literal] [introducer]`, example: `id: term:`.
 
-## Nesting (conceptual definition)
-
-Because, by definition, a literal can be a block of data that can contain one or several other bindings, the fundamental structure allows for recursion and thus nesting of bindings.
-
-Nesting of entries is a feature possible because of the _binding structure_. One entry can be contained within another, and so on.
-
-It is the [literal] part of the `[identifier] [introducer] [literal]` that holds nested entries. The question is if a block identifiers can contain nested entries? An identifier can a contain nested structures, but those structures will never be analyzed as binding structures, but only taken line by line and will be seen as either _[raw]_ or as _strings_ or _primitives_ of _[array]_. A _[block literal]_ on the other hand, has its content analyzed for the purpose of fetching nested data. In the case _[block identifier]_, on the previous hand, data is never fetched from an identifier, only compared. Thus, nesting serves no purpose in identifiers.
-
-_[identifier]_ and _[literal]_ serves different purposes. The identifier is used merely for identification of literal, while the literal is the data itself that can be of a type that can contain other entries meaningful for a parser that may be looking for one entry within another, but the parser will never look within an identifier for the sake of finding a part of it. The parser always uses the whole identifier in matching against a target given identifier for sake of determining if the current entry is desired for futher consideration.
-
-If an identifier can have nested structures that are meaningful as such, it technically could have another entry with another nested identifier and so on for eternal recursion.
-
 ## Inline deliniation syntax (semantic attribution)
 
 The _inline_ syntax centers around _[introducer]_ (`:`) such that `[identifier] [introducer] [literal] [segmenter]` gives, for example, `id: my literal` and `[identifier] [meta level introducer] [literal] [segmenter]` gives, for example, `id:: my literal`.
+
+1. An [inline identifier] can consist of any character, including whitespace, except double quotes (`"`), colon (`:`), and newline (`\n`),
+2. except it CAN contain colon (`:`) in middle, like `k:e:y` but not in start or end as in `:key:`, and it can not contain two colons subsequently as in `abc::def` (in that case, `::` will be seen as operator syntax).
+3. It cannot start with commenting syntax: `--` and `/-`.
+4. An [inline identifier] must contain at least one character, which must be a none non-whitespace character and not any of the exceptions in (1).
+5. An [inline identifier] starts and ends with a permissible non-whitespace character.
+6. Whitespace within the [inline identifier] (between starting and ending non-whitespace characters) is allowed and considered part of the identifier exactly as it occurs. Example: `k e y` is a valid key and is different from `k  e  y`.
+7. Leading and trailing whitespace is not considered part of the [inline identifier] and is ignored.
 
 ## Block deliniation syntax (semantic attribution)
 
@@ -704,11 +950,9 @@ Example:
 term
 ```
 
----
+## Directive syntax (semantic attribution)
 
-From the tokens, a core syntax is created.
-
-## Directive syntax
+Based on the same principle of _binding structures_, a _directive_ is defined, not with `:` as _introducer_, but with `::` as _meta level introducer_.
 
 A directive is a command that is used to control the parser. A the structure of a directive is based on the highest organizing structure of the format, the _binding structure_. From this, as is the case for any other binding, a directive involves a kind of identifier bound to a kind of literal. The syntax in its most general form is `[field] [meta level introducer] [field]`.
 
@@ -774,6 +1018,40 @@ The following can be one or more characters.
 | `[tc-start]` | `tcs`     | `/-`    | Comment block start. |
 | `[tc-end]`   | `tce`     | `-/`    | Comment block end.   |
 
+## Parsing d
+
+### Streaming format
+
+The parser can have different modes of parsing: non-continious and continious. When in the first, the first occurence is returned, and no further checks are done. The parser quits parsing.
+
+`EOF` must not mark the end of a stream, as the same daemon can be fed multiple files. In non-continious mode, the parser would likely consider it the end, but must not, but can continue parsing more files (say all files in a directory are piped to the parser. What makes the parser non-continious or continious is a matter of if the parser stops at the first matching identifier.
+
+A parser may listen, or query for one or more identifiers.
+
+The parser should process the the bindings in the order they occur in the input data, from top to bottom. The parser must process the lines them as they occur line by line, without having to collect all lines before allowing for querying of data.
+
+### Identical identifiers
+
+In the second case of continious parsing, the stream of configuration data is parsed continiously. In case the same identifier occurs again, it is considered the same unit of data being updated with the associated literal. An example is a daemon waiting for data in a stream, and updating some aspects of a system based on certain identifiers.
+
+### Parsing block literal that doesn't match queried identifier
+
+Nested structures implies that a deeper level is not of interest if the identifier of a particular scope doesn't match the queried identifier. However, the embeded content can be of interest depending on the purpose of the parser, if it for example is to make a map of "breadcrub" paths.
+
+If a given line is a multi-line value key, but doesn't match the key being queried for, the parser must skip parsing the lines of the span belonging to that key, and continue parsing after the span.
+
+Thus if we query for `keyx` and the following is the configuration data:
+
+```plaintext
+key::
+    keyx "not this"
+    value part2
+    value part3
+.
+```
+
+It should not return `not this`. That line with key `keyx` is inside a multi-line span, being the value of another key named `key` and is thus not parsed.
+
 ## Implementation
 
 ### Binding codes
@@ -820,85 +1098,6 @@ For sake of implementing a parser, these codes are suggested, but must not be us
 | ------ | --------------- | ------------------- |
 | `i::l` | Explicit        | `file::/etc/global` |
 
-### Syntax for data types
-
-#### Inline identifier
-
-`[identifier] [introducer] ...`
-
-#### Block identifier
-
-`[identifier] [introducer] (...)`
-
-#### Inline literal
-
-`... [literal]`
-
-#### Block literal
-
-`... [] [introduer] (...)`
-
-## Inline and block
-
-The basic tokens form a syntax of inline and block structures.
-
-### Types of data
-
-_Data_ is a generic term capturing all parts of the format that is not syntax.
-
-A data's type is defined by the syntax it is part of.
-
-Different types of data have different rules for what characters.
-
-Data types can be one of two categories: `inline`, `block` or `unspecified`.
-
-The term _inline_ means the data exists only inside a single line.
-The term _unspecified_ means the data can occur inside a single line, or consist of multi-line data.
-The term _block_ means the data must be multi-line data. Even if multi-line data consists only of one line (has only one newline character), it is still considered block data.
-
-#### Inline
-
-| Data type             | Rules      | Example      | Description                        |
-| --------------------- | ---------- | ------------ | ---------------------------------- |
-| `[any inline]`        | [0]        | `abc`        | Generic catch-all inline category. |
-| `[terminator inline]` | [2]        | `(...):abc:` | Used to end multi-line data.       |
-| `[directive inline]`  | `a-z0-9_-` | `abc::(...)` | Name of a directive.               |
-| `[operator inline]`   | [1]        | `(...)::abc` | Data being used for the operation. |
-
-[0] Any possible binary and non-binary character except `[segmenter]` (`\n`).
-[1] `[any data]` except non-ending `\n`.
-[2] `[any data]` except `[delimiter]` (`"`), `[introducer]` (`:`) and `[segmenter]` (`\n`).
-
-#### unspecified
-
-| Data type                  | Rules     | Example                          | Description                                                                           |
-| -------------------------- | --------- | -------------------------------- | ------------------------------------------------------------------------------------- |
-| `[any unspecified]`        | [0]       | `abc`                            | Generic catch-all unspecified category.                                               |
-| `[comment unspecified]`    | [0]       | `-- abc`                         | Considered _nothing_. Thus, conceptually, there is no such thing as `[comment data]`. |
-| `[identifier unspecified]` | See below | `id::`, `:::\n1\n2\n.`           | Used to identify a specific literal.                                                  |
-| `[literal unspecified]`    | See below | `(...): abc`, `(...)::\n1\n2\n.` | The data associated with a key.                                                       |
-
-[0] Any possible binary and non-binary character.
-
-Identifier unspecified:
-In case `identifier unspecified` occures inside a single line, it can contain any character except `[segmenter]` (`\n`) and `[delimiter]` (`"`). It can contain `[introducer]` (`:`), but it must not be part of the identifier as leading or trailing (but `k:e:y: value` is valid, because the last : is not part of the identifier, but part of the `core syntax`. It must not occur in the identifier twice or more directly following eachother, as in `k::ey`.
-
-In case `identifier unspecified` is having multiple lines, it can contain `[any unspecified]` data.
-
-#### Block
-
-There are cases where the possible data can be described only as block data. It can not be either inline or block, but it can only be block. For example: A literal that specifically is multi-line data is termed block data (and it follows we know it is not single-line data).
-
-> [!NOTE]
-> It is primarily the format that is considered a block, not the contained data itself, which anyway can be absent. The syntax (format) allows for a block, thus it is a block.
-
-| Data type            | Rules | Example            | Description                          |
-| -------------------- | ----- | ------------------ | ------------------------------------ |
-| `[identifier block]` | [0]   | `:::\n1\n2\n.`     | Used to identify a specific literal. |
-| `[literal block]`    | [0]   | `(...)::\n1\n2\n.` | The data associated with a key.      |
-
-[0] Any possible binary and non-binary character.
-
 ### Custom tokens
 
 The `basic standalone tokens` can be redefined using `operator directive`. Because `basic composite tokens` are built using `basic standalone tokens`, only the latter can be changed, which consequently changes the former.
@@ -906,58 +1105,6 @@ The `basic standalone tokens` can be redefined using `operator directive`. Becau
 This can be used to for example define binary characters as tokens making it easy to handle any text data, for example in transmitting over a network. However, translating the data from one set of tokens to another, by just switching the tokens in the data, is not recommended, as the new set of tokens may collide with the contained data.
 
 ---
-
-## Basic Definitions
-
-Definitions of general terms as they apply in the context of _f3c_:
-
-**Whitespace**: All characters matched by the POSIX character class `[:space:]` (e.g., space, tab, etc.), **excluding newline characters**.
-
-**Line**: As by POSIX. A sequence of characters, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character.
-
-**Character**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior. See also `Note on supported characters`.
-
-**Data**: The `f3c` format consists of several lines making up the configuration data.
-
-**Parser**: Any program that reads the `f3c` data, evaluates it and preforms desired actions.
-
-**Nesting**: One group can have a subgroup which in turn can have a subgroup, and so on. This is called nesting.
-
-**Identifier**: A identifier is used to identify a specific literal.
-
-**Literal**: A literal consists of a series of characters or no characters (empty).
-
-**Identifier-literal pair**: The identifier and its corresponding value form an identifier-literal pair. An identifier-literal pair can be one of two types: an identifier with a _single-line literal_ or a identifier with a _multi-line literal_.
-
-**Element**: A single-line literal or a multi-line literal.
-
-**Nameless element**: An element without an identifier.
-
-**Named element**: An element with an identifier.
-
-# Remove array object, put below
-
-**Array**: A multi-line literal that is a collection of `array` elements. An `array` element consists of anything but an identifier-literal pair. Thus, an `array` must not have elements classified as `object`.
-
-**Object**: A multi-line literal that is a collection of `object` elements. An `object` element is an identifier-literal pair. The identifier-literal can be a `nameless element` or a `named element`. Content of object must not have elements classified as `array elements`, meaning no content that lacks identifier (empty identifier is still considered an identifier).
-
-**Empty**: _Empty_ is a thing, syntax, that is empty of content. `""` is empty. It is absence of content, contained within `"` and `"`.
-
-**Nothing**: _Nothing_ is not even a thing that is empty. It is the absence of syntax.
-
-## How to read the description of the syntax
-
-When describing the format, syntax elements are written in brackets for clarity, such as `[identifier] [assignment] [literal]`. This notation indicates that the **syntax element** `identifier` is followed by `assignment`, which is followed by `literal`.
-
-However, **the spaces between and within the brackets are not part of the actual syntax**; they are included only to improve readability.
-
-For example, `[identifier] [assignment] [literal]` translates to `key:value`, meaning that the **presentation does not imply whitespace** between these elements in actual use.
-
-Either-or-statement is possible. The example `[custom | default terminator]` means either `custom terminator` or `default terminator`.
-
-`(...)` means optional, where `...` here means that content which is optional.
-
-`...` means "the rest of the expected syntax".
 
 ## Entry
 
@@ -971,28 +1118,13 @@ Comment syntax is based on `comment tokens`.
 | [block comment start] | `/-` | Start of block comments.                 |
 | [block comment end]   | `-/` | End of block comments.                   |
 
-## Whitespace rules
+Block comment can start and end on same line. In case of block comments: Must not have anything other than whitespace before the starting marker and after the ending marker.
 
-Whitespace is trimmed before and after all and any occurence of _core syntax_ and _operator syntax_ with these exceptions:
-
-### Exceptions for _core syntax_
-
-- Whitespace is not trimmed at left side of `[literalizer] [default | custom terminator]` (because it is `[raw]` data, meant to be taken as it is).
-
-> [!NOTE] > `[quote]` is trimmed left and right, but is of course not not trimmed within its two `[delimiter]`, e.g. within `"   this spaced string   "`.
-
-### Exception for _operator syntax_
-
-- Whitespace in the `[data]` part of the operator syntax is not necessarily trimmed. It depends on the directive. Include for example falls back on general parsing rules of _core syntax_, and thus the `[data]` part in that case is trimmed.
-
-> [!NOTE]
-> For whatever reason, a future directive may depend on trailing and leading whitespace, and it should be up to the directive to decide. The `core syntax`, however, is designed to be fully insensitive to whitespace.
+Line comment (`--`) must be on a line of its own. No data other than whitespace is allowed to precede it on the same line.
 
 ### Empty lines
 
 Empty are those with only whitespace or only a newline; these are ignored, with one exception.
-
-Exception: if the empty line exists within an `[array]`; then it is treated as an empty _element_.
 
 ## Implementation
 
@@ -1144,10 +1276,6 @@ Exception: if the empty line exists within an `[array]`; then it is treated as a
 
 ## Comment rules
 
-Block comment can start and end on same line. In case of block comments: Must not have anything other than whitespace before the starting marker and after the ending marker.
-
-Line comment (`--`) must be on a line of its own. No data other than whitespace is allowed to precede it on the same line.
-
 ## Inline identifier with inline literal
 
 ## Inline ...
@@ -1166,19 +1294,6 @@ The key and the value exist on the same line.
 key name "the value"
 
 ```
-
-### Identifier Rules
-
-1. A key can consist of any character, including whitespace, except double quotes (`"`), colon (`:`), and newline (`\n`),
-2. except it CAN contain colon (`:`) in middle, like `k:e:y` but not in start or end as in `:key:`, and it can not contain two colons subsequently as in `abc::def` (it will be seen as functional syntax).
-3. It cannot start with commenting syntax: `#` or `--` and `/-`.
-4. A key must contain at least one character, which must be a none non-whitespace character and not any of the exceptions in (1) or `#`.
-5. A key starts and ends with a permissible non-whitespace character.
-6. Whitespace within the key (between starting and ending non-whitespace characters) is allowed and considered part of the key exactly as it occurs. Example: `k e y` is a valid key.
-7. Leading and trailing whitespace is not considered part of the key and is ignored.
-
-> [!NOTE]
-> Use `multi-line identifier` to be able to use keys with any characters.
 
 ### Key Placement Rules
 
@@ -1597,244 +1712,23 @@ data/key
 > NOTE:
 > This is another method: If surrounding whitespace is desired to be preserved, it should be included by using the same key multiple times. See the section on returning the value of identical keys under "Parsing Rules" below.
 
-### Element
-
-A line is treated as an element as long as it does not match the format of a key-value pair, either for a _key with a single-line value_ or the first line of a _key with a multi-line value_.
-
-Elements can be used for comments or structural annotations (e.g., grouping with labels like `[Group 1]`). These annotations are solely for human readability and are not intended to be processed by default. However, parsers can process elements as desired, allowing to define custom behaviors for how elements are handled.
-
-By using elements and whitespace, a visual hierarchy can be created to improve the readability of the configuration file.
-
-#### Example with Elements
-
-```plaintext
-Group 1
-    key1 "value1"
-        key2.1 "value2.1"
-        key2.2 "value2.2"
-    # Comment
-    key3 "value3"
-
-Group 2
-    key4 "value4"
-    key5 "value5"
-```
-
-In this example:
-
-- `Group 1` and `Group 2` are elements used as structural labels. They hold no meaning to the parser.
-- The line `# Comment` is an element used as a comment. It holds no meaning to the parser.
-- The remaining lines are key-value pairs. They are meaningful to the parser.
-
-## Parsing Rules
-
-## Nesting
-
-Nesting is possible.
-
-1. Any key-value pair can be nested within another multi-line value span.
-
-```
-top level "abc" :
-	key "abc" :
-		key2 "abc" :
-			key3 "xx"
-				xa
-				xb
-				xc
-    			key4 "test"
-			xx
-		abc
-	abc
-abc
-```
-
-Or:
-
-```
-top level:
-	key:
-		key2 :
-            key3:
-				xa
-				xb
-				xc
-    			key4 "test"
-		    key3
-	    key2
-    key
-top level
-```
-
-The command to the parser would be:
-
-```bash
-echo -n "$data" | _parser "top level" "key" "key2" "key3"
-```
-
-and would output:
-
-```
-xa
-xb
-xc
-```
-
-### Pipelining Parsing of Nested Key-Value Pairs
-
-The parser is built to handle this by accepting several keys as a list of arguments to traverse a nested heirarchy. However, this method can also be used.
-
-> [!NOTE]
-> This is not necessary as traversing is already a built in feature of the parser.
-
-The parser returns the value of a key, and because the value in turn can contain further key-value pairs, the output can be piped back to the parser with the argument of the desired key at the next nesting level. In short: The nesting feature enables group-selectors through pipelined parsing.
-
-Observe how, in the example below, the same keys (`user` and `password`) are used for both `local` and `remote` groups:
-
-`example-data.lkc`:
-
-```plaintext
-local "" :2
-    user "name1"
-    password "pwd1"
-
-remote "" :2
-    user "name2"
-    password "pwd2"
-```
-
-We can extract, for example, the `user` value for the `remote` group by first selecting the `remote` group and then selecting the `user` key. This is achieved through pipelining:
-
-```bash
-cat example-data.lkc | ./_parser "remote" | ./_parser "user"
-```
-
-The above outputs `name2`.
-
-### Parsing Multi-Line Value Rule
-
-If a given line is a multi-line value key, but doesn't match the key being queried for, the parser must skip parsing the lines of the span belonging to that key, and continue parsing after the span.
-
-Thus if we query for `keyx` and the following is the configuration data:
-
-```plaintext
-key ""
-    keyx "not this"
-    value part2
-    value part3
-/key
-```
-
-It should not return "not this". That line with key `keyx` is inside a multi-line span, being the value of another key named `key` and is thus not parsed.
-
-### Returning the Value of a Key
-
-A single-line value is returned as-is, without any trailing newline characters. Only the content between the double quotes is returned.
-
-A multi-line value is returned as-is, with all newline characters included. The parser must neither add nor remove any newline characters. Every line, including the last one, should end with a newline character.
-
-If only a single line is returned regardless of where it comes from (single- or multi-line value), no newline character is added even if the value comes from a multi-line value span.
-
-A multi-line value with literal value terminator is returend ias it is, with whatver amount or no amount of newline characters as it is in the span.
-
-### Returning the Value of Multiple Identical Keys
-
-- If the same key occurs multiple times in the configuration data being parsed, the parser should return all values for all occurences of the key.
-- Each value is separated by a newline character.
-- The parser should return the values in the order the corresponding keys appear in the configuration data.
-- Single-line values are not trimmed of leading and trailing whitespace, but multi-line values are.
-
-Use his feature to include surrounding whitespace in the value, as shown in the example below:
-
-````plaintext
-key "  value part1"
-key "    value part2"
-key "       value part3"
-```
-
-Then, querying for `key` will return:
-
-```plaintext
-  value part1
-    value part2
-      value part3
-````
-
-The identical keys will be read and printed as they occur, and any other unrelated keys will be ignored. In the following example, `otherkey` is ignored if queriying for `key`:
-
-```plaintext
-key "value1"
-otherkey "othervalue"
-key "value2"
-key "value3"
-```
-
-The output is:
-
-```plaintext
-value1
-value2
-value3
-```
-
-### Disabling a key by double quote
-
-Adding a double quote to the start of the line will invalidate the syntax thus disabling the key.
-
-```plaintext
-"key "value"
-```
-
-> [!WARNING]
-> Disabling a multi-line value key this way will not prevent the parser from reading and trying to parse the lines within the span of the multi-line value. Any nested keys will become available.
-
-## Behaviour on non-match
-
-If a line does not match the format of a key-value pair, it is treated as an _element_.
-
 ## Error handling
 
 The parser should return the value of the key matched.
 
-If a key is **not** and thus no value printed:
+If a key is **not** found, and thus no value printed:
 
 1. the parser should not output anything.
 2. the parser should return an error code of 1.
 
 If the key is found and a value is printed, even if the value is empty:
 
-1. the parser should output the value of the key.
-2. the parser should return an error code of 0.
-
-> [!NOTE]
-> As long as the parser printed something (even if an empty single line value, which effectively prints nothing), the error code should be 0.
-
-If the key is found, but is a multi-line value key that has content in the key-line's value part (`"example content"`):
-
-1. the parser should output the value as a singl line value.
-2. the parser should return an error code of 0.
-
-If the same key is encountered again after the above case, but this time is considered valid (either single-line or multi-line value key):
-
-1. the parser should output the value of the key.
+1. the parser should output the value of the key (but technically it outputs empty, which is no output.)
 2. the parser should return an error code of 0.
 
 If the value of the key is empty:
 
 - the parser should not output anything. However, the parser still considered that it did print something, just that it was an empty value. The parser returns error code of 0, indicating the key was found, and the empty response in fact is the value.
-
-If the span number is 0:
-
-- the parser should not output anything. The parser should return an error code of 0, indicating the key was found, even if nothing was printed.
-
-The same applies to empty multi-line value:
-
-```
-key "abc" :
-abc
-```
-
-The error code should be 0.
 
 ## Parser options
 
@@ -1847,46 +1741,13 @@ The parser should have option to return row number of a key. The option should:
 
 Purpose of the above: With a row number of a key, a specific key and value in the config file can easily be edited with standard command-line tools.
 
-### Print all lines considered elements
-
-The parser should have an option to print all lines considered elements. Purpose: easy review the correctness of the parsed config so no keys are mistyped and taken as elements.
-
 ## Naming Conventions of f3c Configuration Files
 
-The preferred file extension for f3c configuration files is `.lkc`. Using this extension reduces the likelihood of conflicts with other configuration files.
-
-## Design choices
-
-1. Whitespace before and after any segment of the syntax is ignored, allowing for minor formatting inconsistencies without causing errors. Howvever, all spaces inside "" on the key line are considered part of the value.
-
-2. A key-value pair can be preceded by whitespace, such as spaces or tab characters, allowing visual structuring for better readability.
-
-### For key with single-line value
-
-- The format `key "value"` was chosen over `key = value` because, in the latter, it is not possible to determine whether any trailing whitespace is part of the value. In the former, the `"` clearly marks the end of the value.
-- To use only one character as delimiter, do like `key " text`. That is; without any ending quote.
-
-### For key with multi-line value
-
-1. Multi-line values were introduced to avoid having to encode the string, as for example with base64.
-   The syntax is:
-
-```plaintext
-key
-    value line1
-    value line2
-    ...
-    value lineN
-/key
-```
-
-4. The colon was choosen as it improves visual clarity and conveys the meaning of a subsequent sequence (of lines).
-
-## Data Serialization
-
-### Control characters
+The preferred file extension for f3c configuration files is `.f3c`. Using this extension reduces the likelihood of conflicts with other configuration files.
 
 ## Future possible updates
+
+### 1
 
 Support for changing the syntax characters. Magic keys to configure the parser on the fly, to change syntax characters.
 
@@ -1898,15 +1759,17 @@ Define a common value terminator and able to do like `key "$" :` to have the par
 
 If settings like above, make a default config file that is always parsed before the target file. A settings file in ~/.config.
 
-## Considerations for update
+### 2
 
-Allow for both `'` and `"`?
+- Allow for both `'` and `"`?
+
+- To use only one character as delimiter, do like `key " text`. That is; without any ending quote.
 
 ## Implementation
 
 ### Versioning
 
-Uses [Variable Versioning Format](https://github.com/fmxsh/vvf).
+Uses [Variable Classification Format](https://github.com/fmxsh/vcf).
 
 ### Note on supported characters
 
@@ -1940,3 +1803,9 @@ TODO: Include the _super-enabler_
 This document outlines the `f3c`; an easy to handle configuration and serialization format, designed with the goal of minimal syntax and maximal functionality.
 
 This document is a reference of `f3c` in its totality, suitable for implementing _f3c_ parsers.
+
+## Removed
+
+### Print all lines considered elements
+
+The parser should have an option to print all lines considered elements. Purpose: easy review the correctness of the parsed config so no keys are mistyped and taken as elements.
