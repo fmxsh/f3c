@@ -187,59 +187,28 @@ Either-or-statement is possible. The example `[custom | default terminator]` mea
 
 `...` means "the rest of the expected syntax".
 
-## Basic Definitions
-
-TODO: Not all of them apply anymore...
-
-Definitions of general terms as they apply in the context of _f3c_:
-
-**Whitespace**: All characters matched by the POSIX character class `[:space:]` (e.g., space, tab, etc.), **excluding newline characters**.
-
-**Line**: As by POSIX. A sequence of characters, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character.
-
-**Character**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior. See also `Note on supported characters`.
-
-**Data**: The `f3c` format consists of several lines making up the configuration data.
-
-**Parser**: Any program that reads the `f3c` data, evaluates it and preforms desired actions.
-
-**Nesting**: One group can have a subgroup which in turn can have a subgroup, and so on. This is called nesting.
-
-**Identifier**: A identifier is used to identify a specific literal.
-
-**Literal**: A literal consists of a series of characters or no characters (empty).
-
-**Identifier-literal pair**: The identifier and its corresponding value form an identifier-literal pair. An identifier-literal pair can be one of two types: an identifier with a _single-line literal_ or a identifier with a _multi-line literal_.
-
-**Element**: A single-line literal or a multi-line literal.
-
-**Nameless element**: An element without an identifier.
-
-**Named element**: An element with an identifier.
-
-# Remove array object, put below
-
-**Array**: A multi-line literal that is a collection of `array` elements. An `array` element consists of anything but an identifier-literal pair. Thus, an `array` must not have elements classified as `object`.
-
-**Object**: A multi-line literal that is a collection of `object` elements. An `object` element is an identifier-literal pair. The identifier-literal can be a `nameless element` or a `named element`. Content of object must not have elements classified as `array elements`, meaning no content that lacks identifier (empty identifier is still considered an identifier).
-
-**Empty**: _Empty_ is a thing, syntax, that is empty of content. `""` is empty. It is absence of content, contained within `"` and `"`.
-
-**Nothing**: _Nothing_ is not even a thing that is empty. It is the absence of syntax.
-
 ## Pre-fundamental things (substrate)
 
-At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ that has meaning relating to our purpose. At that level, things are defined and named as suitable building blocks of our purpose.
+At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we only have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ specifically defined with meaning that specifically relates to the purpose. At that level, things are defined and named as suitable building blocks of our purpose.
 
-At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived material, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of a configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents. The contingence of meaning is a fundamental principle that will replicate itself in the relationship between each previous and each current level of abstraction, in the sense that the previous is fundamental to the meaning that emerges at the current level, as a combination of fundamental things that the current level recognizes a structure that is meaningful to the overall purpose. Any fundamental level must be well explicated to allow for the next level of abstraction to percieve meaningful structures among occurences of these fundamental things. _The abstraction _ is the very definition of the structure—referred to by its newly created name—that is seen among the particular occurrence of the fundamentals.
+At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived reality, our conditions, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of this configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents.
 
-**pre-fundamental characters**: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
+The contingence of meaning is a fundamental principle that will replicate itself in the relationship between each previous and each current level of abstraction, in the sense that the previous is fundamental to the meaning that emerges at the current level, as a combination of fundamental things that the current level recognizes a structure that is meaningful to the overall purpose. Any fundamental level must be well explicated to allow for the next level of abstraction to percieve meaningful structures among occurences of these fundamental things. 
 
-**pre-fundamental sequence**: A sequence of _pre-fundamental characters_
+The names of the three _pre-fundamental_ things defined below will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
 
-**pre-fundamental line**: As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+### Pre-fundamental characters
 
-These terms will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
+Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
+
+### Pre-fundamental sequence
+
+A sequence of _pre-fundamental characters_
+
+### Pre-fundamental line
+
+As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+
 
 ## Basic Tokens (conceptual definitions)
 
@@ -1809,3 +1778,12 @@ This document is a reference of `f3c` in its totality, suitable for implementing
 ### Print all lines considered elements
 
 The parser should have an option to print all lines considered elements. Purpose: easy review the correctness of the parsed config so no keys are mistyped and taken as elements.
+
+
+These already ocvur
+
+## 
+
+**Empty**: _Empty_ is a thing, syntax, that is empty of content. `""` is empty. It is absence of content, contained within `"` and `"`.
+
+**Nothing**: _Nothing_ is not even a thing that is empty. It is the absence of syntax.
