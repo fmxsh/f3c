@@ -265,7 +265,11 @@ As a summary of the three following sections: Data is categorized into _fields_.
 
 A _field_ is a term to refer to a deliniated sequence of characters or no characters. Different fields can have different purposes. 
 
-In order to determine the type of a field, the data is analyzed by _data formats_ and _data types_.
+In order to determine the type of a field, the data is cross analyzed by _data formats_ and _data types_.
+
+One field can in turn contain more fields, enabling nested fields. The nesting capability is however further defined by the type of field. Conceptually, this is where the concept of nesting first emerges.
+
+- [x] _f3c_ supports nested data fields. 
 
 ### Data formats
 
@@ -275,7 +279,7 @@ _Inline deliniation_ is where the data is deliniated to start and end on the sam
 
 _Block deliniation_ is where the data is deliniated to start and end on different lines.
 
-All types of data fall into one of two categories of data format: _inline_ or _block_.
+All types of data fall into either of the two categories of data format: _inline_ or _block_.
 
 | Label    | Data type | Description                                 |
 | -------- | --------- | ------------------------------------------- |
@@ -284,34 +288,38 @@ All types of data fall into one of two categories of data format: _inline_ or _b
 
 More precicely:
 
+The labels _[inline format]_ and _[block format]_ refers to the corresponding structure as made up by the syntax including the specific data delineated by the syntax.
+
+The labels _[inline data]_ and _[block data]_ refers to the data delineated by the syntax, excluding the syntax.
+
 [inline] assumes [inline format] and [block] assumes [block format].
 
-The labels _[inline format]_ and _[block format]_ refers to the corresponding structure as made up by the syntax including the specific data being contained by the syntax.
-
-The labels _[inline data]_ and _[block data]_ refers only to the data within the syntax, not the syntax itself.
+- [x] _f3c_ supports inline data and block data. 
 
 ### Data types
 
-Data can be one of two categories of data types: _identifier_ or _literal_.
+A data type is determined by the function of the data. 
+
+Data can be either of two categories of data types: _identifier_ or _literal_.
 
 | Label        | Data type  | Purpose    | Description                                 |
 | ------------ | ---------- | ---------- | ------------------------------------------- |
 | [identifier] | Identifier | Matching   | A name used to identify a specific literal. |
 | [literal]    | Literal    | Retrieving | The data associated with an identifier.     |
 
-These two serve different purpose. _Identifier_ identifies a segment of data which is called a _literal_. Functionally, _identifier_ is matched against an user-given identifier-construct when querying. The literal is consequently retrieved or not, depending on the match.
+These two serve different purpose. _Identifier_ is a field of data that identifies another field of data which is called a _literal_. Functionally, _identifier_ is matched against an user-given identifier when querying. The literal is consequently retrieved or not, depending on the match.
 
 Two modes of identifiers are possible: _implicit identifier_ and _explicit identifier_.
 
-In case of _implicit identifier_: _empty_ is specified as the identifier. Then an identifier should be determined by the ordered sequence of entries, as related to a zero-based indexing, in the parent entry containing the associated literal.
+In case of _implicit identifier_: _empty_ is specified as the identifier. The identifier is then implied and determined by the ordered sequence of in which the fields occur, based in zero-based indexing.
 
-In case of _explicit identifier_: _something_ is specified as the identifier to associate with the literal.
+In case of _explicit identifier_: _something_, an unique sequence_, is specified as the identifier to associate with the literal.
 
 ## Data constructs (conceptual definitions)
 
-The _data types_, _[identifier]_ and _[literal]_, can be combined with the data formats _[inline]_ and _[block]_ to form four combinations called _data constructs_.
+The _data types_, _[identifier]_ and _[literal]_, can be combined with the _data formats_, _[inline]_ and _[block]_, to form four combinations called _data constructs_.
 
-A _data construct_ refers to the structure of the actual data itself, but not the syntax defining the boundary of the data and tells nothing about the structure containing the _data construct_.
+A _data construct_ refers to the structure of the actual data itself, excluding the syntax defining the boundary of the data.
 
 | Label               | Description                                          |
 | ------------------- | ---------------------------------------------------- |
@@ -320,7 +328,7 @@ A _data construct_ refers to the structure of the actual data itself, but not th
 | [inline literal]    | A literal that exists only inside a single line.     |
 | [block literal]     | A literal that must be multi-line data.              |
 
-The four types are descried as follows:
+The four _data constructs_ are descried as follows:
 
 ### Inline identifier
 
@@ -328,7 +336,7 @@ Represented by _[inline identifier]_ is a sequence of characters on a single lin
 
 ### Inline literal
 
-Represented by _[inline literal]_ is a sequence of characters on a single line, that is the data associated with an identifier.
+Represented by _[inline literal]_ is a sequence of characters on a single line, that is the data associated with an implicit or explicit identifier.
 
 Possible literals are:
 
@@ -342,9 +350,11 @@ Possible literals are:
 | 6   | [terminator definition] |           |            | context       | marker       |
 | 7   | [terminator expression] |           |            | context       | marker       |
 
-1-5 is _data_, meaning it is _content_. 6 and 7 are considered _context_; they are syntactic markers, meaning they are literals part of the syntax and not just data values.
+The _dsta_ of 1-5 are considered being _content_. _Content_ is delineated and known trough by syntax, but has no purpose to the syntax itself.
 
-The term _atomic_ is used, meaning the value is taken as given. A non-atomic value is a value that is not taken as given, but is processed in some way.
+The _data_ of 6-7 are considered _context_. They define data that then is part of the syntax. They are syntactic markers, meaning they are literals that are being part of the syntax and serves a syntactical function.
+
+The term _atomic_ is used, meaning the data is taken as given. Non-atomic data is a such that is not taken as given, but is processed in some way.
 
 ### Block identifier
 
@@ -355,9 +365,13 @@ Block identifiers can be of two types: `raw` `array` including, in a certain way
 | Label   | Description                                                                  |
 | ------- | ---------------------------------------------------------------------------- |
 | [raw]   | Raw data exactly as it occurs, nothing is altered. Any character is allowed. |
-| [array] | One or several literals. Surrounding whitespace of each literal is trimmed.  |
+| [array] | One or several literals. |
 
 In case of _[raw]_, the data is considered as it is.
+
+
+- [x] In _f3c_, identifiers can be single-line, multi-line or array. 
+
 
 ### Block literal
 
@@ -368,26 +382,40 @@ Block literals can be of three types: `raw` `array` and `object`.
 | Label    | Description                                                                 |
 | -------- | --------------------------------------------------------------------------- |
 | [raw]    | Raw data exactly as it occurs, nothing is altered. Any character is allowed |
-| [array]  | One or several literals. Surrounding whitespace of each literal is trimmed. |
+| [array]  | One or several literals. |
 | [object] | One or several identifier-literal pairs.                                    |
 
-**Raw**: The acceptable character sequence is: Any binary and non-binary character.
+#### Raw
 
-**Array**: Must consist of only one or more literals with _implicit identifiers_. Can not contain any _[literal]_ with _explicit identifiers_.
+The acceptable character sequence is: Any binary and non-binary character.
 
-**Object**: Must consist of one or more _[literal]_ with _explicit identifiers_. Can not contain any _[literal]_ with _implicit identifiers_.
+#### Array
+
+An [array] must consist of only one or more literals with _implicit identifiers_. Can not contain any _[literal]_ with _explicit identifiers_. The literal, as long as having _implicit identifier_ can be [inline literal] and [block literal], and an arrays content can be a mix of these two. The array does not concern itself with the type of literal, but with how it is identified, requiring the _implicit identifier_. 
+
+#### Object
+
+An [object] must consist of one or more _[literal]_ with _explicit identifiers_. Can not contain any _[literal]_ with _implicit identifiers_.
 
 ## Delineation of data (conceptual definitions)
 
+Delineation of the _data_ of the two _data formats_ [inline format] and [block format] is possible by _tokens_ occurring in the patterns recognized by the structures outlined in the two following sections, and hereby given corresponding structural meaning. 
+
 ### Inline data
 
-The _inline_ syntax centers around _[introducer]_ such that `[identifier] [introducer] [literal] [segmenter]` and `[identifier] [meta level introducer] [literal] [segmenter]`.
+The [inline format] centers around _[introducer]_ such that:
 
-By the knowledge of the _pre-fundamental_ understanding of what a _line_ is, how it starts and ends, and together with the concept the concept of the [introducer], it is known where one inline _field_ of data starts and ends. At the left side of the [introducer] is the eventual [inline identifier] and at the right side is the eventual [inline literal]. It is said 'eventual' because either side can be a [block], but the point is that any inline data is known and delineated in the way described.
+`[identifier] [introducer] [literal] [segmenter]`
+
+and:
+
+`[identifier] [meta level introducer] [literal] [segmenter]`
+
+By the knowledge of the _pre-fundamental_ understanding of what a _line_ is, how it starts and ends, and together with the concept of the [introducer], it is known where one inline _field_ of data starts and ends. At the left side of the [introducer] is the eventual [inline identifier] and at the right side is the eventual [inline literal]. It is said 'eventual' because either side can be a [block], but the point is that any inline data is known and delineated in the way described.
 
 ### Block deliniation
 
-A block has a start and an end in a multi-line space. The start is either of _[explicit inline identifier]_ and _[implicit | explicit block identifier]_. In either case, an associated _[terminator definition]_ is given or assumed, and the end, at a later line, is _[terminator expression]_.
+The [block format] has a start and an end in a multi-line space. The start is either of _[explicit inline identifier]_ or _[implicit | explicit block identifier]_. In either case, an associated _[terminator definition]_ is given or assumed, and the end, at a later line, is _[terminator expression]_.
 
 A block can be terminated in one of two ways:
 
