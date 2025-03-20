@@ -187,6 +187,8 @@ Either-or-statement is possible. The example `[custom | default terminator]` mea
 
 `...` means "the rest of the expected syntax".
 
+TODO: And what does _this_ represents generally?
+
 ## Pre-fundamental things (substrate)
 
 At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we only have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ specifically defined with meaning that specifically relates to the purpose. At that level, things are defined and named as suitable building blocks of our purpose.
@@ -216,7 +218,7 @@ These are called _basic tokens_ and the most fundamental building blocks of the 
 
 ### Basic standalone tokens
 
-All of the syntax, without exception, is built using these _basic tokens_.
+All of the syntax, without exception, is built using these four _basic tokens_.
 
 | Label        | description                                     |
 | ------------ | ----------------------------------------------- |
@@ -225,11 +227,11 @@ All of the syntax, without exception, is built using these _basic tokens_.
 | [delimiter]  | Always delimits single-line data.               |
 | [segmenter]  | Separates elements and parts within an element. |
 
-These represent essence that reoccur in specific forms in the syntax. Each is also bound to a specific representation (character) in the syntax.
+These represent essence that reoccur in specific forms in the syntax. Each is also bound to a specific representation (character), forming the basics of the syntax.
 
 ### Basic composite tokens
 
-Composite tokens are built using the `basic standalone tokens`, such that changing a standalone token would change the related composite token.
+_Composite tokens_ are built using the `basic standalone tokens`, such that changing a standalone token would change the related composite token.
 
 | Label                   | Composition               | Description                                                                                            |
 | ----------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -239,13 +241,23 @@ Composite tokens are built using the `basic standalone tokens`, such that changi
 > [!IMPORTANT]
 > The composite token `[meta level introducer]` is not the same as two individual [introducer] in a row (`[introducer] [introducer]`), even if they may seem identical. [metal level introducer] is considered its own indivisible unit.
 
+### Syntax as emerging from structures of tokens
+
+A _sequence_ holds several tokens in sequence. Thus, patterns among tokens can be defied. The tokens and the patterns both form the syntax. Syntax is not any one particular token, but the combinations of tokens in such a way that we can discern where in the _sequence_ particular content, _data_, with particular meaning, occurs. 
+
+`var = 1 + 1`
+
+In the above example, none of the parts in themselves are considered syntax. That is, because in isolation, or being rearranged, they can not serve the function of inferring _data_. Is `+` part of data or is it not, for example. The function of syntax is to imply content of some type meaning. Thus, syntax is that, whatever, by which content can be discerned in a _sequence_. In the above example, data is understood by the syntax to be the evaluated expression resulting in the sum 2 which doesn't have any direct representation on in the sequence, but nonetheless is understood to exist by Virtue of the rules of the syntax. Thus, while syntax can delineate a part of a sequence and we can see it concretely represented, content can also be abstract. Data, as content, is thus an emergent feature of syntax, by the function of having rules for perception, and, as a result of such a function, resides as a consequence of the tokens, the patterns and the syntax. Tokens gives patterns, gives, syntax, causes data. 
+
 ## Data (conceptual definitions)
 
-Besides the _basic tokens_, there is _data_. Data is a debut delineated sequence of characters or no characters ('emptiness' exist within a delineated space, and thus, the very absence of characters is considered to be the very data of that space). Data in its most general form can contain any character.
+Besides the _basic tokens_, there is _data_. Data is a delineated _sequence_ of _characters_ or no characters ('emptiness' exist within a delineated space, and thus, the very absence of characters is considered to be the very data of that space). Data in its most general form can contain any _character_.
 
 A general rule applying to all _data_ is that no character will ever be interpreted as a token, and consequently, no character is ever escaped.
 
-Data is categorized into _fields_. A _field_ can be one of several _data constructs_. What particular _data constructs_ a that a particular _filed_ consists of, is determined by analyzing the field by aspects of _data formats_ and _data types_. Combining _data formats_ and _data types_ in different ways, yields different _data constructs_ which then defines the type of field.
+- [x] _f3c_ is an escapeless format. 
+
+As a summary of the three following sections: Data is categorized into _fields_. A _field_ can be one of several _data constructs_. What particular _data constructs_ a that a particular _filed_ consists of, is determined by analyzing the field by aspects of _data formats_ and _data types_. Combining _data formats_ and _data types_ in different ways, yields different _data constructs_ which then defines the type of field.
 
 ### Fields
 
