@@ -247,7 +247,9 @@ A _sequence_ holds several tokens in sequence. Thus, patterns among tokens can b
 
 `var = 1 + 1`
 
-In the above example, none of the parts in themselves are considered syntax. That is, because in isolation, or being rearranged, they can not serve the function of inferring _data_. Is `+` part of data or is it not, for example. The function of syntax is to imply content of some type meaning. Thus, syntax is that, whatever, by which content can be discerned in a _sequence_. In the above example, data is understood by the syntax to be the evaluated expression resulting in the sum 2 which doesn't have any direct representation on in the sequence, but nonetheless is understood to exist by Virtue of the rules of the syntax. Thus, while syntax can delineate a part of a sequence and we can see it concretely represented, content can also be abstract. Data, as content, is thus an emergent feature of syntax, by the function of having rules for perception, and, as a result of such a function, resides as a consequence of the tokens, the patterns and the syntax. Tokens gives patterns, gives, syntax, causes data. 
+In the above example, none of the parts in themselves are considered syntax. That is, because in isolation, or being rearranged, they can not serve the function of inferring _data_. Is `+` part of data or is it not, for example. The function of syntax is to imply content of some type meaning. Thus, syntax is that, whatever, by which content can be discerned in a _sequence_. In the above example, data is understood by the syntax to be the evaluated expression resulting in the sum 2 which doesn't have any direct representation on in the sequence, but nonetheless is understood to exist by virtue of the rules of the syntax. Thus, while syntax can delineate a part of a sequence and we can see it concretely represented, content can also be abstract. Data, as content, is thus an emergent feature of syntax, by the function of having rules for perception, and, as a result of such a function, resides as a consequence of the tokens, the patterns and the syntax. Tokens gives patterns, gives, syntax, causes data. 
+
+This configuration deals with only concrete data, not abstract. 
 
 ## Data (conceptual definitions)
 
@@ -261,7 +263,7 @@ As a summary of the three following sections: Data is categorized into _fields_.
 
 ### Fields
 
-A _field_ is a delineated space that contains data. Fields can have different purposes. _Field_ thus is a term to refer to, more specifically, a field of data, meaning a deliniated sequence of characters or no characters.
+A _field_ is a term to refer to a deliniated sequence of characters or no characters. Different fields can have different purposes. 
 
 In order to determine the type of a field, the data is analyzed by _data formats_ and _data types_.
 
