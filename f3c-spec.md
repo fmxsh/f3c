@@ -191,6 +191,25 @@ Either-or-statement is possible. The example `[custom | default terminator]` mea
 
 TODO: And what does _this_ represents generally?
 
+## Structure of the document
+
+Conceptual definitions are oulined before semantic attribution.
+
+### Conceptual definitions
+
+Defines the form, structure, or category of something.
+
+- What a thing is.
+- What it is composed of.
+- What makes it distinct.
+- What is its structural role, meaning ...
+
+### Semantic attribution
+
+What something means or how it behaves in a specific context.
+
+- How it is interpreted in relation to the context.
+
 ## Pre-fundamental things (substrate)
 
 At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we only have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ specifically defined with meaning that specifically relates to the purpose. At that level, things are defined and named as suitable building blocks of our purpose.
@@ -252,69 +271,92 @@ In the above example, none of the parts in themselves are considered syntax. Tha
 
 This configuration deals with only concrete data, not abstract.
 
-## Data (conceptual definitions)
+## Fields
 
-Besides the _basic tokens_, there is _data_. Data is a delineated _sequence_ of _characters_ or no characters ('emptiness' exist within a delineated space, and thus, the very absence of characters is considered to be the very data of that space). Data in its most general form can contain any _character_.
+Context: By the _pre-fundamental things_ and _basic tokens_, _fields_ can be discerned.
 
+Identity: A field is a delineated sequence of characters or no characters and order of placement (left or right of [introducer] or [meta level introducer]. Two properties are discerned in the field's content: _data format_, being _inline_ or _block_, and the second property being _data type_, for _identifier_ or _literal_. The two properties together yields an emergent property which can be one of four _data constructs_. This is the structural identity of a field--what identity it has within this conceptual system.
+
+A _field_ is a _data construct_, which is the emergent property of the combination of _data format_ and _data type_, which in turn are properties of the fields content.
+
+Properties:
+
+- A field has two required properties:
+  - Data Format: Defines how the field is delineated (inline / block).
+  - Data Type: Defines the field’s functional role (identifier / literal).
+
+Constraint: Every field has exactly one format and one type.
+
+Constitution: A field is a delineated _sequence_ of _characters_ or no characters, .
+
+Emergence:
+
+- The combination of the two aspects of _data format_ and _data type_ yields a _data construct_. A _data construct_ determines the possible role and content of a field.
+- The combination of data format and data type yields a _data construct_, which is an emergent structural identity.
+- Nesting is possible: a field may contain other fields, depending on its construct.
+
+Function: The _field_ with its structural identity as _data construct_ serves as a fundamental part for _binding structures_.
+Interpretation: ('emptiness' exist within a delineated space, and thus, the very absence of characters is considered to be the very data of that space).
 A general rule applying to all _data_ is that no character will ever be interpreted as a token, and consequently, no character is ever escaped.
-
-- [x] _f3c_ is an escapeless format.
 
 As a summary of the three following sections: Data is categorized into _fields_. A _field_ can be one of several _data constructs_. What particular _data constructs_ a that a particular _filed_ consists of, is determined by analyzing the field by aspects of _data formats_ and _data types_. Combining _data formats_ and _data types_ in different ways, yields different _data constructs_ which then defines the type of field.
 
-### Fields
+### Property: Data formats
 
-A _field_ is a term to refer to a deliniated sequence of characters or no characters. Different fields can have different purposes.
-
-In order to determine the type of a field, the data is cross analyzed by _data formats_ and _data types_.
-
-One field can in turn contain more fields, enabling nested fields. The nesting capability is however further defined by the type of field. Conceptually, this is where the concept of nesting first emerges.
-
-- [x] _f3c_ supports nested data fields.
-
-### Data formats
-
-A data format is defined by the way the data is deliniated.
+Name: Data format.
+Inference: Inferred property.
+Recognition: By the way the field is delineated.
 
 _Inline deliniation_ is where the data is deliniated to start and end on the same line.
 
 _Block deliniation_ is where the data is deliniated to start and end on different lines.
 
-All types of data fall into either of the two categories of data format: _inline_ or _block_.
+Modes: All types of data fall into either of the two categories of data format: _inline_ or _block_.
 
-| Label    | Data type | Description                                 |
-| -------- | --------- | ------------------------------------------- |
-| [inline] | Inline    | Data that exists only inside a single line. |
-| [block]  | Block     | Data that must be multi-line data.          |
+| Data type | Description                                 |
+| --------- | ------------------------------------------- |
+| Inline    | Data that exists only inside a single line. |
+| Block     | Data that must be multi-line data.          |
 
-More precicely:
+Interface labels:
 
-The labels _[inline format]_ and _[block format]_ refers to the corresponding structure as made up by the syntax including the specific data delineated by the syntax.
+| Label             | Description                                                                 |
+| ----------------- | --------------------------------------------------------------------------- |
+| `[inline]`        | Indicating inline data format.                                              |
+| `[block]`         | Indicating block data format.                                               |
+| `[inline format]` | Refers to the structure made up by the syntax, including the data it wraps. |
+| `[block format]`  | Refers to the structure made up by the syntax, including the data it wraps. |
+| `[inline data]`   | Refers to the data delineated by the syntax, excluding the syntax itself.   |
+| `[block data]`    | Refers to the data delineated by the syntax, excluding the syntax itself.   |
 
-The labels _[inline data]_ and _[block data]_ refers to the data delineated by the syntax, excluding the syntax.
+### Property: Data types
 
-[inline] assumes [inline format] and [block] assumes [block format].
+Name: Data type.
+Inference: Inferred property.
+Recognition: By the function of the data.
+Modes: Data can be either of two categories of data types: _identifier_ or _literal_.
 
-- [x] _f3c_ supports inline data and block data.
+| Data type  | Function    | Description                                 |
+| ---------- | ----------- | ------------------------------------------- |
+| Identifier | Identifying | A name used to identify a specific literal. |
+| Literal    | Storing     | The content associated with an identifier.  |
 
-### Data types
+Interface labels:
 
-A data type is determined by the function of the data.
+| Label          | Description                            |
+| -------------- | -------------------------------------- |
+| `[identifier]` | Label indicating identifier data type. |
+| `[literal]`    | Label indicating literal data type.    |
 
-Data can be either of two categories of data types: _identifier_ or _literal_.
+### Emergent property: Data constructs (conceptual definitions)
 
-| Label        | Data type  | Purpose    | Description                                 |
-| ------------ | ---------- | ---------- | ------------------------------------------- |
-| [identifier] | Identifier | Matching   | A name used to identify a specific literal. |
-| [literal]    | Literal    | Retrieving | The data associated with an identifier.     |
-
-These two serve different purpose. _Identifier_ is a field of data that identifies another field of data which is called a _literal_. Functionally, _identifier_ is matched against an user-given identifier when querying. The literal is consequently retrieved or not, depending on the match.
-
-## Data constructs (conceptual definitions)
-
-The _data types_, _[identifier]_ and _[literal]_, can be combined with the _data formats_, _[inline]_ and _[block]_, to form four combinations called _data constructs_.
+Name: Data construct.
+Inference: Emergent property.
+Recognition: By the combination of _data format_ and _data type_.
 
 A _data construct_ refers to the structure of the actual data itself, excluding the syntax defining the boundary of the data.
+
+Modes and interface labels:
 
 | Label               | Description                                          |
 | ------------------- | ---------------------------------------------------- |
@@ -323,13 +365,31 @@ A _data construct_ refers to the structure of the actual data itself, excluding 
 | [inline literal]    | A literal that exists only inside a single line.     |
 | [block literal]     | A literal that must be multi-line data.              |
 
-The four _data constructs_ are descried as follows:
+The details of each As described in subsequent dedicated section.
 
-### Inline identifier
+## Inline identifier
+
+Context:
+Identity: A sequence of characters
+Properties: Can be implicit or explicit.
+Constraints:
+Constitution:
+Emergence:
+Function:
+Interpretation:
 
 Represented by _[inline identifier]_ is a sequence of characters on a single line, with the purpose of identifying something.
 
-### Inline literal
+Context:
+Identity:
+Properties:
+Constraints:
+COnstitution:
+Emergence:
+Function:
+Interpretation:
+
+## Inline literal
 
 Represented by _[inline literal]_ is a sequence of characters on a single line, that is the data associated with an implicit or explicit identifier.
 
@@ -351,7 +411,7 @@ The _data_ of 6-7 are considered _context_. They define data that then is part o
 
 The term _atomic_ is used, meaning the data is taken as given. Non-atomic data is a such that is not taken as given, but is processed in some way.
 
-### Block identifier
+## Block identifier
 
 Represented by _[block identifier]_ is a sequence of characters spaning multiple lines, with the purpose of identifying something.
 
@@ -366,7 +426,7 @@ In case of _[raw]_, the data is considered as it is.
 
 - [x] In _f3c_, identifiers can be single-line, multi-line or array.
 
-### Block literal
+## Block literal
 
 Represented by _[block literal]_ is a sequence of characters spaning multiple lines, that is the data associated with an identifier.
 
@@ -378,17 +438,33 @@ Block literals can be of three types: `raw` `array` and `object`.
 | [array]  | One or several literals.                                                    |
 | [object] | One or several identifier-literal pairs.                                    |
 
-#### Raw
+## Raw
 
 The acceptable character sequence is: Any binary and non-binary character.
 
-#### Array
+## Array
 
 An [array] must consist of only one or more literals with _implicit identifiers_. Can not contain any _[literal]_ with _explicit identifiers_. The literal, as long as having _implicit identifier_ can be [inline literal] and [block literal], and an arrays content can be a mix of these two. The array does not concern itself with the type of literal, but with how it is identified, requiring the _implicit identifier_.
 
-#### Object
+## Object
 
 An [object] must consist of one or more _[literal]_ with _explicit identifiers_. Can not contain any _[literal]_ with _implicit identifiers_.
+
+## Meta level bindings (conceptual definitions)
+
+Using the [meta level introducer] it is possible to bind an [identifier] to a [literal] in the following way:
+
+`[identifier] [meta level introducer] [literal]`
+
+Everything after the [meta level introducer] is considered to be the [literal]. This means anything, including ordinary bindings can occur after the [meta level introducer]. This opens for several possibilities.
+
+- Pre-processing of the associated literal which may be an ordinary bindings. For example, type checking can be done.
+- Post-processing of the literal, such as Base64 decoding.
+- Directives to the parser. For example tell the parser to include a file.
+- Even control flow statements. For example, return the literal only if another literal is set to a certain value.
+- Dynamic literals, a literal that has its value set dynamically, where the parser makes a system call getting the data before the literal is returned to the querier.
+
+Meta level bindings can also hold block literals, by stripping itself out and allowing the parser to parse the lines as usual, with the directive part of the parser capturing the block data.
 
 ## Delineation of data (conceptual definitions)
 
@@ -435,7 +511,7 @@ Based in _basic tokens_ and _data_ the highest organizing structures are built. 
 
 ### General properties
 
-A binding structure binds an _[identifier]_ to a _[literal]_ into an _[entry]_. All entries must have an, at its level of nesting, unique identifier to separate it from other entries at the same level of nesting. There is no literal with identifier absent.
+A binding structure binds an _[identifier]_ to a _[literal]_ into an _[entry]_ using _[introducer]_. All entries must have an, at its level of nesting, unique identifier to separate it from other entries at the same level of nesting. There is no literal with identifier absent.
 
 All structural meaning of the format arises from this basic concept of binding the two fields of _[identifier]_ and _[literal]_ together in that particular order. All syntax center around facilitating this binding. What a binding does is to bind an identity to a given set of data which is the literal, for example this valid syntax: `fruit: banana`. The identifier is `fruit` and the literal is `banana`.
 
@@ -1149,596 +1225,6 @@ Block comment can start and end on same line. In case of block comments: Must no
 
 Line comment (`--`) must be on a line of its own. No data other than whitespace is allowed to precede it on the same line.
 
-### Empty lines
-
-Empty are those with only whitespace or only a newline; these are ignored, with one exception.
-
-## Implementation
-
-```
-
-## Types
-
-    # Single line identifier with multi-line assignment with fixed VT.
-    # icc	identifier::
-    readonly MAPPING_is=0
-
-    # id ::
-    # 	val1
-    # 	val2
-    # :
-
-    # NOTE:
-    # `ec` not possible. To literal without key, just do `l` instead.
-    # `ecc` however is possible as multi-line literal without key.
-
-    # Multi-line identifier and fixed VT.
-    # ccc	:::
-    readonly MAPPING_i=1
-
-    # :::
-    # 	ml-id-val1
-    # 	ml-id-val2
-    # :
-
-    # Multi-line literal with empty identifier.
-    # `e` stands for empty, and means two double quotes.
-    # ecc	""::
-    #
-    # ""::
-    # 	data1
-    # 	data2
-    # :
-    #
-    # Note:
-    # No `ec` is possible, as that would be for single line, and simply `l` is used for that.
-
-    # TODO: Insert this
-    # Multi-line literal without identifier with assignment as LT.
-    # eclc	"":lt:
-    #
-
-    # "":lt:
-    # 	ea
-    # 	eb
-    # lt
-
-    # Multi-line assignment without identifier and fixed VT. (No other thing on line allowed)
-    # cc	::
-    readonly MAPPING_i=1
-
-    # [...]
-    # ::
-    # 	assignment-data1
-    # 	assignment-data2
-    # :
-
-    # Extended functionality mode:
-    # cc	::[directive]
-
-# Single line identifier with single line literal
-
-# icl identifier: literal
-
-# fruit: apple
-
-    # Single line identifier with multi-line assignment with single-line assignment as VT.
-    # iclc	identifier "assignment" :
-    readonly MAPPING_ias=3
-
-    # id: "vt":
-    # 	ml-data1
-    # 	ml-data2
-    # :vt
-
-    # NO, NOT TRUE: Multi-line identifier (naturally without identifier on the header line) with single-line assignment as VT.
-    # or, depending on context:
-    # NOT ANYMORE: Multi-line assignment without identifier and single-line assignment as VT.
-    # Follows a multi-line identifier.
-    # Follows only a multi-line identifier and is for defining multi-line literal, with assignment as LT.
-    # NOTE: which one depends on what comes after/was before. If found without previous identifier, it is identifier, else it is assignment.
-    #
-    # clc	:"assignment":
-    readonly MAPPING_as=4
-
-    # Case 1
-    # :"vt":
-    # 	ml-id-val1
-    # 	ml-id-val2
-    # :vt
-    #
-
-    # Not true: Multi-line assignment without identifier and single-line assignment as VT. (Object)
-    # clc	: assignment:
-    readonly MAPPING_sA=7
-
-    # Multi-line identifier with fixed LT.
-    # ccc	"::
-
-    # ::"abc":
-    # 	ml-id-val1
-    # 	ml-id-val2
-    # :
-    # ::
-    # 	value1
-    # 	value2
-    # :
-
-    # Multi-line identifier with literal as LT
-    # cclc	::lt:
-
-    # ::"lt":
-    # or
-    # ::lt:
-
-    # 	ml-id-val1
-    # 	ml-id-val2
-    # lt
-
-    # Single line assignment without identifier.
-    # l	"assignment"
-    readonly MAPPING_a=8
-
-    # Single line assignment without identifier. (Object)
-    # l	assignment
-    readonly MAPPING_A=9
-
-    # Fixed terminators
-    #
-    # :	parsed value terminator (array/object)
-    # ::	literal terminator
-    #
-
-    # Comments
-    # B	/- other text
-    # b    other text -/
-    # BB	// other text
-
-    # Technically:
-    # ic	identifier:	# Empty assignment
-    # cl	:"assignment"	# Empty identifier, just prints the value in an array same as "assignment" would
-    # cl	:assignment	# would print it as object (a trimmed version).
-
-```
-
-## Comment rules
-
-## Inline identifier with inline literal
-
-## Inline ...
-
-## Inline identifier (not: A Key with a Single-Line Value
-
-The key and the value exist on the same line.
-
-### Syntax
-
-1. A key (required)
-2. A value (required)
-
-```
-
-key name "the value"
-
-```
-
-### Key Placement Rules
-
-1. The key must be at the start of the line.
-1. After the key, a double quote (`"`) must be present.
-
-```
-
-my key "...
-
-```
-
-### Value Rules
-
-1. The value starts at the first double quote (`"`) on the line.
-2. The value ends at the last double quote (`"`) on the line.
-3. If only one double quote is present, it is assumed the rest of the line is part of the value. (The parser corrects the syntax by adding a double quote at the end of the line.)
-
-   - In case of syntax correction, the value is trimmed of leading and trailing whitespace.
-
-> [!NOTE]
-> The syntax correction allows for other types like true, bool, null, etc.
-
-4. The value consists of all characters between the first and last double quotes on the line, in the exact in the order they occur. Values are treated literally.
-
-These two are not the same value:
-
-```
-
-    my key "my value"...
-    my key "  my value  "...
-
-```
-
-The value is as it occurs between the double quotes.
-
-5. Characters between the first and last `"` **do not need to be escaped**.
-
-```
-
-    my key "my value is the "best" example"...
-
-```
-
-The above produces the value `my value is the "best" example`.
-
-> [!NOTE]
-> This simplifies the inclusion of quotes in values. The value can contain double quotes without needing to escape them.
-
-### Trailing Characters Rules
-
-1. If the pattern `"[[:space}]*:[[:space]]*$"`, that is `:`, is matched after the value, the line is considered a key with a _multi-line value_ (see further down).
-
-Example of a key with multi-line value:
-
-```
-
-    my key "my value" :
-    ...
-
-```
-
-2. If the line does not match the format of (1), then any characters after the last double quote (") and before the newline (\n) will be ignored.
-3. Any character after `:` is ignored.
-
-```
-
-    my key "my value" this text is ignored
-    my key "my value": this too
-
-```
-
-> [!TIP]
-> Trailing characters can be used for comments or additional information.
-
-### Whitespace rule
-
-- Whitespace before and after any segment of the syntax is ignored.
-
-These are parsed to have the same meaning:
-
-```
-
-my key "my value"
-my key"my value"
-
-```
-
-### Line Validity
-
-1. A line must include a valid key and at least two double quotes (`"`).
-2. Lines without a valid key to the right and two double quotes anywhere to the left of the line are treated as _elements_ (see below).
-
-These are not valid key-value pairs:
-
-```
-
-my key "my value
-my key my value"
-my key my value
-"my value"
-"my value" key
-
-```
-
-### Examples of parsing
-
-The following will be parsed as:
-
-**Key:** `key`
-**Value:** `value`
-
-```plaintext
-key "value"
-   key "value"
-   key    "value"
-   key"value"
-```
-
-The following will be parsed as:
-
-**Key:** `key`  
-**Value:** `value`
-
-```plaintext
-key "value" this text is ignored
-key "value"this text is ignored
-key"value"this text is ignored
-```
-
-The following will be parsed as:
-
-**Key:** `key with spaces`  
-**Value:** `value`
-
-```plaintext
-key with spaces "value"
-    key with spaces    "value"
-    key with spaces    "value" this text will be ignored
-```
-
-The following will be parsed as:
-
-**Key:** `key`  
-**Value:** `value with "quotes" that don't need to be escaped`
-
-```plaintext
-key "value with "quotes" that don't need to be escaped"
-```
-
-The following will be parsed as:
-
-**Key:** `key with spaces`  
-**Value:** `value with "quotes" that don't need to be escaped`
-
-```plaintext
-key with spaces "value with "quotes" that don't need to be escaped" this text is ignored
-key with spaces"value with "quotes" that don't need to be escaped"this text is ignored
-       key with spaces           "value with "quotes" that don't need to be escaped" this text is ignored
-```
-
-## Block identifier (not: Key with Multi-Line Value
-
-A multi-line value consists of a key on one line, followed by its value spread across multiple consecutive lines.
-
-No escaping is needed for any characters in the multi-line value.
-
-### Span of a Multi-Line Value
-
-A span can be defined in one of two ways: 1) Simple for quick use, and 2) advanced for more demanding cases.
-
-Muti-line values can be introduced and ended in different ways.
-
-#### Simple Method
-
-For simplicity, do the following:
-
-```
-key:
-```
-
-End the span with the keyname on a consecutive line of its own:
-
-```
-[KEY NAME]
-```
-
-#### Advanced method
-
-Define a custom value terminator:
-
-```
-key "[CUSTOM VALUE TERMINATOR]" :
-```
-
-The value span is ended like this on a consecutive line of its own:
-
-```
-[CUSTOM VALUE TERMINATOR]
-```
-
-Example:
-
-```
-my-key "end"
-    value line1
-    value line2
-end
-```
-
-### Content of a Multi-Line Value
-
-Each line of the content is trimmed by default.
-
-To retain the literal string, end with `/` as follows:
-
-```
-key:
-    ...
-/key
-```
-
-If last newline is undesired, do this:
-
-```
-key:
-    .../key
-```
-
-This last example returns `    ...` without a newline character at the end.
-
-The following consequently returns nothing:
-
-```
-key:
-/key
-```
-
-### Key Rules
-
-For a key of a multi-line value, the same rules apply as for a key with a single-line value (see above).
-
-#### Single-line Value Rules in Multi-Line value key
-
-The value field of a key line with a multi-line value have two modes:
-
-1. The value field contains the **value terminator**. It is a sequence of characters that determines the end of the multi-line value. If a value terminator is present, the span number is ignored.
-
-**Example with span number:**
-
-```plaintext
-key "" :3
-    value part1
-    value part2
-    value part3
-```
-
-**Example with value terminator:**
-
-```plaintext
-key "end"
-    value part1
-    value part2
-    value part3
-end
-```
-
-2. A key can be written with just keyname followd by colon and newline, and the span is ended by the keyname on a consecutive line.
-
-```
-key:
-    ...
-key
-```
-
-### Span of a Multi-Line Value
-
-The span of a multi-line value is defined by the key line and the value terminator.
-
-#### Span Defined by Value Terminator
-
-The value terminator (see below) defineds the end of the multi-line value.
-
-1. If having a value terminator, the span number, if given, will be ignored.
-2. The span number can be omitted, and the syntax is `key "end" :`.
-
-Example of ignoring the span number:
-
-```plaintext
-key "end" :
-    value part1
-    ...
-    end
-```
-
-### Value Terminator
-
-A value terminator is used to mark the end of a multi-line value span.
-
-1. A custom value terminator can be used to specify the end of the multi-line value, and is specified in the value field of the key line.
-
-```plaintext
-key "end" :
-    value part1
-    ...
-    end
-```
-
-The value terminator is a string that is used to mark the end of the multi-line value.
-
-2. The value terminator must be on a line by itself.
-3. The value terminator is not part of the value and is not returned by the parser.
-4. The value terminator is:
-   - matched exactly as defined in the value field of the key line,
-   - the matched-against value terminator, which is supposed to be the ending of the multi-line value, is matched:
-     - exactly as given on the line against the defined value terminator,
-     - and if that fails; is trimmed and matched against the defined value terminator.
-
-> [!NOTE]
-> Point (4) thus allows visual structuring by indenting the value terminator, but the parser will still match it as if it was not indented.
-
-5. If the key is defined without custom value terminator, but is entered with just colon, like `key:`, then the keyname itself (`key`) becomes the value terminator and is used on a consecutive line to end the span..
-6. The value terminator can occur:
-
-- On a line by itself.
-- On the same line as data, and then `/` is used before value terminator, like `/[value terminator]`.
-
-7. when `/` syntax is used, the multiline value is treated literally, otherwise each line is trimmed in the final result of querying for data.
-
-### Trailing Characters Rules
-
-Any trailing characters are ignored:
-
-```plaintext
-    key "" :3 this text is ignored
-    key "" :3:2 this text is ignored
-```
-
-- A double quote in the trailing part will make everything prior, back to the first double quote, part of the value, thus disabling any span number and selector syntax. This `:3 "three" is the number` makes `:3 "three" is the number` part of the value..
-
-Thus, this disables the span number and selector syntax:
-
-```
-    key "" :3:1,2 "three" is the number
-```
-
-### Whitespace rule
-
-- Whitespace before and after any segment of the syntax is ignored.
-
-These are parsed to have the same meaning:
-
-```plaintext
-key "":3
-key "":3abc
-key "" :3
-key "" : 3
-key "": 3
-key "": 3abc
-key "": 3 abc
-```
-
-These are the same:
-
-```
-    key "":3:2this text is ignored
-    key "" : 3 : 2 this text is ignored
-```
-
-### Multi-Line Value Rules
-
-#### With non-literal value terminator
-
-1. The ending newline character of each line of the multi-line value is considered part of the value.
-2. Leading and trailing whitespace are trimmed.
-
-Thus, the following:
-
-```plaintext
-key:
-    value part1
-    value part2
-    value part3
-key
-```
-
-gives the following value:
-
-```plaintext
-value part1
-value part2
-value part3
-```
-
-3. If only one line is returned of a multi-line value, for whatever reason, a newline is present at end of line.
-
-#### With literal value terminator
-
-- The line is returend litearlly as it is. The `/` syntax marks the end, and if is on a line of its own beneath data, then a newline is returned. If it is on same line as data, then no newline is returned.
-
-Returns newline:
-
-```
-key:
-data
-/key
-```
-
-Does not return newline:
-
-```
-key:
-data/key
-```
-
-> NOTE:
-> This is another method: If surrounding whitespace is desired to be preserved, it should be included by using the same key multiple times. See the section on returning the value of identical keys under "Parsing Rules" below.
-
 ## Error handling
 
 The parser should return the value of the key matched.
@@ -1844,4 +1330,3 @@ These already ocvur
 **Empty**: _Empty_ is a thing, syntax, that is empty of content. `""` is empty. It is absence of content, contained within `"` and `"`.
 
 **Nothing**: _Nothing_ is not even a thing that is empty. It is the absence of syntax.
-

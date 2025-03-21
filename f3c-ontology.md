@@ -45,3 +45,12 @@ Clarify why a higher-level construct cannot transgress downwards.
 Could specify that emergence in ontology goes upwards, where new levels are formed to solve higher-order structural constraints. (Based in reflection on the `.` as [finalizer] in _f3c_.
 
 iConceptual minimalism by removing redundant representatoins... ontological minimalism demands each representation be uniquely necessary.
+
+## More things...
+
+Do not wrongfully make categories into things. A category holding 3 sub-cats should not lead to the assumption the three sub-cats create an emergent thing that would be the parent cat. Perhaps, as a rule, do not have overarching categories. Whats the purpose, other than wrongfully used convention for the sake of it, rather than as with structural relevance as reason.
+The document should only consist of things, not categories that are not things.. Each heading represents a thing. What about sub,headings? Should then Conceptual definition and semantic attribution be _things_... as that is my way of categorizing... yes, they can be made into ontological things, ... I guess..
+
+--
+Recognize the conceptual casual chain...
+For identity, describe by order of conceptual casual chain...
