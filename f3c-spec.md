@@ -143,6 +143,8 @@ Toc needs update.
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 
+# f3c specification
+
 ## Porupose
 
 Define a configuration format with the following properties:
@@ -171,11 +173,7 @@ A _conceptual element_ is indicated by `[` and `]` like `[identifier]` or `[lite
 
 A conceptual discussion may be: `[identifier] [introducer] [literal]`. The representational expression is, for example: `MyIdentifier: my literal`.
 
-### << Concept and representation
-
-The conceptual level deals with the concepts of the configuration format, the generic structures, their relations and principles, and how they respond to the purpose of defining a configuration format. Each concept is a _thing_ created by defining what it is, but without reference to concrete representatoin. As such, the concept is a self containing _thing_ within its own level, in that it neither depends on a concrete representation to be percieved, nor on something more abstract. Its medium of existence is the space of thought. These self containing things form relationships, yielding higher structures that becomes a higher level _thing_, still in the space of thought, emerging from the relationchips between the lower things in the space of thought. The representational level deals with how these _things_ in the space of thought are represented at the concrete non-thought level of characters and parsing. The representation should be in complete alignment with the conceptual.
-
-### >>
+**Concept and representation**: The conceptual level deals with the concepts of the configuration format, the generic structures, their relations and principles, and how they respond to the purpose of defining a configuration format. Each concept is a _thing_ created by defining what it is, but without reference to concrete representatoin. As such, the concept is a self containing _thing_ within its own level, in that it neither depends on a concrete representation to be percieved, nor on something more abstract. Its medium of existence is the space of thought. These self containing things form relationships, yielding higher structures that becomes a higher level _thing_, still in the space of thought, emerging from the relationchips between the lower things in the space of thought. The representational level deals with how these _things_ in the space of thought are represented at the concrete non-thought level of characters and parsing. The representation should be in complete alignment with the conceptual.
 
 When describing the format, syntax elements are written in brackets for clarity, such as `[identifier] [assignment] [literal]`. This notation indicates that the **syntax element** `identifier` is followed by `assignment`, which is followed by `literal`.
 
