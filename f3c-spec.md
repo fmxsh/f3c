@@ -145,6 +145,18 @@ Toc needs update.
 
 # f3c specification
 
+Identity: _f3c specification_ is a scpecification of the _f3c_ which stands for _Fine Format For Configuration_.
+
+Constitution: _f3c specificatoin_ is based in the ontological core of _Thing of Things_, and the _description of a thing_... and which is a self-referential, self-defining, self-organizing, and self-reflecting system of _things_. It also constitutes of ... every single thing, from basic tokens to literal types to binding structures, are listed here ...
+
+_f3c_ constitutes itself...
+
+Properties: The properties of _f3c specification_ are:
+
+The specificatoin has the property of defining of a table of contents, an overview of how the constitutants organizes into a configuration format.
+
+Emergence:
+
 ## Porupose
 
 Define a configuration format with the following properties:

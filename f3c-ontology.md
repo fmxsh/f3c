@@ -130,7 +130,18 @@ Emergence The new thing that comes into being from the configuration of properti
 
 ## Defining the building block of the ontology
 
-Defining the _thing_ of a thing.
+A _thing of thins_ is:
+Self-defining: It names and identifies its own role and composition.
+
+Self-constituting: Its purpose (root intent) determines what differences matter — thus, it creates the parts it needs to fulfill that intent.
+
+Self-organizing: Through structured perception and categorization.
+
+Self-reflecting: It describes itself using the same descriptive categories that define other things.
+
+### Defining the _thing_ of a thing.
+
+Purpose: organize the field of perception in acordance with choice based in usefulness. (a thing can thus self-constituting, as the root purpose of all things, is to organize the field of perception (meaning define constitutions, properties etc) in accordance with choice based in usefulness. Usefulness is the root purpose, and a thing defines its specific purpose based in that core purpose)
 
 Identity: A _thing of things_ is a discernable purposeful entity that contains discernable enteties that are purposeful to the thing.
 Constitution:
@@ -138,6 +149,13 @@ Constitution:
 - Constituted by the perception of difference.
 - Purpose, that one discerned thing is favored (choosen) over another.
 - Value of good and bad basis of choice and purpose. An usefull thing is good, a harmful thing is bad.
+
+A _thing of things_ is also constituted by the structure of purpose, identity, constitution, property, and emergence. Thus, a _thing of a thing_ is self-constituting (consisting of the things it defines), self-organizing (organizes itself by the way it defines), and self-reflecting (describes itself using the categories it created). (In addition to this, it is self-defining, in that it identifies its own role in the purpose part, and the purpose part is a result of its self-constituting ability to create such a thing called "purpose")
+i
+
+... any constitution of a thing, is the perception of difference, steered by purpose, thus steered perception creates the things needed to fulfil the purpose of the thing.
+
+... The thing envelops many parts and self-constitutes it by enveloping them.”
 
 Property: A thing has the property of containing units. An unit is percieved because of the difference between it and other units. Things are percieved on basis of purpose and usefulness.
 
