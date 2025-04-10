@@ -3,163 +3,45 @@
 > [!NOTE]
 > This project is under development. Do not expect finished order.
 
-# Table of Contents
+# Fine Format For Configuration (f3c)
 
-Toc needs update.
+## Meta
 
-- [f3c - Fine Format For Configuration](#f3c---fine-format-for-configuration)
-  - [Porupose](#porupose)
-  - [Introduction](#introduction)
-  - [Terminology](#terminology)
-    - [&lt;&lt; Concept and representation](#-concept-and-representation)
-    - [&gt;&gt;](#)
-  - [Basic Definitions](#basic-definitions)
-- [Remove array object, put below](#remove-array-object-put-below)
-  - [Pre-fundamental things (substrate)](#pre-fundamental-things-substrate)
-  - [Basic Tokens (conceptual definitions)](#basic-tokens-conceptual-definitions)
-    - [Basic standalone tokens](#basic-standalone-tokens)
-    - [Basic composite tokens](#basic-composite-tokens)
-  - [Data (conceptual definitions)](#data-conceptual-definitions)
-    - [Fields](#fields)
-    - [Data formats](#data-formats)
-    - [Data types](#data-types)
-  - [Data constructs (conceptual definitions)](#data-constructs-conceptual-definitions)
-    - [Inline identifier](#inline-identifier)
-    - [Inline literal](#inline-literal)
-    - [Block identifier](#block-identifier)
-    - [Block literal](#block-literal)
-  - [Delineation of data (conceptual definitions)](#delineation-of-data-conceptual-definitions)
-    - [Inline data](#inline-data)
-    - [Block deliniation](#block-deliniation)
-  - [Binding structures (conceptual definitions)](#binding-structures-conceptual-definitions)
-    - [Inline-Inline Binding](#inline-inline-binding)
-    - [Inline-Block Binding](#inline-block-binding)
-    - [Block-Inline Binding](#block-inline-binding)
-    - [Block-Block Binding](#block-block-binding)
-  - [Emergence and compliance](#emergence-and-compliance)
-    - [Nesting](#nesting)
-    - [Note on <em>[inline terminator definition]</em>](#note-on-inline-terminator-definition)
-  - [Format overall](#format-overall)
-    - [Identifiers must be unique](#identifiers-must-be-unique)
-  - [Basic representations (semantic attribution)](#basic-representations-semantic-attribution)
-    - [Ghostspace and whitespace](#ghostspace-and-whitespace)
-    - [Basic standalone representations](#basic-standalone-representations)
-      - [Rationale for the choice of dot as implicator](#rationale-for-the-choice-of-dot-as-implicator)
-    - [Basic composite representations](#basic-composite-representations)
-    - [Representations for comments](#representations-for-comments)
-    - [Ghostspace and whitespace](#ghostspace-and-whitespace-1)
-  - [Data (semantic attribution)](#data-semantic-attribution)
-    - [Inline identifier](#inline-identifier-1)
-    - [Inline literal](#inline-literal-1)
-      - [String](#string)
-      - [Fragment](#fragment)
-      - [Number](#number)
-      - [Bool](#bool)
-      - [Null](#null)
-      - [Terminator definition](#terminator-definition)
-      - [Terminator expression](#terminator-expression)
-    - [Block identifier](#block-identifier-1)
-    - [Block literal](#block-literal-1)
-  - [Binding structures (conceptual definitions)](#binding-structures-conceptual-definitions-1)
-  - [Inline deliniation syntax (semantic attribution)](#inline-deliniation-syntax-semantic-attribution)
-  - [Block deliniation syntax (semantic attribution)](#block-deliniation-syntax-semantic-attribution)
-  - [Inline-Inline Binding (iib) (semantic attribution)](#inline-inline-binding-iib-semantic-attribution)
-    - [With explicit identifier](#with-explicit-identifier)
-    - [With implicit identifier](#with-implicit-identifier)
-    - [With empty literal](#with-empty-literal)
-  - [Inline-Block Binding (ibb)](#inline-block-binding-ibb)
-    - [With explicit identifier with custom terminator definition](#with-explicit-identifier-with-custom-terminator-definition)
-    - [With explicit identifier with default terminator definition](#with-explicit-identifier-with-default-terminator-definition)
-    - [With implicit identifier with default terminator definition](#with-implicit-identifier-with-default-terminator-definition)
-    - [With implicit identifier with custom terminator definition](#with-implicit-identifier-with-custom-terminator-definition)
-  - [Block identifiers generally](#block-identifiers-generally)
-    - [With default terminator definition for block identifier](#with-default-terminator-definition-for-block-identifier)
-    - [With custom terminator definition for block identifier](#with-custom-terminator-definition-for-block-identifier)
-  - [Literals following block identifiers](#literals-following-block-identifiers)
-    - [Block-Inline Binding](#block-inline-binding-1)
-    - [Block-Block Binding with default terminator definition](#block-block-binding-with-default-terminator-definition)
-    - [Block-Block binding with custom terminator definition](#block-block-binding-with-custom-terminator-definition)
-  - [Directive syntax (semantic attribution)](#directive-syntax-semantic-attribution)
-    - [x Defining types](#x-defining-types)
-    - [Operator directive](#operator-directive)
-      - [Template directives](#template-directives)
-      - [Parser controling directives](#parser-controling-directives)
-      - [Token configuration directives](#token-configuration-directives)
-  - [Parsing d](#parsing-d)
-    - [Streaming format](#streaming-format)
-    - [Identical identifiers](#identical-identifiers)
-    - [Parsing block literal that doesn't match queried identifier](#parsing-block-literal-that-doesnt-match-queried-identifier)
-  - [Implementation](#implementation)
-    - [Binding codes](#binding-codes)
-      - [Inline format](#inline-format)
-      - [Block identifiers](#block-identifiers)
-      - [Literals following block identifiers](#literals-following-block-identifiers-1)
-      - [Directives](#directives)
-    - [Custom tokens](#custom-tokens)
-  - [Entry](#entry)
-    - [Comment syntax](#comment-syntax)
-    - [Empty lines](#empty-lines)
-  - [Implementation](#implementation-1)
-  - [Comment rules](#comment-rules)
-  - [Inline identifier with inline literal](#inline-identifier-with-inline-literal)
-  - [Inline ...](#inline-)
-  - [Inline identifier (not: A Key with a Single-Line Value](#inline-identifier-not-a-key-with-a-single-line-value)
-    - [Syntax](#syntax)
-    - [Key Placement Rules](#key-placement-rules)
-    - [Value Rules](#value-rules)
-    - [Trailing Characters Rules](#trailing-characters-rules)
-    - [Whitespace rule](#whitespace-rule)
-    - [Line Validity](#line-validity)
-    - [Examples of parsing](#examples-of-parsing)
-  - [Block identifier (not: Key with Multi-Line Value](#block-identifier-not-key-with-multi-line-value)
-    - [Span of a Multi-Line Value](#span-of-a-multi-line-value)
-      - [Simple Method](#simple-method)
-      - [Advanced method](#advanced-method)
-    - [Content of a Multi-Line Value](#content-of-a-multi-line-value)
-    - [Key Rules](#key-rules)
-      - [Single-line Value Rules in Multi-Line value key](#single-line-value-rules-in-multi-line-value-key)
-    - [Span of a Multi-Line Value](#span-of-a-multi-line-value-1)
-      - [Span Defined by Value Terminator](#span-defined-by-value-terminator)
-    - [Value Terminator](#value-terminator)
-    - [Trailing Characters Rules](#trailing-characters-rules-1)
-    - [Whitespace rule](#whitespace-rule-1)
-    - [Multi-Line Value Rules](#multi-line-value-rules)
-      - [With non-literal value terminator](#with-non-literal-value-terminator)
-      - [With literal value terminator](#with-literal-value-terminator)
-  - [Error handling](#error-handling)
-  - [Parser options](#parser-options)
-    - [Row number of a key](#row-number-of-a-key)
-  - [Naming Conventions of f3c Configuration Files](#naming-conventions-of-f3c-configuration-files)
-  - [Future possible updates](#future-possible-updates)
-    - [1](#1)
-    - [2](#2)
-  - [Implementation](#implementation-2)
-    - [Versioning](#versioning)
-    - [Note on supported characters](#note-on-supported-characters)
-    - [Redefining syntax](#redefining-syntax)
-  - [TODO](#todo)
-  - [Removed](#removed)
-    - [Print all lines considered elements](#print-all-lines-considered-elements)
+### About
 
-<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+This document is a complete specification of the _Fine Format For Configuration_ (f3c) configuration format.
 
-# f3c specification
+The format of this configuration format has _representational elements_ and _conceptual elements_. An _representation element_ is the character or set of characters being the concrete representation of a given concept. All given concept within this configuration format falls under the category _conceptual elements_.
 
-Identity: _f3c specification_ is a scpecification of the _f3c_ which stands for _Fine Format For Configuration_.
+### Table of contents
 
-Constitution: _f3c specificatoin_ is based in the ontological core of _Thing of Things_, and the _description of a thing_... and which is a self-referential, self-defining, self-organizing, and self-reflecting system of _things_. It also constitutes of ... every single thing, from basic tokens to literal types to binding structures, are listed here ...
+[toc here]
 
-_f3c_ constitutes itself...
+### Meta-syntax
 
-Properties: The properties of _f3c specification_ are:
+The meta-syntax is used by this specification to have a common language to describe the format. The meta-syntax is not part of the configuration format itself, but is used to describe the concepts of the configuration format.
 
-The specificatoin has the property of defining of a table of contents, an overview of how the constitutants organizes into a configuration format.
+A _conceptual element_ is indicated by `[` and `]` like `[identifier]` or `[literal]`.
 
-Emergence:
+When describing the format, syntax elements are written in brackets for clarity, such as `[identifier] [assignment] [literal]`. This notation indicates that the **syntax element** `identifier` is followed by `assignment`, which is followed by `literal`. So, if the conceptual expression is: `[identifier] [introducer] [literal]`, then the representational expression is, for example: `distance: 10`.
 
-## Porupose
+Spaces between the brackets are only used for readability and serve no other purpose.
 
-Define a configuration format with the following properties:
+For example, `[identifier] [assignment] [literal]` may translate to `key:value`, meaning that the whitespace in the conceptual expression does not imply whitespace in the possible representational counterpart.
+
+Either-or-statement is possible. The example `[custom || default terminator]` means either `custom terminator` or `default terminator`. This `&&` is also possible. Nested brackets can be expressed: `[[a && b] || [x || y]]`.
+
+`()` means optional, so `[a] ([b])` means that `a` is required, but `b` is optional.
+
+`...` is a placeholder meaning \_subsequent content of relevant kind, or it means "the rest of the expected syntax".
+
+### Structure of the document
+
+This specification is based in the ontology of [_Structure of conceptual models_](https://github.com/fmxsh/socm-ontology) which is an ontology for conceptual modeling. This is not essential to understanding the specification, but it explains the format of the document.
+
+## Identity
+
+The _specification of "Fine Format For Configuration" (f3c)_ outlines a configuration and data serialization format with the following properties:
 
 - with minimal set of tokens, support as much functionality as possible,
 - key-value pairs,
@@ -169,37 +51,11 @@ Define a configuration format with the following properties:
 - allow for custom type checking,
 - ...
 
-## Introduction
+The specification describes _f3c_ using a meta-syntax invented specifically for this specification. Using the meta-syntax, the _conceptual elements_ are outlined in one section, and in another separate section, are mapped to _representational elements_. For example: the concept [newline] may be mapped to `\n`.
 
-This document is written primarily for completeness and exhaustive detail as a reference for implementation of related parsers.
+## Constitution
 
-We start by defining semantics. Semantics are the particular units of meaning, or conceptual definitions, used to fully define this configuration format. Thus we first concern ourselves with the concepts and structures among concepts, and only later focus on how these concepts and structures map to actual characters and character sequences, the most concrete representations, to form the concrete syntax reflecting the formats purpose.
-
-Following the intended approach, conceptual definitions are introduced for _basic tokens_ and _data_. These will yield higher emergent conceptual definitions, that are structures of meaning, called _binding structures_. These _binding structures_, providing the function of associating one field with another, that is; binding an identifier to a literal; represents the highest level of emergent conceptual property that is the complete conceptual response to the purpose of defining this particular configuration format. The reality of concrete representations, as compared to the space of conceptual thought, then undergoes a process of semantic attribution, where the conceptual definitions imbude the representations with conceptual structural meaning. Concepts are mapped to representations. Structureed meaning is determined in the concrete; syntactical meaning is given to to selected characters such as `:`, `.` and `"`), and with these, the concept of contained data of different forms can also be realized in the concrete.
-
-## Terminology
-
-The format of this configuration format has _representational elements_ and _conceptual elements_. An _representation element_ is the character or set of characters being the concrete representation of a given concept. All given concept within this configuration format falls under the category _conceptual elements_.
-
-A _conceptual element_ is indicated by `[` and `]` like `[identifier]` or `[literal]`. A _representational element_ is that concrete data--the character or characters--that aligns with the rules outlined as the concept.
-
-A conceptual discussion may be: `[identifier] [introducer] [literal]`. The representational expression is, for example: `MyIdentifier: my literal`.
-
-**Concept and representation**: The conceptual level deals with the concepts of the configuration format, the generic structures, their relations and principles, and how they respond to the purpose of defining a configuration format. Each concept is a _thing_ created by defining what it is, but without reference to concrete representatoin. As such, the concept is a self containing _thing_ within its own level, in that it neither depends on a concrete representation to be percieved, nor on something more abstract. Its medium of existence is the space of thought. These self containing things form relationships, yielding higher structures that becomes a higher level _thing_, still in the space of thought, emerging from the relationchips between the lower things in the space of thought. The representational level deals with how these _things_ in the space of thought are represented at the concrete non-thought level of characters and parsing. The representation should be in complete alignment with the conceptual.
-
-When describing the format, syntax elements are written in brackets for clarity, such as `[identifier] [assignment] [literal]`. This notation indicates that the **syntax element** `identifier` is followed by `assignment`, which is followed by `literal`.
-
-However, **the spaces between and within the brackets are not part of the actual syntax**; they are included only to improve readability.
-
-For example, `[identifier] [assignment] [literal]` translates to `key:value`, meaning that the **presentation does not imply whitespace** between these elements in actual use.
-
-Either-or-statement is possible. The example `[custom | default terminator]` means either `custom terminator` or `default terminator`.
-
-`(...)` means optional, where `...` here means that content which is optional.
-
-`...` means "the rest of the expected syntax".
-
-TODO: And what does _this_ represents generally?
+The specification of _f3c_ consists of the following parts.
 
 ## Structure of the document
 
@@ -1340,3 +1196,11 @@ These already ocvur
 **Empty**: _Empty_ is a thing, syntax, that is empty of content. `""` is empty. It is absence of content, contained within `"` and `"`.
 
 **Nothing**: _Nothing_ is not even a thing that is empty. It is the absence of syntax.
+
+# Stuff not fitting the new outlining
+
+## Introduction
+
+We start by defining semantics. Semantics are the particular units of meaning, or conceptual definitions, used to fully define this configuration format. Thus we first concern ourselves with the concepts and structures among concepts, and only later focus on how these concepts and structures map to actual characters and character sequences, the most concrete representations, to form the concrete syntax reflecting the formats purpose.
+
+Following the intended approach, conceptual definitions are introduced for _basic tokens_ and _data_. These will yield higher emergent conceptual definitions, that are structures of meaning, called _binding structures_. These _binding structures_, providing the function of associating one field with another, that is; binding an identifier to a literal; represents the highest level of emergent conceptual property that is the complete conceptual response to the purpose of defining this particular configuration format. The reality of concrete representations, as compared to the space of conceptual thought, then undergoes a process of semantic attribution, where the conceptual definitions imbude the representations with conceptual structural meaning. Concepts are mapped to representations. Structureed meaning is determined in the concrete; syntactical meaning is given to to selected characters such as `:`, `.` and `"`), and with these, the concept of contained data of different forms can also be realized in the concrete.
