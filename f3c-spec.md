@@ -17,23 +17,20 @@ The format of this configuration format has _representational elements_ and _con
 
 [toc here]
 
-### Meta-syntax
+### Conceptual syntax
 
-The meta-syntax is used by this specification to have a common language to describe the format. The meta-syntax is not part of the configuration format itself, but is used to describe the concepts of the configuration format.
+_Conceptual syntax_ describes the syntax of _f3c_ at a conceptual level, without any reference to the specific representation of the syntax. `[newline]` would be a concept and `\n` would be the specific representation.
 
-A _conceptual element_ is indicated by `[` and `]` like `[identifier]` or `[literal]`.
-
-When describing the format, syntax elements are written in brackets for clarity, such as `[identifier] [assignment] [literal]`. This notation indicates that the **syntax element** `identifier` is followed by `assignment`, which is followed by `literal`. So, if the conceptual expression is: `[identifier] [introducer] [literal]`, then the representational expression is, for example: `distance: 10`.
-
-Spaces between the brackets are only used for readability and serve no other purpose.
-
-For example, `[identifier] [assignment] [literal]` may translate to `key:value`, meaning that the whitespace in the conceptual expression does not imply whitespace in the possible representational counterpart.
-
-Either-or-statement is possible. The example `[custom || default terminator]` means either `custom terminator` or `default terminator`. This `&&` is also possible. Nested brackets can be expressed: `[[a && b] || [x || y]]`.
-
-`()` means optional, so `[a] ([b])` means that `a` is required, but `b` is optional.
-
-`...` is a placeholder meaning \_subsequent content of relevant kind, or it means "the rest of the expected syntax".
+- A _conceptual element_ is indicated by `[` and `]` like `[identifier]` or `[literal]`.
+- An expression of _conceptual syntax_ may involve one or several _conceptual elements_ such as in `[identifier] [assignment] [literal]`. The meaning here is that `identifier` is followed by `assignment`, which is followed by `literal`. In this case, the representation could, for example, be `distance: 10`.
+- Spaces between the brackets are only used for readability and serve no other purpose. For example, `[identifier] [assignment] [literal]` may translate to `key:value`, meaning that the whitespace in the conceptual expression does not imply whitespace in the possible representational counterpart.
+- Grouping is possible with `{` and `}`. For example, `{[identifier] [assignment] [literal]}` means that the whole expression is grouped together.
+- Grouping is used to group elements of logical operators.
+- Logical operators `&&` and `||` are possible. The example `{ [custom] || [default terminator] }` means either `[custom terminator]` or `[default terminator]`.
+- And-statement, `&&`, is also possible.
+- Nested groups can be expressed: `{ { [a] && [b] } || { [x] || [y] } }`.
+- `()` means optional, so `[a] ( [b] )` means that `[a]` is required, but `[b]` is optional.
+- `...` is a placeholder meaning _subsequent content of relevant kind_, or it means _the rest of the expected syntax_.
 
 ### Structure of the document
 
