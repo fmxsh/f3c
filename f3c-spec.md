@@ -12,8 +12,6 @@
 
 This document is a complete specification of the _Fine Format For Configuration_ (f3c) configuration format.
 
-The format of this configuration format has _representational elements_ and _conceptual elements_. An _representation element_ is the character or set of characters being the concrete representation of a given concept. All given concept within this configuration format falls under the category _conceptual elements_.
-
 ### Table of contents
 
 <toc here>
@@ -25,21 +23,20 @@ _Conceptual syntax_ describes the syntax of _f3c_ at a conceptual level, without
 - A _conceptual element_ is indicated by `<` and `>` like `<identifier>` or `<literal>`.
 - An expression of _conceptual syntax_ may involve one or several _conceptual elements_ such as in `<identifier> <assignment> <literal>`. The meaning here is that `identifier` is followed by `assignment`, which is followed by `literal`. In this case, the representation could, for example, be `distance: 10`.
 - Spaces between the brackets are only used for readability and serve no other purpose. For example, `<identifier> <assignment> <literal>` may translate to `key:value`, meaning that the whitespace in the conceptual expression does not imply whitespace in the possible representational counterpart.
-- Grouping is possible with `{` and `}`. For example, `{<identifier> <assignment> <literal>}` means that the whole expression is grouped together.
+- Grouping is possible with `(` and `)`. For example, `(<identifier> <assignment> <literal>)` means that the whole expression is grouped together.
 - Grouping is used to group elements of logical operators.
-- Logical operators `&&` and `||` are possible. The example `{ <custom> || <default terminator> }` means either `<custom terminator>` or `<default terminator>`.
-- And-statement, `&&`, is also possible.
-- Nested groups can be expressed: `{ { <a> && <b> } || { <x> || <y> } }`.
-- `()` means optional, so `<a> ( <b> )` means that `<a>` is required, but `<b>` is optional.
+- Logical operators `&&` and `||` are possible. The example `( <custom> || <default terminator> )` means either `<custom terminator>` or `<default terminator>`.
+- Nested groups can be expressed: `( ( <a> && <b> ) || ( <x> || <y> ) )`.
+- `[]` means optional, so `<a> [<b>]` means that `<a>` is required, but `<b>` is optional.
 - `...` is a placeholder meaning _subsequent content of relevant kind_, or it means _the rest of the expected syntax_.
 
 ### Structure of the document
 
-This specification is based in the ontology of <_Structure of conceptual models_>(https://github.com/fmxsh/socm-ontology) which is an ontology for conceptual modeling. This is not essential to understanding the specification, but it explains the format of the document.
+This specification is based in the ontology of [_Structure of conceptual models_](https://github.com/fmxsh/socm-ontology) which is an ontology for conceptual modeling. This is not essential for understanding the specification, but it explains the format of the document.
 
 ## Identity
 
-The _specification of "Fine Format For Configuration" (f3c)_ outlines a configuration and data serialization format with the following properties:
+The _Fine Format For Configuration_ (_f3c_) outlines a configuration and data serialization format with the following properties:
 
 - with minimal set of tokens, support as much functionality as possible,
 - key-value pairs,
@@ -51,38 +48,18 @@ The _specification of "Fine Format For Configuration" (f3c)_ outlines a configur
 
 The specification describes _f3c_ using a meta-syntax invented specifically for this specification. Using the meta-syntax, the _conceptual elements_ are outlined in one section, and in another separate section, are mapped to _representational elements_. For example: the concept <newline> may be mapped to `\n`.
 
-## Constitution
+## Constraints
 
-The specification of _f3c_ consists of the following parts.
+The semantic attribution of _f3c_ is constrained to map its conceptual tokens to specific characters.
+The data in which meaningful structures of _f3c_ are discerned, must be sequentially arranged data, meaning the individual characters are ordered in sequence.
 
-## Structure of the document
+### Character
 
-Conceptual definitions are oulined before semantic attribution.
+### Sequence
 
-### Conceptual definitions
+A sequence of _characters_
 
-Defines the form, structure, or category of something.
-
-- What a thing is.
-- What it is composed of.
-- What makes it distinct.
-- What is its structural role, meaning ...
-
-### Semantic attribution
-
-What something means or how it behaves in a specific context.
-
-- How it is interpreted in relation to the context.
-
-## Pre-fundamental things (substrate)
-
-At this level, we have not yet entered the stage where any _meaning_ specific to this configuration format can be seen. _Meaning_ is defined as an occurrence of a thing or a structure which is a set of things and their relations, in the perceived material, that aligns with our purpose. At this level, without any meaning, without any recognizable structure directly responding to put purpose, we only have pre-fundamental _things_. Thus, this is a level prior to the most fundamental level of the configuration format, where the _fundamental level_ is the first _things_ specifically defined with meaning that specifically relates to the purpose. At that level, things are defined and named as suitable building blocks of our purpose.
-
-At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived reality, our conditions, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of this configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents.
-
-The contingence of meaning is a fundamental principle that will replicate itself in the relationship between each previous and each current level of abstraction, in the sense that the previous is fundamental to the meaning that emerges at the current level, as a combination of fundamental things that the current level recognizes a structure that is meaningful to the overall purpose. Any fundamental level must be well explicated to allow for the next level of abstraction to percieve meaningful structures among occurences of these fundamental things.
-
-The names of the three _pre-fundamental_ things defined below will later in the document be simplified to _character_, _sequence_, and _line_ while carrying the same meaning.
+start OLD stuff:
 
 ### Pre-fundamental characters
 
@@ -95,6 +72,23 @@ A sequence of _pre-fundamental characters_
 ### Pre-fundamental line
 
 As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+
+:End OLD stuff
+
+### Line
+
+As by POSIX. A sequence of _characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+
+## Constitution
+
+Thus, there is _conceptual syntax_ and _actual syntax_.
+_f3c_ consists of a series of concepts and the conceptual structures arising from arranging various concepts. These form the _conceptual syntax_ of _f3c_.
+
+_f3c_ also consists of the representational layer of characters, such as the characters you read right now. The _conceptual syntax_ is mapped to specific characters, thus defining what becomes the _actual syntax_, which is the syntax used to structure data in meaningful ways, such as `volume:100`.
+
+_f3c_ also consists of the specific characters representing the data being contained by the actual syntax.
+
+In summary, _f3c_ consists of all possible characters: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
 
 ## Basic Tokens (conceptual definitions)
 
@@ -987,6 +981,10 @@ The following can be one or more characters.
 | `<tc-dash>`  | `tcd`     | `--`    | Comment dash.        |
 | `<tc-start>` | `tcs`     | `/-`    | Comment block start. |
 | `<tc-end>`   | `tce`     | `-/`    | Comment block end.   |
+
+## Emergence
+
+Addapt this text, having the concepts, we now can have as emergent feature the mapping to representations: ... At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived reality, our conditions, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of this configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents.
 
 ## Parsing
 
