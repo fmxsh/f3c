@@ -1,34 +1,20 @@
-# f3c - Fine Format For Configuration
+# Definition of concept and representation of f3c
 
 > <!NOTE>
 >
 > This project is under development. Do not expect finished order.
 
-# Fine Format For Configuration (f3c)
-
 ## Meta
 
 ### About
 
-This document is a complete specification of the _Fine Format For Configuration_ (f3c) configuration format.
+_f3c_ stands for _Fine Format For Configuration_. An overview can be found [here...].
+
+This document defines the of the conceptual aspect of _Fine Format For Configuration_ (_f3c_). For a mapping to the concrete representation, see [f3c-rep.md](f3c-rep.md).
 
 ### Table of contents
 
 <toc here>
-
-### Conceptual syntax
-
-_Conceptual syntax_ describes the syntax of _f3c_ at a conceptual level, without any reference to the specific representation of the syntax. `<newline>` would be a concept and `\n` would be the specific representation.
-
-- A _conceptual element_ is indicated by `<` and `>` like `<identifier>` or `<literal>`.
-- An expression of _conceptual syntax_ may involve one or several _conceptual elements_ such as in `<identifier> <assignment> <literal>`. The meaning here is that `identifier` is followed by `assignment`, which is followed by `literal`. In this case, the representation could, for example, be `distance: 10`.
-- Spaces between the brackets are only used for readability and serve no other purpose. For example, `<identifier> <assignment> <literal>` may translate to `key:value`, meaning that the whitespace in the conceptual expression does not imply whitespace in the possible representational counterpart.
-- Grouping is possible with `(` and `)`. For example, `(<identifier> <assignment> <literal>)` means that the whole expression is grouped together.
-- Grouping is used to group elements of logical operators.
-- Logical operators `&&` and `||` are possible. The example `( <custom> || <default terminator> )` means either `<custom terminator>` or `<default terminator>`.
-- Nested groups can be expressed: `( ( <a> && <b> ) || ( <x> || <y> ) )`.
-- `[]` means optional, so `<a> [<b>]` means that `<a>` is required, but `<b>` is optional.
-- `...` is a placeholder meaning _subsequent content of relevant kind_, or it means _the rest of the expected syntax_.
 
 ### Structure of the document
 
@@ -36,7 +22,7 @@ This specification is based in the ontology of [_Structure of conceptual models_
 
 ## Identity
 
-The _Fine Format For Configuration_ (_f3c_) outlines a configuration and data serialization format with the following properties:
+The _concept of f3c_ is a concept of a configuration and data serialization format with the following properties:
 
 - with minimal set of tokens, support as much functionality as possible,
 - key-value pairs,
@@ -46,97 +32,101 @@ The _Fine Format For Configuration_ (_f3c_) outlines a configuration and data se
 - allow for custom type checking,
 - ...
 
-The specification describes _f3c_ using a meta-syntax invented specifically for this specification. Using the meta-syntax, the _conceptual elements_ are outlined in one section, and in another separate section, are mapped to _representational elements_. For example: the concept <newline> may be mapped to `\n`.
-
 ## Constraints
 
-The semantic attribution of _f3c_ is constrained to map its conceptual tokens to specific characters.
-The data in which meaningful structures of _f3c_ are discerned, must be sequentially arranged data, meaning the individual characters are ordered in sequence.
+### Scope
 
-### Character
+Only the concepts are described, not the concrete representation. In other words: _concept of f3c_ does not describe what the different concepts map to, for example <newline> may be discussed, but its representation `\n` is not.
 
-### Sequence
+Concepts may be exemplified by representations to better illustrate the concept.
 
-A sequence of _characters_
+### Context
 
-start OLD stuff:
+A conceptual sequence must be present. That is a sequence of undifferentiated perceptual units, awaiting differentiation. (For example a sequence of UTF-8 characters.)
 
-### Pre-fundamental characters
+### The format
 
-Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
+No escaping.
 
-### Pre-fundamental sequence
+Minimal set of tokens.
 
-A sequence of _pre-fundamental characters_
+Must support nesting.
 
-### Pre-fundamental line
+Must support custom type checking.
 
-As by POSIX. A sequence of _pre-fundamental characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
-
-:End OLD stuff
-
-### Line
-
-As by POSIX. A sequence of _characters_, or an empty sequence, that ends with a newline character (`\n`). A line can contain only one newline character. It follows that lines occur in sequence, one line following another.
+...
 
 ## Constitution
 
-Thus, there is _conceptual syntax_ and _actual syntax_.
-_f3c_ consists of a series of concepts and the conceptual structures arising from arranging various concepts. These form the _conceptual syntax_ of _f3c_.
+### Conceptual syntax
 
-_f3c_ also consists of the representational layer of characters, such as the characters you read right now. The _conceptual syntax_ is mapped to specific characters, thus defining what becomes the _actual syntax_, which is the syntax used to structure data in meaningful ways, such as `volume:100`.
+_Conceptual syntax_ is used to denote concepts and express combinations of them to reflect meaningful structural relationships.
 
-_f3c_ also consists of the specific characters representing the data being contained by the actual syntax.
+- A _conceptual element_ is denoted by `<` and `>` like `<identifier>` or `<literal>`.
+- An expression of _conceptual syntax_ may involve one or several _conceptual elements_ such as in `<identifier> <assignment> <literal>`. The meaning here is that `identifier` is followed by `assignment`, which is followed by `literal`. In this case, the representation could, for example, be `distance: 10`.
+- Spaces between the brackets are only used for readability and serve no other purpose. For example, `<identifier> <assignment> <literal>` may translate to `key:value`, meaning that the whitespace in the conceptual expression does not imply whitespace in the possible representational counterpart.
+- Grouping is possible with `(` and `)`. For example, `(<identifier> <assignment> <literal>)` means that the whole expression is grouped together.
+- Grouping is used to group elements of logical operators.
+- Logical operators `&&` and `||` are possible. The example `( <custom> || <default terminator> )` means either `<custom terminator>` or `<default terminator>`.
+- Nested groups can be expressed: `( ( <a> && <b> ) || ( <x> || <y> ) )`.
+- `[]` means optional, so `<a> [<b>]` means that `<a>` is required, but `<b>` is optional.
+- `...` is a placeholder meaning _subsequent content of relevant kind_, or it means _the rest of the expected syntax_.
 
-In summary, _f3c_ consists of all possible characters: Any valid byte sequence recognized by the host system's encoding configuration, including but not limited to UTF-8, UTF-16, UTF-32, ASCII, extended ANSI (ISO-8859 series), and arbitrary binary data (including null bytes \x00). Character interpretation depends on the system's locale (LC_CTYPE), encoding settings, and application behavior.
+### Representation
 
-## Basic Tokens (conceptual definitions)
+_Definition of concept and representation of f3c_ consists also of definitions of the specific representations, meaning the specific characters representing the concepts of _f3c_.
+
+### Sequence of characters
+
+A sequence of characters, typically a file of data, but can be any data stream, is needed to discern meaningful structure relating to _f3c_.
+
+The term _data_ refers simply to a sequence of characters.
+
+### Basic Tokens (conceptual definitions)
+
+Certain characters are given special meaning as tokens, in order to be able to discern _f3c_ related structures within the given data.
+
+Starting with a sequence of undifferentiated conceptual units (the series of characters being the configuration data), some of the units will be designated as _tokens_ for the purpose of differentiation and discernment of meaningful structure (for example, what is an identifier and what is the related literal).
 
 These are called _basic tokens_ and the most fundamental building blocks of the format.
 
-### Basic standalone tokens
+#### Basic standalone tokens
 
-All of the syntax, without exception, is built using these four _basic tokens_.
+The entire concept of _f3c_, without exception, is built using these four _basic tokens_.
 
-| Label        | description                                            |
-| ------------ | ------------------------------------------------------ |
-| <introducer> | Always indicates something follows.                    |
-| <implicator> | Denotes an implicit value in place of an explicit one. |
-| <delimiter>  | Always delimits single-line data.                      |
-| <segmenter>  | Separates elements and parts within an element.        |
+| Semantic label | Token | Description                                            |
+| -------------- | ----- | ------------------------------------------------------ |
+| <introducer>   | `:`   | Always indicates something follows.                    |
+| <implicator>   | `.`   | Denotes an implicit value in place of an explicit one. |
+| <delimiter>    | `"`   | Always delimits single-line data.                      |
+| <segmenter>    | `\n`  | Separates elements and parts within an element.        |
 
-These represent essence that reoccur in specific forms in the syntax. Each is also bound to a specific representation (character), forming the basics of the syntax.
+These represent the basic units of the format, and each also connotes the very essence of their general meaning within the format.
 
-### Basic composite tokens
+The configuration format processes data segment by segment, meaning line by line.
+
+#### Basic composite tokens
 
 _Composite tokens_ are built using the `basic standalone tokens`, such that changing a standalone token would change the related composite token.
 
-| Label                   | Composition               | Description                                                                                            |
-| ----------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------ |
-| <meta level introducer> | <introducer> <introducer> | Same as _introducer_ but a higher level of abstraction.                                                |
-| <emptier>               | <delimiter> <delimiter>   | Used to indicate that no identifier exists for the multi-line literal that follows. (Nameless element) |
+| Label                   | Composition               | Representation | Description                                                                                                                             |
+| ----------------------- | ------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| <meta level introducer> | <introducer> <introducer> | `::`           | Same as _introducer_ but a higher level of abstraction.                                                                                 |
+| <emptier>               | <delimiter> <delimiter>   | `""`           | TODO: This doesnt apply anymore: Used to indicate that no identifier exists for the multi-line literal that follows. (Nameless element) |
 
 > <!IMPORTANT>
 >
 > The composite token `<meta level introducer>` is not the same as two individual <introducer> in a row (`<introducer> <introducer>`), even if they may seem identical. <metal level introducer> is considered its own indivisible unit.
 
-### Syntax as emerging from structures of tokens
-
-A _sequence_ holds several tokens in sequence. Thus, patterns among tokens can be defied. The tokens and the patterns both form the syntax. Syntax is not any one particular token, but the combinations of tokens in such a way that we can discern where in the _sequence_ particular content, _data_, with particular meaning, occurs.
-
-`var = 1 + 1`
-
-In the above example, none of the parts in themselves are considered syntax. That is, because in isolation, or being rearranged, they can not serve the function of inferring _data_. Is `+` part of data or is it not, for example. The function of syntax is to imply content of some type meaning. Thus, syntax is that, whatever, by which content can be discerned in a _sequence_. In the above example, data is understood by the syntax to be the evaluated expression resulting in the sum 2 which doesn't have any direct representation on in the sequence, but nonetheless is understood to exist by virtue of the rules of the syntax. Thus, while syntax can delineate a part of a sequence and we can see it concretely represented, content can also be abstract. Data, as content, is thus an emergent feature of syntax, by the function of having rules for perception, and, as a result of such a function, resides as a consequence of the tokens, the patterns and the syntax. Tokens gives patterns, gives, syntax, causes data.
-
-This configuration deals with only concrete data, not abstract.
-
 ## Fields
 
-Context: By the _pre-fundamental things_ and _basic tokens_, _fields_ can be discerned.
+In the sequence conceptual units (think sequence of UTF8-characters), the presence of a field can be discerned by locating the token _<introducer>_ or _<meta level introducer>_, in conjunction with a <segmenter>. The <segmenter> typically maps to the newline character (`\n`) and thus, data is parsed line by line looking for <introducer> or <meta level introducer> in order to discern fields.
 
-Identity: A field is a delineated sequence of characters or no characters and order of placement (left or right of <introducer> or <meta level introducer>. Two properties are discerned in the field's content: _data format_, being _inline_ or _block_, and the second property being _data type_, for _identifier_ or _literal_. The two properties together yields an emergent property which can be one of four _data constructs_. This is the structural identity of a field--what identity it has within this conceptual system.
+A field is at either side of the _<introducer>_ or _<meta level introducer>_ and is a delineation within the sequence of conceptual units. All the conceptual units within the delineation is the content of the field. The field can also be empty if there are no conceptual units within its delineation.
 
-A _field_ is a _data construct_, which is the emergent property of the combination of _data format_ and _data type_, which in turn are properties of the fields content.
+A field always have two aspects: _data format_ and _data type_. The aspect of _data format_ can be either _inline_ or _block_, and the second aspect of _data type_ can be either _identifier_ or _literal_. The two aspects together yields four possible combinations: inline identifier, inline literal, block identifier, block literal. These are four different _data constructs_. This is the structural identity of a field.
+
+A _field_'s structural identity is a _data construct_, which is the emergent property of the combination of _data format_ and _data type_.
 
 Properties:
 
@@ -144,26 +134,14 @@ Properties:
   - Data Format: Defines how the field is delineated (inline / block).
   - Data Type: Defines the field’s functional role (identifier / literal).
 
-Constraint: Every field has exactly one format and one type.
+Nesting is possible: a field may contain other fields, depending on its construct.
 
-Constitution: A field is a delineated _sequence_ of _characters_ or no characters, .
-
-Emergence:
-
-- The combination of the two aspects of _data format_ and _data type_ yields a _data construct_. A _data construct_ determines the possible role and content of a field.
-- The combination of data format and data type yields a _data construct_, which is an emergent structural identity.
-- Nesting is possible: a field may contain other fields, depending on its construct.
-
-Function: The _field_ with its structural identity as _data construct_ serves as a fundamental part for _binding structures_.
-Interpretation: ('emptiness' exist within a delineated space, and thus, the very absence of characters is considered to be the very data of that space).
-A general rule applying to all _data_ is that no character will ever be interpreted as a token, and consequently, no character is ever escaped.
+A general rule applying to all _fields_ is that none of its contained conceptual units will ever be interpreted as a token, and consequently, no conceptual unit is ever escaped.
 
 As a summary of the three following sections: Data is categorized into _fields_. A _field_ can be one of several _data constructs_. What particular _data constructs_ a that a particular _filed_ consists of, is determined by analyzing the field by aspects of _data formats_ and _data types_. Combining _data formats_ and _data types_ in different ways, yields different _data constructs_ which then defines the type of field.
 
-### Property: Data formats
+### Data formats
 
-Name: Data format.
-Inference: Inferred property.
 Recognition: By the way the field is delineated.
 
 _Inline deliniation_ is where the data is deliniated to start and end on the same line.
@@ -172,10 +150,10 @@ _Block deliniation_ is where the data is deliniated to start and end on differen
 
 Modes: All types of data fall into either of the two categories of data format: _inline_ or _block_.
 
-| Data type | Description                                 |
-| --------- | ------------------------------------------- |
-| Inline    | Data that exists only inside a single line. |
-| Block     | Data that must be multi-line data.          |
+| Data type | Description                                          |
+| --------- | ---------------------------------------------------- |
+| Inline    | Field content that exists only inside a single line. |
+| Block     | Field content that must be multi-line data.          |
 
 Interface labels:
 
@@ -188,10 +166,8 @@ Interface labels:
 | `<inline data>`   | Refers to the data delineated by the syntax, excluding the syntax itself.   |
 | `<block data>`    | Refers to the data delineated by the syntax, excluding the syntax itself.   |
 
-### Property: Data types
+### Data types
 
-Name: Data type.
-Inference: Inferred property.
 Recognition: By the function of the data.
 Modes: Data can be either of two categories of data types: _identifier_ or _literal_.
 
@@ -207,13 +183,9 @@ Interface labels:
 | `<identifier>` | Label indicating identifier data type. |
 | `<literal>`    | Label indicating literal data type.    |
 
-### Emergent property: Data constructs (conceptual definitions)
+### Data constructs (conceptual definitions)
 
-Name: Data construct.
-Inference: Emergent property.
 Recognition: By the combination of _data format_ and _data type_.
-
-A _data construct_ refers to the structure of the actual data itself, excluding the syntax defining the boundary of the data.
 
 Modes and interface labels:
 
@@ -228,25 +200,9 @@ The details of each As described in subsequent dedicated section.
 
 ## Inline identifier
 
-Context:
-Identity: A sequence of characters
-Properties: Can be implicit or explicit.
-Constraints:
-Constitution:
-Emergence:
-Function:
-Interpretation:
+An _inline identifier_ can be implicit or explicit.
 
-Represented by _<inline identifier>_ is a sequence of characters on a single line, with the purpose of identifying something.
-
-Context:
-Identity:
-Properties:
-Constraints:
-COnstitution:
-Emergence:
-Function:
-Interpretation:
+Represented by _<inline identifier>_ is a sequence of conceptual units on a single line, with the purpose of identifying something.
 
 ## Inline literal
 
@@ -264,7 +220,7 @@ Possible literals are:
 | 6   | <terminator definition> |           |            | context       | marker       |
 | 7   | <terminator expression> |           |            | context       | marker       |
 
-The _dsta_ of 1-5 are considered being _content_. _Content_ is delineated and known trough by syntax, but has no purpose to the syntax itself.
+The _data_ of 1-5 are considered being _content_. _Content_ is delineated and known trough by syntax, but has no purpose to the syntax itself.
 
 The _data_ of 6-7 are considered _context_. They define data that then is part of the syntax. They are syntactic markers, meaning they are literals that are being part of the syntax and serves a syntactical function.
 
@@ -985,6 +941,18 @@ The following can be one or more characters.
 ## Emergence
 
 Addapt this text, having the concepts, we now can have as emergent feature the mapping to representations: ... At this current _pre-fundamental_ level, for the sake of elaboration, we are only concerned with the things (characters) and structure (sequence of characters and sequence of lines), which comprises the very existence of _a_ _something_, which is the perceived reality, our conditions, within which specific structures can be defined to have higher meaning that can only arise by combinations and relations among these _pre-fundamental things_. The possibility of such emergent higher meaning, based in patterns of lower level things, is what allows the definition of structures specifically meaningful for the purpose of this configuration format. Meaning is thus contingent on patterns that are built from these lower-level constituents.
+
+With the constitutional _basic tokens_ along with the contextual constraint of several tokens being present in sequence, the sequence is read from left to right and analyzed token-wise. In the sequence of tokens, several distinct and meaningful structures emerge.
+
+### Syntax as emerging from structures of tokens
+
+A _sequence_ holds several tokens in sequence. Thus, patterns among tokens can be defied. The tokens and the patterns both form the syntax. Syntax is not any one particular token, but the combinations of tokens in such a way that we can discern where in the _sequence_ particular content, _data_, with particular meaning, occurs.
+
+`var = 1 + 1`
+
+In the above example, none of the parts in themselves are considered syntax. That is, because in isolation, or being rearranged, they can not serve the function of inferring _data_. Is `+` part of data or is it not, for example. The function of syntax is to imply content of some type meaning. Thus, syntax is that, whatever, by which content can be discerned in a _sequence_. In the above example, data is understood by the syntax to be the evaluated expression resulting in the sum 2 which doesn't have any direct representation on in the sequence, but nonetheless is understood to exist by virtue of the rules of the syntax. Thus, while syntax can delineate a part of a sequence and we can see it concretely represented, content can also be abstract. Data, as content, is thus an emergent feature of syntax, by the function of having rules for perception, and, as a result of such a function, resides as a consequence of the tokens, the patterns and the syntax. Tokens gives patterns, gives, syntax, causes data.
+
+This configuration deals with only concrete data, not abstract.
 
 ## Parsing
 
