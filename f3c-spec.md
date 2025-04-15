@@ -1,4 +1,4 @@
-# Definition of concept and representation of f3c
+# Definition of concept and representation of _f3c_
 
 > <!NOTE>
 >
@@ -20,7 +20,17 @@ This document defines the of the conceptual aspect of _Fine Format For Configura
 
 This specification is based in the ontology of [_Structure of conceptual models_](https://github.com/fmxsh/socm-ontology) which is an ontology for conceptual modeling. This is not essential for understanding the specification, but it explains the format of the document.
 
+### How to read this document
+
+Efforts have been made to support reading this document from top to bottom in sequential order, for the sake of understanding the _f3c_.
+
+### Intended audience
+
+This document is intended for developers seeking to implement or just understand the _f3c_.
+
 ## Identity
+
+TODO: Put the binding structures here, they are emergent concepts, and show how they semantically map to the concrete representation.
 
 The _concept of f3c_ is a concept of a configuration and data serialization format with the following properties:
 
@@ -30,25 +40,15 @@ The _concept of f3c_ is a concept of a configuration and data serialization form
 - escapeless - no escaping of characters,
 - allow for data serialization,
 - allow for custom type checking,
-- ...
+- simple to read and edit.
 
-### Basic representations (semantic attribution)
+### Basic tokens
 
-Out of all characters of the _pre-fundamental characters_, certain ones will be given special meaning. The selected characters will be the concrete representations of the conceptual tokens outlined in the conceptual section, and will be the most fundamental building blocks of the syntax. Characters, that otherwise can represent anything, are given the general meaning of being tokens, where each token has a specific uniquely defined meaning.
+The _basic tokens_ are the characters representing the most fundamental elements of the syntax. All syntax of _f3c_ are based in these.
 
-Thus, this section outlines the basic concrete representation as linked with the conceptual tokens, making up the syntax.
+There are two kinds: _standalone tokens_ and _composite tokens_.
 
-#### Ghostspace and whitespace
-
-All _ghostspace_ is trimmed and ignored. Only what is defined by each _conceptual element_ and thus instantiated by the correpsonding _representational elements_ matters to the parser.
-
-Before and after any _representational element_, there can be any or no amount of ghostspace.
-
-In other words: whitespace in syntax (called _ghostspace_) does not affect the meaning of the syntax or the data (but within the boundary of a <literal> whitespace is kept).
-
-These are the same `id : 123` and `id:123` and `id: 123` and `  id :123`.
-
-#### Basic standalone representations
+#### Standalone tokens
 
 All syntax depends on these.
 
@@ -61,37 +61,27 @@ All syntax depends on these.
 
 > <!NOTE>
 >
-> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to the data contained by the syntax, like the data of a multi-line literal.
+> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to any occurence of `\n` in the data contained by the syntax, like the data of a multi-line literal. This is because data is never parsed to reflect syntactical concepts, but is just parsed as data regardless of content.
 
-In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax.
+In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax. Think of two files being streamed to the parser (such as over a websocket). The parser reads them the same regardless if the content is split over two files or is all in the same file.
 
-##### Rationale for the choice of dot as implicator
+#### Composite tokens
 
-The original term was _finalizer_, but changed to _implicator_ as its function extends from defining the end of a thing to also be able to imply a thing. Thus, the _implicator_ implies _implicit identifier_, _default terminator definition_, it implies data of type _raw_, and it implies the end of multiline data. In its most general sense, it implies that it implies something in a specific context, and in the specific context, in turn, it implies a specific thing. The implicator not only implies a thing, but implies that it implies different things in different contexts.
+Composite tokens are built using the `standalone tokens`, such that changing a standalone token would change the related composite token.
 
-The colon was choosen as it improves visual clarity and conveys the meaning of something following that which was before, and implying a relationship between the follower and the followed. Initally `:` was intended for ~<finalizer>~ <introducer> to keep the representations mininmal, but would conflict with the same representation used in other context (nested objects for example, we can not determine what ends what.) The `.` also adds a visual distinction, contradicting, in sense, the `:`. The discrepancy between `:` and `.` aligns with their essence of opening `:` and `.` closing. Colon (`:`), having two dots, implies a relatoin between two things as one have to relate to the other merely by exising in the same space. It aligns with the essence of _binding structures_ which is one thing (identifier) relating (bound) to another (a literal). Following up with a dot (`.`) consequently marks the end of a space in which things stand in relation to eachother, as a dot, by its visual content as a character, convays a singular thing. The dot, in _regex_ also symbolizes _any character_ and when we end with a dot, the parser accepts any character, looking for structure again. Thus, `.` symbolizes the end of structure and \_from now on, anything follows, till new structure is recognized. All structure tus involves the `:`.
-
-Conceptually, following the above reasoning, it can be argued that; `.`, `\n` and `EOF` are all, share the functoin of being finalizers, of finalizing data, and logically we should be able to do the following all on the same line: `user: name. pwd: mypass. host: localhost.`
-
-With this in mind, why can we not put `.` in the same category as `\n` and `EOF`? Conceptually, `.` is based in a higher level concept, meant to respond to <block> which is higher than <inline>. Enough are _character_, _sequence_ and _line_ to define an inline syntax, and still knowing how to end it, without introducing any new concept. `\n` and `EOF` are fundamental representations used to define the span of the inline data. <block>, on the other hand, is a higher level construct, in the sense of building on several lines, where the `\n` thus can not uniquely represent the ending of the block, or we would not be able to include the next line of the multi-line data intended to be stored. Thus, a construct at the same level of conceptual emergence, needs to be in place. For this, we have the <inline terminator definition> and <inline terminator expression>. The `.` represents a default <terminator definition>, and if used like `..` or `.myterminator` it means to take the content as <raw>, where the first dot is <literalizer>, indicating the content does not stand in relation to any oppinion of the format, but is taken as it is (not trimmed etc).
-
-In summary, <segmenter> and <finalizer> (whoes functionality is absorbed by <implicator>) exist at different conceptual levels. Using `.` for inline syntax, as in `user: name. pwd: mypass. host: localhost.` would not, as first thought, make effective use of an already existing representation of a higher level (block), but would spawn a new representation for the same essence of putting an end to a thing, but at a lower level (inline). It would add redundancy of an additional representation, having `\n`, `EOF` and `.` serving the same purpose, for the illusion of conceptual and representational coherence, ignoring the reality of conceptually different levels. It may seem conceptually coherent that the `.` at the higher level of <block> should work to also terminate <inline>, if desired, but it is not conceptually coherent, as the `.` would transgress its conceptual domain, trying to solve a lower level thing with a hihger level construct, that in itself was made first to solve the higher level structure that was built on the very lower level things. Conceptually, it would be similar having drawers deliniated by samller peices of wood, and drawers together are collected in a cabinet, which is deliniated with bigger pieces of wood, and then expecting to deliniate a drawer with the big wodden surface of the top of the cabinet. You would have drawers with the size of the cabinet surface, obviously being antagonostic towards the cabinette that then can not contain them.
-
-#### Basic composite representations
-
-Representations of composite tokens are built using the `basic standalone representations`, such that changing a standalone token would change the related composite token.
-
-| Token | Name                  | Description                                                         |
-| ----- | --------------------- | ------------------------------------------------------------------- |
-| `::`  | Meta level introducer | The same meaning as _introducer_ but a higher level of abstraction. |
+| Token | Conceptual label        | Description                                                         |
+| ----- | ----------------------- | ------------------------------------------------------------------- |
+| `::`  | <meta level introducer> | The same meaning as _introducer_ but a higher level of abstraction. |
 
 > <!IMPORTANT>
 >
 > The composite representation `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very usage itself, we recognize we are dealing with two separate `introducer` representations and not one _meta level introducer_. Its even more clear by the fact we can space out the former case like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two colons of the composite.
 
-#### Representations for comments
+### Comments, whitespace and ghostspace
 
-Note: Comments do not have any conceptual representation, as they are not part of the data, but only part of the syntax. Comments are not structurally relevant to the format. If comments had conceptual counterparts, it would imply they are seen as meaningful by the system, but the comment by essence is used to denote something meaningless, non-existent, to the parser, meaning it is void of meaningful structure and should be ignored.
+#### Comments
+
+Note: The comments syntax does not have any conceptual counterpart. Comments are not structurally relevant to the format and does not contain any meaningful data. If comments had conceptual counterparts, it would imply they are seen as meaningful to the parser, but comments by essence are used to denote something meaningless and non-existent to the parser, meaning it is void of meaningful structure and should be ignored.
 
 `--`
 `/-`
@@ -99,29 +89,50 @@ Note: Comments do not have any conceptual representation, as they are not part o
 
 Nested block comments are not supported. A block comment is always terminated by the first occurrence of the terminator expression.
 
-A block comment must start on a line with nothing or nothing but whitespace before it.
+A block comment must start on a line with nothing or nothing but ghostspace before it.
 
-A block comment must end on a line with nothing or nothing but whitespace after it.
+A block comment must end on a line with nothing or nothing but ghostspace after it.
 
-Comments are considered **ghost-tokens**, forming a **ghost-syntax**, because they exist to human perception but do not exist in the parsed structure.
+Comments are considered **ghost-tokens**, forming a **ghost-syntax**, because the comment syntax exist to human perception but does not exist in the parsed structure.
 
 A comment token is a **token that is never interpreted as a token** in the sense of relating to data.
 
-To human perception, it appears that the comment syntax relates to the comment-text itself—i.e., the syntax _contains_ the comment. However, the parser does not merely ignore the comment-text; it also ignores the comment syntax.
+To human perception, it appears that the comment syntax relates to the comment-text itself—i.e., the comment syntax _contains_ the comment. However, the parser does not merely ignore the comment-text; it also ignores the comment syntax in the sense no structural awareness of the comment is kept. This means the parser skips the comment syntax and its data without any analysis or recording either.
 
-In all other cases of syntax, the parser assigns meaning to the content, whether it is empty or not. In the case of a comment, no meaning is assigned to any contained data or to the comment syntax itself.
+In all other cases of syntax, the parser analyses the tokens, perceives structure, and assigns meaning to the content within the structure, whether it is empty or not. In the case of a comment, no meaning is assigned neither to the contained data nor to the comment syntax itself.
 
 #### Ghostspace and whitespace
 
-<whitespace> is data that may or may not have meaning. As part of the data of a literal, whitespace retains its POSIX definition. In the case it occurs outside a literal's span, it lacks meaning, as no part of the syntax is dependent on whitespace, except in case of `\n`. `\n` has meaning to the syntax of being a <segmenter>. As a <segmenter>, `\n` is not considered whitespace, but considered a representation of a token. A reason to not term it _whitespace_ is because the representation of <segmenter>, can by definition of this format, be redefined to something else.
+Whitespace is by the definition of POSIX. Whitespace is treated differently and termed differently depending on where it occurs in the syntax.
 
-Whitespace as part of a literal, is having meaning, as it is part of the data. Whitespace outside a literal is considered _nothing_, as it is not part of anything the format regognizes as meaningful. Similarly to comments appearing to have meaning to human perception, but being inherently empty of meaning to the format, and thus called _ghost syntax_, the equally meaningless whitespace, indentation, may convay meaning to human perception, but is meaningless to the configuration format, and thus is called **ghost-space**.
+#### Ghostspace
 
-Ghostspace is not just the literal representations of white space (`\t`, ` ` etc...) but such occurence that is regarded as not meaningful to the structure or data of the configuration format, and consequently is ignored.
+_Ghostspace_ is whitespace surrounding the _basic tokens_ and _composite tokens_
 
-Ghostspace is any representation (character) regognized as whitespace that is not of _conceptual element_ (eg. <segmenter>, <string> etc...).
+Before and after any _basic token_ and _composite token_, there can be **any or no** amount of whitespace. This means that the syntax is not sensitive to whitespace.
+
+In other words: whitespace in syntax does not affect the meaning of the syntax or the data.
+
+These are the same `id : 123` and `id:123` and `id: 123` and `  id :123`.
+
+#### Whitespace
+
+The term _whitespace_ refers to whitespace that part of the content of an <identifier> or a <literal>.
+
+An example of whitespace would be: `id: "string with    whitespace"`.
 
 ### Data (semantic attribution)
+
+Using the _basic tokens_, we can discern individual fields of data which are the basis of the assignment of literals to identifiers.
+
+The concept is: `<identifier> <introducer> <literal>` and an example of an representation would be `id: value`.
+
+We have two types of data:
+
+- identifier - a unique sequence of characters used to identify the associated literal.
+- literal - the data associated with the identifier.
+
+Both of these can be _inline_ or _block_, meaning they can exist on a single line or span multiple lines.
 
 #### Inline identifier
 
@@ -131,7 +142,7 @@ The acceptable character sequence is: Any character except `<delimiter>` (`"`), 
 
 A literal value is returned as-is by the parser, without any trailing newline characters.
 
-As outlined conceptually, different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context), and, if shown the type is not determined to match a certain set of types, then, as second, evaluation is preformed of the content contained by the syntax. It follows that, in evaluation of literal type, context has precedence over content. A string literal will have additional meaning, or not, depending of in what context it appears, and thus, context should be evaluated first.
+As outlined conceptually, different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context) to see if it is delineated by <delimiter> (`"`). If it is, then we know it is a string. If no surrounding <delimiter> exist, then a second evaluation is preformed of the content contained, for example determining `1` is a number. It follows that, in evaluation of literal type, context has precedence over content in evaluating its type.
 
 Possible literals are:
 
@@ -147,11 +158,11 @@ Possible literals are:
 
 Literal 6-7 are used to determine the end of block. They can be any of the previous 1-5.
 
-All primitive literals (number, bool, null) are case-insensitive.
+All primitive literals (number, bool, null) are case-insensitive. (TODO: state which are primitive)
 
 The data of all literals, except _<string>_, is considered to be the sequence that is with and from the first non-whitespace character to and with the last non-whitespace character. In case of <string> the data is considered that which is delinieated by the <delimiter>.
 
-Inline literals are always trimmed of whitespace, because whitespace is not part of the data (in case of string: it is trimmed outside its delimiter if a delimiter is given).
+Inline literals are always trimmed of whitespace, because whitespace is not part of the data (in case of string: it is trimmed outside its delimiter if a delimiter is given, and in case of string, the <delimiter> (`"`) itself is of course not part of the data but is excluded).
 
 ##### String
 
@@ -161,11 +172,13 @@ The acceptable character sequence is: Any binary and non-binary character except
 
 The delimiters must be around the data, or it will be seen as part of the data. `id: "data"` gives data `data`, while `id: this "is" my data` gives as data `this "is" my data`. Works the same in all contexts where <string> can occur: <terminator definition>, <terminator expression>, <literal> with <explicit identifier> and with <implicit identifier>.
 
-> <!NOTE> > `<string>` is trimmed left and right, but is of course not trimmed within its two `<delimiter>`, e.g. within `"   this spaced string   "`.
+> <!NOTE> > `<string>` is trimmed left and right, but is of course not trimmed within its two `<delimiter>`, e.g. the spaces within `"   this spaced string   "` are kept.
 
 ##### Fragment
 
 A sequence of characters or no characters, without surrounding _<delimiter>_, with leading and trailing whitespace is trimmed.
+
+A fragment must not be any of the other types: <number>, <bool>, <null>, and can never be related to <terminator definition || expression> because those are outside the syntactical scope of where <fragment> is able to be recognized.
 
 The acceptable character sequence is: Any binary and non-binary character except, but can not start with _<delimiter>_ (`"`), or it will be an _<explicit string>_.
 
@@ -173,7 +186,7 @@ Any unquoted literal that is not a _<number>_, _<bool>_ or _<null>_, is treated 
 
 ##### Number
 
-The acceptable character sequence is as inferred from the example in the table above.
+The acceptable character sequence reflecting a number as inferred by these examples: `-1, 10, 1.2, -1.2`.
 
 ##### Bool
 
@@ -205,17 +218,23 @@ Can be a _<string>_ or a _<fragment>_, and the accepted character sequence is th
 
 While a _<terminator definition>_ defines the terminator for a block, a _<terminator expression>_ is the actual use of the terminator to end the corresponding block.
 
+#### A note on inline fragments
+
+<number>, <bool>, <null> really are just <fragment> as there is no arithmetic or evaluation in the format, but when serializing to other formats, they are recognized as by their type in order to be serialized correctly.
+
 #### Block identifier
 
 Block identifier is parsed and compared to user given identifier.
 
-The _<object>_ is considered serialized, as the parser never parses it as an object, but only line by line as any other data. Thus, there is no use in having an object in a block identifier, because it is never treated as an object. The reason is a _<block identifier>_ is used to identify a _<literal>_ and having literals with identifiers inside an identifier serves no purpose as literals are never queried for inside identifiers.
+Data of a _block identifier_ is always considered to be a series of _array elements_ or data of type <raw>. <object> is never recognized inside a _block identifier_.
+
+Inside the _block identifier_, the _<object>_ is considered serialized, as the parser never parses it as an object, but only line by line as any other data. Thus, there is no use in having an object in a block identifier for the sake of its function as an object, because it is never treated as an object. The reason is that a _<block identifier>_ is used to identify a _<literal>_ and having literals with identifiers inside an identifier serves no purpose as literals are never queried for inside identifiers.
 
 The parser does not assign zero-based index value based on position to the elements of a <block identifier> because no identifier is needed, as literals inside a <block identifier> are never queried for. Thus, no _implicit identifier_ exists for the literals.
 
 #### Block literal
 
-Block literals are retrieved if the identifier matches the user given identifier.
+Block literals are retrieved if the associated identifier matches the user given identifier.
 
 In case of <block literal> being <array>, each contained <inline literal> has an _implicit identifier_, meaning the literals are automatically assigned an zero-based index value based on the identifiers position in the array.
 
@@ -251,21 +270,21 @@ The _inline_ syntax centers around _<introducer>_ (`:`) such that `<identifier> 
 
 ### Block deliniation syntax (semantic attribution)
 
-Unlike _inline_ data, for which the span can be easily determined by recognizing the _pre-fundamental_ structure of a _line_, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those higher level artifacts are _<terminator definition>_ and _<terminator expression>_, as defined earlier. With these, the structure of a block can be defined.
+Unlike _inline_ data, for which the span can be easily determined by recognizing the end of the span, which is the end of the line found by the _basic token_ <segmenter>, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those higher level artifacts are _<terminator definition>_ and _<terminator expression>_, as defined in the conceptual section. With these, the span of a block can be delineated.
 
-Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional things for its syntax to be possible.
+Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional artifacts for its syntax to be possible.
 
-Here the _basic tokens_ are given unique meaning, in the context of _<block>_, to define the concept of _<block>_.
+Here the _basic tokens_ are given unique meaning, in the context of _<block>_, to define the span of a _<block>_.
 
 | Label                 | From basic token | Block syntax | Description                                              |
 | --------------------- | ---------------- | ------------ | -------------------------------------------------------- |
 | <identifier proxy>    | <introducer>     | `:`          | Introduces a block identifier. `::term:`                 |
-| <identifier proxy>    | <introducer>     | `:`          | Introduces a block literal. `id:term:`                   |
+| <literal proxy>       | <introducer>     | `:`          | Introduces a block literal. `id:term:`                   |
 | <literalizer>         | <implicator>     | `.`          | Makes block literal of type <raw>.                       |
 | <default terminator>  | <implicator>     | `.`          | Default terminator for block literal or identifier.      |
 | <implicit identifier> | <implicator>     | `.`          | Implies implicit identifier for <literal>. `.: my value` |
 
-To terminate a block: _<terminator expression>_ is used, which is the replication of the _<terminator definition>_ where the block is desired to end.
+To terminate a block: _<terminator expression>_ is used, which is the replication of the _<terminator definition>_ and put where the block is desired to end.
 
 The _<terminator expression>_ can occur in two ways: a) `<terminator expression>` on a line of its own at the end of the block data, and b) `<literalizer> <terminator expression>` after the intended end of the data, meaning it can occur at the same line as the last data (thus the data will not end with a newline, as it is taken literally as it occurs within the block span).
 
@@ -579,17 +598,15 @@ The following can be one or more characters.
 
 ## Constraints
 
-### Scope
+The _f3c_ can only be perceived to occur where there is a concrete representational layer of undifferentiated sequential units. This means: a sequence of undifferentiated characters. The _f3c_ is thus constrained to exist in such a place. It can not for example exist as a 3d-matrix, because the representational units of the 3d-matrix do not occur sequentially where one clearly follows another linearly.
 
-Only the concepts are described, not the concrete representation. In other words: _concept of f3c_ does not describe what the different concepts map to, for example <newline> may be discussed, but its representation `\n` is not.
+The _f3c_ is constrained to the requirement that the sequence of units is processed, meaning the units are considered one by one individually.
 
-Concepts may be exemplified by representations to better illustrate the concept.
+The _f3c_ is constrained to the requirement that the sequence of units is processed from left to right.
 
-### Context
+The _f3c_ is limited to be a queryable format meaning that the format must be able to be queried by an application for specific data.
 
-A conceptual sequence must be present. That is a sequence of undifferentiated perceptual units, awaiting differentiation. (For example a sequence of UTF-8 characters.)
-
-### The format
+The _f3c_ is constrained to be a streaming format, meaning it can not require to reach a presumed end of the data before meaningfully parsing the content. This means that the format does not require building an internal model of all configuration data being given to it before parsing the data. Instead, the parser builds an internal model of what it has right in front of itself and up till its current position, and throws away everything of the prior that is not queried for.
 
 No escaping.
 
@@ -602,6 +619,15 @@ Must support custom type checking.
 ...
 
 ## Constitution
+
+The _definition of concept and representation of f3c_ consists of several things.
+
+- The _f3c_ consist of a concrete representational layer. It is that which the conceptual definitions are semantically attributed to. It means _f3c_ consists of a sequence of characters, which then is subject to semantic attribution, where certain concrete representations---characters---gain certain conceptual meaning as specific tokens. To exemplify with a stop-sign: The concept of a stop-sign (that a car has to stop) is semantically attributed to the concrete representation being the pysichal stop-sign made by certain materials and with specific placement.
+- Thus, at its base, the _f3c_ consists of differentiated concrete representations given specific meaning and thus recognized as either _tokens_ or _data_.
+- The _f3c_ consists of conceptual definitions of _basic tokens_ and _basic data_.
+- The _f3c_ consists of definitions of how the conceptual definitions of _basic tokens_ and _basic data_ are semantically attributed to the concrete representations.
+- The _f3c_ consists of a conceptual syntax is used to describe the conceptual definitions.
+- The _f3c_ also consists of terminology used to describe the format.
 
 ### Conceptual syntax
 
@@ -616,18 +642,15 @@ _Conceptual syntax_ is used to denote concepts and express combinations of them 
 - Nested groups can be expressed: `( ( <a> && <b> ) || ( <x> || <y> ) )`.
 - `[]` means optional, so `<a> [<b>]` means that `<a>` is required, but `<b>` is optional.
 - `...` is a placeholder meaning _subsequent content of relevant kind_, or it means _the rest of the expected syntax_.
+- `||` and `&&` can be used within `<>` too.
 
-### Representation
-
-_Definition of concept and representation of f3c_ consists also of definitions of the specific representations, meaning the specific characters representing the concepts of _f3c_.
-
-### Sequence of characters
-
-A sequence of characters, typically a file of data, but can be any data stream, is needed to discern meaningful structure relating to _f3c_.
+### Terminology
 
 The term _data_ refers simply to a sequence of characters.
 
-### Basic Tokens (conceptual definitions)
+### Basic Tokens
+
+These are the constituting conceptual definitions being semantically attributed to specific concrete representations.
 
 Certain characters are given special meaning as tokens, in order to be able to discern _f3c_ related structures within the given data.
 
@@ -663,17 +686,21 @@ _Composite tokens_ are built using the `basic standalone tokens`, such that chan
 >
 > The composite token `<meta level introducer>` is not the same as two individual <introducer> in a row (`<introducer> <introducer>`), even if they may seem identical. <metal level introducer> is considered its own indivisible unit.
 
-## Emergence
+### Basic data
 
-### Fields
+In the sequence of undifferentiated concrete representations (sequence of characters), certain representations (characters) are recognized as tokens, forming the syntax. The syntax is then delineating sequences of undifferentiated concrete representations (sequences of characters) and designating them as _data_. Thus, _data_ is inferred from _syntax_. _Data_ together with the _syntax_ constitutes the _f3c_.
+
+A _field_ is the general term for any given data.
+
+#### Fields
 
 In the sequence conceptual units (think sequence of UTF8-characters), the presence of a field can be discerned by locating the token _<introducer>_ or _<meta level introducer>_, in conjunction with a <segmenter>. The <segmenter> typically maps to the newline character (`\n`) and thus, data is parsed line by line looking for <introducer> or <meta level introducer> in order to discern fields.
 
-A field is at either side of the _<introducer>_ or _<meta level introducer>_ and is a delineation within the sequence of conceptual units. All the conceptual units within the delineation is the content of the field. The field can also be empty if there are no conceptual units within its delineation.
+A field is at either side of the _<introducer>_ or _<meta level introducer>_ and is a delineation within the sequence of characters. All the characters within the delineation is the content of the field. The field can also be empty if there are no conceptual units within its delineation.
 
 A field always have two aspects: _data format_ and _data type_. The aspect of _data format_ can be either _inline_ or _block_, and the second aspect of _data type_ can be either _identifier_ or _literal_. The two aspects together yields four possible combinations: inline identifier, inline literal, block identifier, block literal. These are four different _data constructs_. This is the structural identity of a field.
 
-A _field_'s structural identity is a _data construct_, which is the emergent property of the combination of _data format_ and _data type_.
+A _field_'s structural identity is a _data construct_, which is a term to refer to any of the four possible combination of _data format_ and _data type_.
 
 Properties:
 
@@ -683,11 +710,9 @@ Properties:
 
 Nesting is possible: a field may contain other fields, depending on its construct.
 
-A general rule applying to all _fields_ is that none of its contained conceptual units will ever be interpreted as a token, and consequently, no conceptual unit is ever escaped.
+A general rule applying to all _fields_ is that none of its contained characters will ever be interpreted as a token, and consequently, no characters are ever escaped.
 
-As a summary of the three following sections: Data is categorized into _fields_. A _field_ can be one of several _data constructs_. What particular _data constructs_ a that a particular _filed_ consists of, is determined by analyzing the field by aspects of _data formats_ and _data types_. Combining _data formats_ and _data types_ in different ways, yields different _data constructs_ which then defines the type of field.
-
-#### Data formats
+##### Data formats
 
 Recognition: By the way the field is delineated.
 
@@ -713,7 +738,7 @@ Interface labels:
 | `<inline data>`   | Refers to the data delineated by the syntax, excluding the syntax itself.   |
 | `<block data>`    | Refers to the data delineated by the syntax, excluding the syntax itself.   |
 
-#### Data types
+##### Data types
 
 Recognition: By the function of the data.
 Modes: Data can be either of two categories of data types: _identifier_ or _literal_.
@@ -730,7 +755,7 @@ Interface labels:
 | `<identifier>` | Label indicating identifier data type. |
 | `<literal>`    | Label indicating literal data type.    |
 
-#### Data constructs (conceptual definitions)
+##### Data constructs (conceptual definitions)
 
 Recognition: By the combination of _data format_ and _data type_.
 
@@ -745,13 +770,13 @@ Modes and interface labels:
 
 The details of each As described in subsequent dedicated section.
 
-### Inline identifier
+#### Inline identifier
 
 An _inline identifier_ can be implicit or explicit.
 
 Represented by _<inline identifier>_ is a sequence of conceptual units on a single line, with the purpose of identifying something.
 
-### Inline literal
+#### Inline literal
 
 Represented by _<inline literal>_ is a sequence of characters on a single line, that is the data associated with an implicit or explicit identifier.
 
@@ -773,7 +798,7 @@ The _data_ of 6-7 are considered _context_. They define data that then is part o
 
 The term _atomic_ is used, meaning the data is taken as given. Non-atomic data is a such that is not taken as given, but is processed in some way.
 
-### Block identifier
+#### Block identifier
 
 Represented by _<block identifier>_ is a sequence of characters spaning multiple lines, with the purpose of identifying something.
 
@@ -788,7 +813,7 @@ In case of _<raw>_, the data is considered as it is.
 
 - <x> In _f3c_, identifiers can be single-line, multi-line or array.
 
-### Block literal
+#### Block literal
 
 Represented by _<block literal>_ is a sequence of characters spaning multiple lines, that is the data associated with an identifier.
 
@@ -800,19 +825,19 @@ Block literals can be of three types: `raw` `array` and `object`.
 | <array>  | One or several literals.                                                    |
 | <object> | One or several identifier-literal pairs.                                    |
 
-### Raw
+#### Raw
 
 The acceptable character sequence is: Any binary and non-binary character.
 
-### Array
+#### Array
 
 An <array> must consist of only one or more literals with _implicit identifiers_. Can not contain any _<literal>_ with _explicit identifiers_. The literal, as long as having _implicit identifier_ can be <inline literal> and <block literal>, and an arrays content can be a mix of these two. The array does not concern itself with the type of literal, but with how it is identified, requiring the _implicit identifier_.
 
-### Object
+#### Object
 
 An <object> must consist of one or more _<literal>_ with _explicit identifiers_. Can not contain any _<literal>_ with _implicit identifiers_.
 
-### Meta level bindings (conceptual definitions)
+#### Meta level bindings (conceptual definitions)
 
 Using the <meta level introducer> it is possible to bind an <identifier> to a <literal> in the following way:
 
@@ -828,11 +853,11 @@ Everything after the <meta level introducer> is considered to be the <literal>. 
 
 Meta level bindings can also hold block literals, by stripping itself out and allowing the parser to parse the lines as usual, with the directive part of the parser capturing the block data.
 
-### Delineation of data (conceptual definitions)
+#### Delineation of data (conceptual definitions)
 
 Delineation of the _data_ of the two _data formats_ <inline format> and <block format> is possible by _tokens_ occurring in the patterns recognized by the structures outlined in the two following sections, and hereby given corresponding structural meaning.
 
-#### Inline data
+##### Inline data
 
 The <inline format> centers around _<introducer>_ such that:
 
@@ -844,7 +869,7 @@ and:
 
 By the knowledge of the _pre-fundamental_ understanding of what a _line_ is, how it starts and ends, and together with the concept of the <introducer>, it is known where one inline _field_ of data starts and ends. At the left side of the <introducer> is the eventual <inline identifier> and at the right side is the eventual <inline literal>. It is said 'eventual' because either side can be a <block>, but the point is that any inline data is known and delineated in the way described.
 
-#### Block deliniation
+##### Block deliniation
 
 The <block format> has a start and an end in a multi-line space. The start is either of _<explicit inline identifier>_ or _<implicit | explicit block identifier>_. In either case, an associated _<terminator definition>_ is given or assumed, and the end, at a later line, is _<terminator expression>_.
 
@@ -866,6 +891,12 @@ The _<terminator definition>_ is defined at the start boundary of the block, whe
 ```
 
 The use of the two literal types _<terminator definition>_ and _<terminator expression>_ makes it clear they are entierly dependent on context (where and how they are used) to be identified as such literals and not fall back on other forms of literals. Also, the _<inline data>_ of these two literal types is never evaluated to determine its type.
+
+## Emergence
+
+This is actually emergence...
+
+- The _f3c_ thus naturally also consists of conceptual definitions that are assigned to complex concrete representations, which is are complex patterns of tokens (complex in the sense the tokens and placement form patterns).
 
 ### Binding structures (conceptual definitions)
 
@@ -1176,3 +1207,17 @@ These already ocvur
 We start by defining semantics. Semantics are the particular units of meaning, or conceptual definitions, used to fully define this configuration format. Thus we first concern ourselves with the concepts and structures among concepts, and only later focus on how these concepts and structures map to actual characters and character sequences, the most concrete representations, to form the concrete syntax reflecting the formats purpose.
 
 Following the intended approach, conceptual definitions are introduced for _basic tokens_ and _data_. These will yield higher emergent conceptual definitions, that are structures of meaning, called _binding structures_. These _binding structures_, providing the function of associating one field with another, that is; binding an identifier to a literal; represents the highest level of emergent conceptual property that is the complete conceptual response to the purpose of defining this particular configuration format. The reality of concrete representations, as compared to the space of conceptual thought, then undergoes a process of semantic attribution, where the conceptual definitions imbude the representations with conceptual structural meaning. Concepts are mapped to representations. Structureed meaning is determined in the concrete; syntactical meaning is given to to selected characters such as `:`, `.` and `"`), and with these, the concept of contained data of different forms can also be realized in the concrete.
+
+## Other
+
+##### Rationale for the choice of dot as implicator
+
+The original term was _finalizer_, but changed to _implicator_ as its function extends from defining the end of a thing to also be able to imply a thing. Thus, the _implicator_ implies _implicit identifier_, _default terminator definition_, it implies data of type _raw_, and it implies the end of multiline data. In its most general sense, it implies that it implies something in a specific context, and in the specific context, in turn, it implies a specific thing. The implicator not only implies a thing, but implies that it implies different things in different contexts.
+
+The colon was choosen as it improves visual clarity and conveys the meaning of something following that which was before, and implying a relationship between the follower and the followed. Initally `:` was intended for ~<finalizer>~ <introducer> to keep the representations mininmal, but would conflict with the same representation used in other context (nested objects for example, we can not determine what ends what.) The `.` also adds a visual distinction, contradicting, in sense, the `:`. The discrepancy between `:` and `.` aligns with their essence of opening `:` and `.` closing. Colon (`:`), having two dots, implies a relatoin between two things as one have to relate to the other merely by exising in the same space. It aligns with the essence of _binding structures_ which is one thing (identifier) relating (bound) to another (a literal). Following up with a dot (`.`) consequently marks the end of a space in which things stand in relation to eachother, as a dot, by its visual content as a character, convays a singular thing. The dot, in _regex_ also symbolizes _any character_ and when we end with a dot, the parser accepts any character, looking for structure again. Thus, `.` symbolizes the end of structure and \_from now on, anything follows, till new structure is recognized. All structure tus involves the `:`.
+
+Conceptually, following the above reasoning, it can be argued that; `.`, `\n` and `EOF` are all, share the functoin of being finalizers, of finalizing data, and logically we should be able to do the following all on the same line: `user: name. pwd: mypass. host: localhost.`
+
+With this in mind, why can we not put `.` in the same category as `\n` and `EOF`? Conceptually, `.` is based in a higher level concept, meant to respond to <block> which is higher than <inline>. Enough are _character_, _sequence_ and _line_ to define an inline syntax, and still knowing how to end it, without introducing any new concept. `\n` and `EOF` are fundamental representations used to define the span of the inline data. <block>, on the other hand, is a higher level construct, in the sense of building on several lines, where the `\n` thus can not uniquely represent the ending of the block, or we would not be able to include the next line of the multi-line data intended to be stored. Thus, a construct at the same level of conceptual emergence, needs to be in place. For this, we have the <inline terminator definition> and <inline terminator expression>. The `.` represents a default <terminator definition>, and if used like `..` or `.myterminator` it means to take the content as <raw>, where the first dot is <literalizer>, indicating the content does not stand in relation to any oppinion of the format, but is taken as it is (not trimmed etc).
+
+In summary, <segmenter> and <finalizer> (whoes functionality is absorbed by <implicator>) exist at different conceptual levels. Using `.` for inline syntax, as in `user: name. pwd: mypass. host: localhost.` would not, as first thought, make effective use of an already existing representation of a higher level (block), but would spawn a new representation for the same essence of putting an end to a thing, but at a lower level (inline). It would add redundancy of an additional representation, having `\n`, `EOF` and `.` serving the same purpose, for the illusion of conceptual and representational coherence, ignoring the reality of conceptually different levels. It may seem conceptually coherent that the `.` at the higher level of <block> should work to also terminate <inline>, if desired, but it is not conceptually coherent, as the `.` would transgress its conceptual domain, trying to solve a lower level thing with a hihger level construct, that in itself was made first to solve the higher level structure that was built on the very lower level things. Conceptually, it would be similar having drawers deliniated by samller peices of wood, and drawers together are collected in a cabinet, which is deliniated with bigger pieces of wood, and then expecting to deliniate a drawer with the big wodden surface of the top of the cabinet. You would have drawers with the size of the cabinet surface, obviously being antagonostic towards the cabinette that then can not contain them.
