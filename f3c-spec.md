@@ -1,4 +1,4 @@
-# Definition of concept and representation of _f3c_
+# Fine Format For Configuration (_f3c_)
 
 Note of reasoning, in most recent plan: I put the semantic attribution of the emergent binding structures in identity, binding structs is the highest emergence, and makes sense semantically attribute it in identity, but basic tokens and their semantic attribution to representation i see as part of constitution, however, i wonder if the semantic attribution then actually doesnt fall under constraint, as the conceptual definition is constrainted to the representation... the constituting part can be seen to hold concepts only, and semantic is the constraining to representation of them, constitution gives emergence of binding structures concept, and constraint comes to inform identity about where the emergence lands as identity
 
@@ -10,9 +10,9 @@ Note of reasoning, in most recent plan: I put the semantic attribution of the em
 
 ### About
 
-_f3c_ stands for _Fine Format For Configuration_. An overview can be found [here...].
+_f3c_ stands for _Fine Format For Configuration_ and is a configuration and data serialization format.
 
-This document defines the of the conceptual aspect of _Fine Format For Configuration_ (_f3c_). For a mapping to the concrete representation, see [f3c-rep.md](f3c-rep.md).
+The subtle beauty of the format, which can easily be felt, but hardly explained, has here been brought from the ineffable, to the explicit, by rigorous and equally beautiful analysis by this ontological approach of excellent stringency.
 
 ### Table of contents
 
@@ -20,19 +20,17 @@ This document defines the of the conceptual aspect of _Fine Format For Configura
 
 ### Structure of the document
 
-This specification is based in the ontology of [_Structure of conceptual models_](https://github.com/fmxsh/socm-ontology) which is an ontology for conceptual modeling. This is not essential for understanding the specification, but it explains the format of the document.
+This specification is based in the ontology of [_Structure of conceptual models_](https://github.com/fmxsh/socm-ontology) which is an ontology for conceptual modeling. This is not essential for understanding the specification, but it explains the format of the document and the ontological frame behind.
 
 ### How to read this document
 
-Efforts have been made to support reading this document from top to bottom in sequential order, for the sake of understanding the _f3c_.
+The entirety of format can be understood by the _binding structures_ in the section _Identity_, because all conceptual understanding can be inferred from the examples of the concrete representations alone. Everything else are conceptual and representational details underpinning the _binding structures_.
 
 ### Intended audience
 
-This document is intended for developers seeking to implement or just understand the _f3c_.
+This document is intended for software developers or system administrators seeking to implement or just understand the _f3c_.
 
 ## Identity
-
-TODO: Put the binding structures here, they are emergent concepts, and show how they semantically map to the concrete representation.
 
 The _concept of f3c_ is a concept of a configuration and data serialization format with the following properties:
 
@@ -46,45 +44,20 @@ The _concept of f3c_ is a concept of a configuration and data serialization form
 
 ### Binding structures (conceptual definitions)
 
-What follows is how different _binding structures_ are recognized.
+This section is the entry point for understanding the _f3c_. Everything else are details contributing to the culminating _binding structures_ of the _f3c_.
 
-**A note on _<inline terminator definition>_**: The _<inline terminator definition>_ is recognized by the same principle as any other _binding structure_. An _<inline terminator definition>_ always follows the format of `<identifier> <introducer> <literal>`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an <introducer> is added at the end: `<identifier> <introducer> <literal> <introducer>`, example: `id: term:`.
+The _f3c_ essentially is the ability to bind an identifier on the left side, to a literal on the right side, such as `counter: 10`, where `counter` is the identifier, and `10` is the literal. To address both simple and complex use cases, a total of four different _binding structures_ are possible.
 
-### Inline deliniation syntax (semantic attribution)
+The different binding structures are:
 
-The _inline_ syntax centers around _<introducer>_ (`:`) such that `<identifier> <introducer> <literal> <segmenter>` gives, for example, `id: my literal` and `<identifier> <meta level introducer> <literal> <segmenter>` gives, for example, `id:: my literal`.
+- _inline-inline binding_ (iib)
+- _inline-block binding_ (ibb)
+- _block-inline binding_ (bbb)
+- _block-block binding_ (bib)
 
-1. An <inline identifier> can consist of any character, including whitespace, except double quotes (`"`), colon (`:`), and newline (`\n`),
-2. except it CAN contain colon (`:`) in middle, like `k:e:y` but not in start or end as in `:key:`, and it can not contain two colons subsequently as in `abc::def` (in that case, `::` will be seen as operator syntax).
-3. It cannot start with commenting syntax: `--` and `/-`.
-4. An <inline identifier> must contain at least one character, which must be a none non-whitespace character and not any of the exceptions in (1).
-5. An <inline identifier> starts and ends with a permissible non-whitespace character.
-6. Whitespace within the <inline identifier> (between starting and ending non-whitespace characters) is allowed and considered part of the identifier exactly as it occurs. Example: `k e y` is a valid key and is different from `k  e  y`.
-7. Leading and trailing whitespace is not considered part of the <inline identifier> and is ignored.
+Thus, as seen, both the identifier and the literal can be either inline (existing on a single line) or block (spanning multiple lines).
 
-### Block deliniation syntax (semantic attribution)
-
-Unlike _inline_ data, for which the span can be easily determined by recognizing the end of the span, which is the end of the line found by the _basic token_ <segmenter>, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those higher level artifacts are _<terminator definition>_ and _<terminator expression>_, as defined in the conceptual section. With these, the span of a block can be delineated.
-
-Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional artifacts for its syntax to be possible.
-
-Here the _basic tokens_ are given unique meaning, in the context of _<block>_, to define the span of a _<block>_.
-
-| Label                 | From basic token | Block syntax | Description                                              |
-| --------------------- | ---------------- | ------------ | -------------------------------------------------------- |
-| <identifier proxy>    | <introducer>     | `:`          | Introduces a block identifier. `::term:`                 |
-| <literal proxy>       | <introducer>     | `:`          | Introduces a block literal. `id:term:`                   |
-| <literalizer>         | <implicator>     | `.`          | Makes block literal of type <raw>.                       |
-| <default terminator>  | <implicator>     | `.`          | Default terminator for block literal or identifier.      |
-| <implicit identifier> | <implicator>     | `.`          | Implies implicit identifier for <literal>. `.: my value` |
-
-To terminate a block: _<terminator expression>_ is used, which is the replication of the _<terminator definition>_ and put where the block is desired to end.
-
-The _<terminator expression>_ can occur in two ways: a) `<terminator expression>` on a line of its own at the end of the block data, and b) `<literalizer> <terminator expression>` after the intended end of the data, meaning it can occur at the same line as the last data (thus the data will not end with a newline, as it is taken literally as it occurs within the block span).
-
-In case _a_, the block is treated as _<array>_ or _<object>_ depending on the content. In case _b_, the block is treated as _<raw>_.
-
-Because a terminator definition is part of the syntax to define the boundary of a block, the terminator definition itself can not be a block. It would conceptually lead to endless recursion if every nested _block terminator definition_ in turn define a _block terminator definition_ to define the end of the parent _block terminator definition_.
+All of these are explained in the following sections (but with a slightly different categorization to avoid overlapping descriptions). This section reflects the functioning totality of the _f3c_, in semantically attributing the conceptual _binding structures_ concrete syntax---patterns of tokens---as discerned in the configuration data. This is where the emergent concepts of the _f3c_ is mapped to the concrete reality of a sequence of characters, and thus the identity of _f3c_ as a unique format is fully established and is evident.
 
 ### Inline-Inline Binding (iib) (semantic attribution)
 
@@ -284,7 +257,7 @@ Example:
 : val3
 ```
 
-#### Block-Block Binding with default terminator definition
+#### Block-Block Binding with default terminator definition for identifier and literal
 
 Concept: `<introducer> <introducer>`
 
@@ -303,7 +276,7 @@ Example:
 .
 ```
 
-#### Block-Block binding with custom terminator definition
+#### Block-Block binding with custom terminator definition for literal
 
 Concept: `<introducer> <literal> <introducer>`
 
@@ -854,6 +827,8 @@ The literal _<terminator definition>_ is a type that is used to define the end o
 
 Can be a _<string>_ or a _<fragment>_, and the accepted character sequence is the same as for those.
 
+**A note on _<inline terminator definition>_**: The _<inline terminator definition>_ is recognized by the same principle as any other _binding structure_. An _<inline terminator definition>_ always follows the format of `<identifier> <introducer> <literal>`. Thus, identifier has its ordinary place to the left, and to the right a literal is found. Be aware that the terminator definition is for a block of data, and thus an <introducer> is added at the end: `<identifier> <introducer> <literal> <introducer>`, example: `id: term:`.
+
 ##### Terminator expression
 
 While a _<terminator definition>_ defines the terminator for a block, a _<terminator expression>_ is the actual use of the terminator to end the corresponding block.
@@ -905,6 +880,52 @@ An <array> must consist of only one or more literals with _implicit identifiers_
 #### Object
 
 An <object> must consist of one or more _<literal>_ with _explicit identifiers_. Can not contain any _<literal>_ with _implicit identifiers_.
+
+### Basic delineation syntax
+
+#### Inline deliniation syntax (semantic attribution)
+
+##### For identifier
+
+The _inline_ syntax centers around _<introducer>_ (`:`) such that `<identifier> <introducer> <literal> <segmenter>` gives, for example, `id: my literal` and `<identifier> <meta level introducer> <literal> <segmenter>` gives, for example, `id:: my literal`.
+
+1. An <inline identifier> can consist of any character, including whitespace, except double quotes (`"`), colon (`:`), and newline (`\n`),
+2. except it CAN contain colon (`:`) in middle, like `k:e:y` but not in start or end as in `:key:`, and it can not contain two colons subsequently as in `abc::def` (in that case, `::` will be seen as operator syntax).
+3. It cannot start with commenting syntax: `--` and `/-`.
+4. An <inline identifier> must contain at least one character, which must be a none non-whitespace character and not any of the exceptions in (1).
+5. An <inline identifier> starts and ends with a permissible non-whitespace character.
+6. Whitespace within the <inline identifier> (between starting and ending non-whitespace characters) is allowed and considered part of the identifier exactly as it occurs. Example: `k e y` is a valid key and is different from `k  e  y`.
+7. Leading and trailing whitespace is not considered part of the <inline identifier> and is ignored.
+
+##### For literal
+
+Delineation of <inline literal> is done by localizing data at the right side of the <introducer>, and that data is delineated according to the rules of the _<literal>_.
+
+#### Block deliniation syntax (semantic attribution)
+
+This applies to both _<block identifier>_ and _<block literal>_.
+
+Unlike _inline_ data, for which the span can be easily determined by recognizing the end of the span, which is the end of the line found by the _basic token_ <segmenter>, _block_ data, on the other hand, spans multiple lines and requires higher level artifacts to define its boundaries, in order to allow the desired escapeless flexibility of the format. Those higher level artifacts are _<terminator definition>_ and _<terminator expression>_, as defined in the conceptual section. With these, the span of a block can be delineated.
+
+Like _inline_ syntax, _block_ syntax is also understood in its fullness in the _binding structures_ section, but requires additional artifacts for its syntax to be possible.
+
+Here the _basic tokens_ are given unique meaning, in the context of _<block>_, to define the span of a _<block>_.
+
+| Label                 | From basic token | Block syntax | Description                                              |
+| --------------------- | ---------------- | ------------ | -------------------------------------------------------- |
+| <identifier proxy>    | <introducer>     | `:`          | Introduces a block identifier. `::term:`                 |
+| <literal proxy>       | <introducer>     | `:`          | Introduces a block literal. `id:term:`                   |
+| <literalizer>         | <implicator>     | `.`          | Makes block literal of type <raw>.                       |
+| <default terminator>  | <implicator>     | `.`          | Default terminator for block literal or identifier.      |
+| <implicit identifier> | <implicator>     | `.`          | Implies implicit identifier for <literal>. `.: my value` |
+
+To terminate a block: _<terminator expression>_ is used, which is the replication of the _<terminator definition>_ and put where the block is desired to end.
+
+The _<terminator expression>_ can occur in two ways: a) `<terminator expression>` on a line of its own at the end of the block data, and b) `<literalizer> <terminator expression>` after the intended end of the data, meaning it can occur at the same line as the last data (thus the data will not end with a newline, as it is taken literally as it occurs within the block span).
+
+In case _a_, the block is treated as _<array>_ or _<object>_ depending on the content. In case _b_, the block is treated as _<raw>_.
+
+Because a terminator definition is part of the syntax to define the boundary of a block, the terminator definition itself can not be a block. It would conceptually lead to endless recursion if every nested _block terminator definition_ in turn define a _block terminator definition_ to define the end of the parent _block terminator definition_.
 
 ## Emergence
 
@@ -1222,9 +1243,9 @@ We start by defining semantics. Semantics are the particular units of meaning, o
 
 Following the intended approach, conceptual definitions are introduced for _basic tokens_ and _data_. These will yield higher emergent conceptual definitions, that are structures of meaning, called _binding structures_. These _binding structures_, providing the function of associating one field with another, that is; binding an identifier to a literal; represents the highest level of emergent conceptual property that is the complete conceptual response to the purpose of defining this particular configuration format. The reality of concrete representations, as compared to the space of conceptual thought, then undergoes a process of semantic attribution, where the conceptual definitions imbude the representations with conceptual structural meaning. Concepts are mapped to representations. Structureed meaning is determined in the concrete; syntactical meaning is given to to selected characters such as `:`, `.` and `"`), and with these, the concept of contained data of different forms can also be realized in the concrete.
 
-## Other
+## Meta: reasoning and choices
 
-##### Rationale for the choice of dot as implicator
+### Rationale for the choice of dot as implicator
 
 The original term was _finalizer_, but changed to _implicator_ as its function extends from defining the end of a thing to also be able to imply a thing. Thus, the _implicator_ implies _implicit identifier_, _default terminator definition_, it implies data of type _raw_, and it implies the end of multiline data. In its most general sense, it implies that it implies something in a specific context, and in the specific context, in turn, it implies a specific thing. The implicator not only implies a thing, but implies that it implies different things in different contexts.
 
