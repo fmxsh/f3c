@@ -1,5 +1,7 @@
 # Definition of concept and representation of _f3c_
 
+Note of reasoning, in most recent plan: I put the semantic attribution of the emergent binding structures in identity, binding structs is the highest emergence, and makes sense semantically attribute it in identity, but basic tokens and their semantic attribution to representation i see as part of constitution, however, i wonder if the semantic attribution then actually doesnt fall under constraint, as the conceptual definition is constrainted to the representation... the constituting part can be seen to hold concepts only, and semantic is the constraining to representation of them, constitution gives emergence of binding structures concept, and constraint comes to inform identity about where the emergence lands as identity
+
 > <!NOTE>
 >
 > This project is under development. Do not expect finished order.
@@ -41,214 +43,6 @@ The _concept of f3c_ is a concept of a configuration and data serialization form
 - allow for data serialization,
 - allow for custom type checking,
 - simple to read and edit.
-
-### Basic tokens
-
-The _basic tokens_ are the characters representing the most fundamental elements of the syntax. All syntax of _f3c_ are based in these.
-
-There are two kinds: _standalone tokens_ and _composite tokens_.
-
-#### Standalone tokens
-
-All syntax depends on these.
-
-| Token         | Conceptual label | Description                                            |
-| ------------- | ---------------- | ------------------------------------------------------ |
-| `:`           | <introducer>     | Always precedes something being defined.               |
-| `.`           | <implicator>     | Denotes an implicit value in place of an explicit one. |
-| `"`           | <delimiter>      | Always delimits single-line data.                      |
-| `\n` or `EOF` | <segmenter>      | Separates elements and parts within an element.        |
-
-> <!NOTE>
->
-> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to any occurence of `\n` in the data contained by the syntax, like the data of a multi-line literal. This is because data is never parsed to reflect syntactical concepts, but is just parsed as data regardless of content.
-
-In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax. Think of two files being streamed to the parser (such as over a websocket). The parser reads them the same regardless if the content is split over two files or is all in the same file.
-
-#### Composite tokens
-
-Composite tokens are built using the `standalone tokens`, such that changing a standalone token would change the related composite token.
-
-| Token | Conceptual label        | Description                                                         |
-| ----- | ----------------------- | ------------------------------------------------------------------- |
-| `::`  | <meta level introducer> | The same meaning as _introducer_ but a higher level of abstraction. |
-
-> <!IMPORTANT>
->
-> The composite representation `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very usage itself, we recognize we are dealing with two separate `introducer` representations and not one _meta level introducer_. Its even more clear by the fact we can space out the former case like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two colons of the composite.
-
-### Comments, whitespace and ghostspace
-
-#### Comments
-
-Note: The comments syntax does not have any conceptual counterpart. Comments are not structurally relevant to the format and does not contain any meaningful data. If comments had conceptual counterparts, it would imply they are seen as meaningful to the parser, but comments by essence are used to denote something meaningless and non-existent to the parser, meaning it is void of meaningful structure and should be ignored.
-
-`--`
-`/-`
-`-/`
-
-Nested block comments are not supported. A block comment is always terminated by the first occurrence of the terminator expression.
-
-A block comment must start on a line with nothing or nothing but ghostspace before it.
-
-A block comment must end on a line with nothing or nothing but ghostspace after it.
-
-Comments are considered **ghost-tokens**, forming a **ghost-syntax**, because the comment syntax exist to human perception but does not exist in the parsed structure.
-
-A comment token is a **token that is never interpreted as a token** in the sense of relating to data.
-
-To human perception, it appears that the comment syntax relates to the comment-text itself—i.e., the comment syntax _contains_ the comment. However, the parser does not merely ignore the comment-text; it also ignores the comment syntax in the sense no structural awareness of the comment is kept. This means the parser skips the comment syntax and its data without any analysis or recording either.
-
-In all other cases of syntax, the parser analyses the tokens, perceives structure, and assigns meaning to the content within the structure, whether it is empty or not. In the case of a comment, no meaning is assigned neither to the contained data nor to the comment syntax itself.
-
-#### Ghostspace and whitespace
-
-Whitespace is by the definition of POSIX. Whitespace is treated differently and termed differently depending on where it occurs in the syntax.
-
-#### Ghostspace
-
-_Ghostspace_ is whitespace surrounding the _basic tokens_ and _composite tokens_
-
-Before and after any _basic token_ and _composite token_, there can be **any or no** amount of whitespace. This means that the syntax is not sensitive to whitespace.
-
-In other words: whitespace in syntax does not affect the meaning of the syntax or the data.
-
-These are the same `id : 123` and `id:123` and `id: 123` and `  id :123`.
-
-#### Whitespace
-
-The term _whitespace_ refers to whitespace that part of the content of an <identifier> or a <literal>.
-
-An example of whitespace would be: `id: "string with    whitespace"`.
-
-### Data (semantic attribution)
-
-Using the _basic tokens_, we can discern individual fields of data which are the basis of the assignment of literals to identifiers.
-
-The concept is: `<identifier> <introducer> <literal>` and an example of an representation would be `id: value`.
-
-We have two types of data:
-
-- identifier - a unique sequence of characters used to identify the associated literal.
-- literal - the data associated with the identifier.
-
-Both of these can be _inline_ or _block_, meaning they can exist on a single line or span multiple lines.
-
-#### Inline identifier
-
-The acceptable character sequence is: Any character except `<delimiter>` (`"`), and `<segmenter>` (`\n`). Also that `<introducer>` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following each other within the identifier.
-
-#### Inline literal
-
-A literal value is returned as-is by the parser, without any trailing newline characters.
-
-As outlined conceptually, different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context) to see if it is delineated by <delimiter> (`"`). If it is, then we know it is a string. If no surrounding <delimiter> exist, then a second evaluation is preformed of the content contained, for example determining `1` is a number. It follows that, in evaluation of literal type, context has precedence over content in evaluating its type.
-
-Possible literals are:
-
-| #   | Label                   | Literal  | Example         |
-| --- | ----------------------- | -------- | --------------- |
-| 1   | <string>                | String   | `"abc def"`     |
-| 2   | <fragment>              | Fragment | `ghi a123`      |
-| 3   | <number>                | Number   | `32, 3.14, -10` |
-| 4   | <bool>                  | Bool     | `true, on, yes` |
-| 5   | <null>                  | Null     | `null, nil`     |
-| 6   | <terminator definition> | <1-5>    | <1-5>           |
-| 7   | <terminator expression> | <1-5>    | <1-5>           |
-
-Literal 6-7 are used to determine the end of block. They can be any of the previous 1-5.
-
-All primitive literals (number, bool, null) are case-insensitive. (TODO: state which are primitive)
-
-The data of all literals, except _<string>_, is considered to be the sequence that is with and from the first non-whitespace character to and with the last non-whitespace character. In case of <string> the data is considered that which is delinieated by the <delimiter>.
-
-Inline literals are always trimmed of whitespace, because whitespace is not part of the data (in case of string: it is trimmed outside its delimiter if a delimiter is given, and in case of string, the <delimiter> (`"`) itself is of course not part of the data but is excluded).
-
-##### String
-
-A sequence of characters or no characters deliniated by _<delimiter>_ (`"`) such that `<delimiter> (...) <delimiter>`. The surrounding _<delimiter>_ is not part of the literal's data. `"abc"` is `abc` but `""abc""` is `"abc"`, meaning, only the uttermost surrounding _<delimiter>_ is taken as marks of the data's boundary.
-
-The acceptable character sequence is: Any binary and non-binary character except _<segmenter>_ (`\n`) as it would contradict the essence of _inline_ in _<inline literal>_.
-
-The delimiters must be around the data, or it will be seen as part of the data. `id: "data"` gives data `data`, while `id: this "is" my data` gives as data `this "is" my data`. Works the same in all contexts where <string> can occur: <terminator definition>, <terminator expression>, <literal> with <explicit identifier> and with <implicit identifier>.
-
-> <!NOTE> > `<string>` is trimmed left and right, but is of course not trimmed within its two `<delimiter>`, e.g. the spaces within `"   this spaced string   "` are kept.
-
-##### Fragment
-
-A sequence of characters or no characters, without surrounding _<delimiter>_, with leading and trailing whitespace is trimmed.
-
-A fragment must not be any of the other types: <number>, <bool>, <null>, and can never be related to <terminator definition || expression> because those are outside the syntactical scope of where <fragment> is able to be recognized.
-
-The acceptable character sequence is: Any binary and non-binary character except, but can not start with _<delimiter>_ (`"`), or it will be an _<explicit string>_.
-
-Any unquoted literal that is not a _<number>_, _<bool>_ or _<null>_, is treated as _<fragment>_. In other words, If not a _<string>_ and not a primitive literal, then it is treated as a _<fragment>_. Thus, `&#38;`, for example, is treated as a _<fragment>_.
-
-##### Number
-
-The acceptable character sequence reflecting a number as inferred by these examples: `-1, 10, 1.2, -1.2`.
-
-##### Bool
-
-The acceptable character sequence are: `true`, `on`, `yes`, `false`, `off`, `no`, `maybe`.
-
-| Data  | Meaning       |
-| ----- | ------------- |
-| true  | true          |
-| on    | true          |
-| yes   | true          |
-| false | false         |
-| off   | false         |
-| no    | false         |
-| maybe | true or false |
-
-The _maybe_ should return true or false randomly by anything that parses the format. If serialized to another format, it may either be resolved into true or false, or it may be treated as a _<string>_ of the sequence `maybe`.
-
-##### Null
-
-The acceptable character sequence is as inferred from the example in the table above.
-
-##### Terminator definition
-
-The literal _<terminator definition>_ is a type that is used to define the end of a block of data. A terminator definition is always a _literal_ type of _inline_ format. The user defines a sequence of characters that is used as the terminator for the block.
-
-Can be a _<string>_ or a _<fragment>_, and the accepted character sequence is the same as for those.
-
-##### Terminator expression
-
-While a _<terminator definition>_ defines the terminator for a block, a _<terminator expression>_ is the actual use of the terminator to end the corresponding block.
-
-#### A note on inline fragments
-
-<number>, <bool>, <null> really are just <fragment> as there is no arithmetic or evaluation in the format, but when serializing to other formats, they are recognized as by their type in order to be serialized correctly.
-
-#### Block identifier
-
-Block identifier is parsed and compared to user given identifier.
-
-Data of a _block identifier_ is always considered to be a series of _array elements_ or data of type <raw>. <object> is never recognized inside a _block identifier_.
-
-Inside the _block identifier_, the _<object>_ is considered serialized, as the parser never parses it as an object, but only line by line as any other data. Thus, there is no use in having an object in a block identifier for the sake of its function as an object, because it is never treated as an object. The reason is that a _<block identifier>_ is used to identify a _<literal>_ and having literals with identifiers inside an identifier serves no purpose as literals are never queried for inside identifiers.
-
-The parser does not assign zero-based index value based on position to the elements of a <block identifier> because no identifier is needed, as literals inside a <block identifier> are never queried for. Thus, no _implicit identifier_ exists for the literals.
-
-#### Block literal
-
-Block literals are retrieved if the associated identifier matches the user given identifier.
-
-In case of <block literal> being <array>, each contained <inline literal> has an _implicit identifier_, meaning the literals are automatically assigned an zero-based index value based on the identifiers position in the array.
-
-An empty <block literal> that is not _<raw>_ is treated as empty array. If it is not <raw> it must be <object> or <array>, and in case it is empty, it is treated as an empty <array> and not empty <object>.
-
-> <!NOTE>
->
-> Block literals were introduced to avoid having to encode the data, as for example is commonly done with with base64 when a format's literal type can only store certain characters.
-
-In case of _<array>_, each line is considered _<inline literal>_ , meaning it can be any of _value_, being _<string>_, _<number>_, etc..., (but of course, the markers _<terminator definition>_ and _<terminator expression>_ are not considered part of the arrays content).
-
-If the empty line exists within an <array>; then it is treated as an <empty> <inline literal>.
-
-A <block literal> of type <raw> is returned as-is, with all newline characters (and whitespace) included and none added to the output. In case of the content of <array> being returned, every line, including the last one, should end with a newline character, and only one. An empty line is seen as a literal with value <empty> and is returned as just a newline `\n` and nothing else. For this reason, it is important all lines of an <array> ends with one and only one '\n`. In case of content of <object> being returned, at least one <segmenter> ('\n') must follow each _binding structure_ that is contained, as to separate them.More <segmenters> can be added by the parser, but will not make a difference to the meaning of the content.
 
 ### Binding structures (conceptual definitions)
 
@@ -596,28 +390,6 @@ The following can be one or more characters.
 | `<tc-start>` | `tcs`     | `/-`    | Comment block start. |
 | `<tc-end>`   | `tce`     | `-/`    | Comment block end.   |
 
-## Constraints
-
-The _f3c_ can only be perceived to occur where there is a concrete representational layer of undifferentiated sequential units. This means: a sequence of undifferentiated characters. The _f3c_ is thus constrained to exist in such a place. It can not for example exist as a 3d-matrix, because the representational units of the 3d-matrix do not occur sequentially where one clearly follows another linearly.
-
-The _f3c_ is constrained to the requirement that the sequence of units is processed, meaning the units are considered one by one individually.
-
-The _f3c_ is constrained to the requirement that the sequence of units is processed from left to right.
-
-The _f3c_ is limited to be a queryable format meaning that the format must be able to be queried by an application for specific data.
-
-The _f3c_ is constrained to be a streaming format, meaning it can not require to reach a presumed end of the data before meaningfully parsing the content. This means that the format does not require building an internal model of all configuration data being given to it before parsing the data. Instead, the parser builds an internal model of what it has right in front of itself and up till its current position, and throws away everything of the prior that is not queried for.
-
-No escaping.
-
-Minimal set of tokens.
-
-Must support nesting.
-
-Must support custom type checking.
-
-...
-
 ## Constitution
 
 The _definition of concept and representation of f3c_ consists of several things.
@@ -658,20 +430,22 @@ Starting with a sequence of undifferentiated conceptual units (the series of cha
 
 These are called _basic tokens_ and the most fundamental building blocks of the format.
 
-#### Basic standalone tokens
+#### Standalone tokens
 
-The entire concept of _f3c_, without exception, is built using these four _basic tokens_.
+All syntax depends on these.
 
-| Semantic label | Token | Description                                            |
-| -------------- | ----- | ------------------------------------------------------ |
-| <introducer>   | `:`   | Always indicates something follows.                    |
-| <implicator>   | `.`   | Denotes an implicit value in place of an explicit one. |
-| <delimiter>    | `"`   | Always delimits single-line data.                      |
-| <segmenter>    | `\n`  | Separates elements and parts within an element.        |
+| Token         | Conceptual label | Description                                            |
+| ------------- | ---------------- | ------------------------------------------------------ |
+| `:`           | <introducer>     | Always precedes something being defined.               |
+| `.`           | <implicator>     | Denotes an implicit value in place of an explicit one. |
+| `"`           | <delimiter>      | Always delimits single-line data.                      |
+| `\n` or `EOF` | <segmenter>      | Separates elements and parts within an element.        |
 
-These represent the basic units of the format, and each also connotes the very essence of their general meaning within the format.
+> <!NOTE>
+>
+> The `segmenter`, `\n` or `EOF`, refers strictly to syntax and is part of the syntax. It does not refer to any occurence of `\n` in the data contained by the syntax, like the data of a multi-line literal. This is because data is never parsed to reflect syntactical concepts, but is just parsed as data regardless of content.
 
-The configuration format processes data segment by segment, meaning line by line.
+In case of `EOF`, it is used to indicate the end of the file, and is considered the same as `\n` in the context of the syntax. Think of two files being streamed to the parser (such as over a websocket). The parser reads them the same regardless if the content is split over two files or is all in the same file.
 
 #### Basic composite tokens
 
@@ -825,18 +599,6 @@ Block literals can be of three types: `raw` `array` and `object`.
 | <array>  | One or several literals.                                                    |
 | <object> | One or several identifier-literal pairs.                                    |
 
-#### Raw
-
-The acceptable character sequence is: Any binary and non-binary character.
-
-#### Array
-
-An <array> must consist of only one or more literals with _implicit identifiers_. Can not contain any _<literal>_ with _explicit identifiers_. The literal, as long as having _implicit identifier_ can be <inline literal> and <block literal>, and an arrays content can be a mix of these two. The array does not concern itself with the type of literal, but with how it is identified, requiring the _implicit identifier_.
-
-#### Object
-
-An <object> must consist of one or more _<literal>_ with _explicit identifiers_. Can not contain any _<literal>_ with _implicit identifiers_.
-
 #### Meta level bindings (conceptual definitions)
 
 Using the <meta level introducer> it is possible to bind an <identifier> to a <literal> in the following way:
@@ -891,6 +653,258 @@ The _<terminator definition>_ is defined at the start boundary of the block, whe
 ```
 
 The use of the two literal types _<terminator definition>_ and _<terminator expression>_ makes it clear they are entierly dependent on context (where and how they are used) to be identified as such literals and not fall back on other forms of literals. Also, the _<inline data>_ of these two literal types is never evaluated to determine its type.
+
+## Constraints
+
+The _f3c_ can only be perceived to occur where there is a concrete representational layer of undifferentiated sequential units. This means: a sequence of undifferentiated characters. The _f3c_ is thus constrained to exist in such a place. It can not for example exist as a 3d-matrix, because the representational units of the 3d-matrix do not occur sequentially where one clearly follows another linearly.
+
+The _f3c_ is constrained to the requirement that the sequence of units is processed, meaning the units are considered one by one individually.
+
+The _f3c_ is constrained to the requirement that the sequence of units is processed from left to right.
+
+The _f3c_ is limited to be a queryable format meaning that the format must be able to be queried by an application for specific data.
+
+The _f3c_ is constrained to be a streaming format, meaning it can not require to reach a presumed end of the data before meaningfully parsing the content. This means that the format does not require building an internal model of all configuration data being given to it before parsing the data. Instead, the parser builds an internal model of what it has right in front of itself and up till its current position, and throws away everything of the prior that is not queried for.
+
+No escaping.
+
+Minimal set of tokens.
+
+Must support nesting.
+
+Must support custom type checking.
+
+...
+
+### Basic tokens
+
+**Semantic attribution**
+
+The _basic tokens_ are the characters representing the most fundamental elements of the syntax. All syntax of _f3c_ are based in these.
+
+There are two kinds: _standalone tokens_ and _composite tokens_.
+
+#### Standalone tokens
+
+(Semantic attribution)
+
+The entire concept of _f3c_, without exception, is built using these four _basic tokens_.
+
+| Semantic label | Token | Description                                            |
+| -------------- | ----- | ------------------------------------------------------ |
+| <introducer>   | `:`   | Always indicates something follows.                    |
+| <implicator>   | `.`   | Denotes an implicit value in place of an explicit one. |
+| <delimiter>    | `"`   | Always delimits single-line data.                      |
+| <segmenter>    | `\n`  | Separates elements and parts within an element.        |
+
+These represent the basic units of the format, and each also connotes the very essence of their general meaning within the format.
+
+The configuration format processes data segment by segment, meaning line by line.
+
+#### Composite tokens
+
+**Semantic attribution**
+
+Composite tokens are built using the `standalone tokens`, such that changing a standalone token would change the related composite token.
+
+| Token | Conceptual label        | Description                                                         |
+| ----- | ----------------------- | ------------------------------------------------------------------- |
+| `::`  | <meta level introducer> | The same meaning as _introducer_ but a higher level of abstraction. |
+
+> <!IMPORTANT>
+>
+> The composite representation `::` is not the same as two individual `introducers` (`:`) in a row (`::`), but they may seem identical. For example: An identifier for a multi-line literal can be defined with a `terminator definition` as in `id:termdef:`, but if we desire to use the `default terminator` we leave it empty as in `id::`. In this case, by the very usage itself, we recognize we are dealing with two separate `introducer` representations and not one _meta level introducer_. Its even more clear by the fact we can space out the former case like `id: :`. The composite token `::`, on the other hand, is a single token, and always appears as `::` without any whitespace possible between the two colons of the composite.
+
+### Comments, whitespace and ghostspace
+
+#### Comments
+
+Note: The comments syntax does not have any conceptual counterpart. Comments are not structurally relevant to the format and does not contain any meaningful data. If comments had conceptual counterparts, it would imply they are seen as meaningful to the parser, but comments by essence are used to denote something meaningless and non-existent to the parser, meaning it is void of meaningful structure and should be ignored.
+
+`--`
+`/-`
+`-/`
+
+Nested block comments are not supported. A block comment is always terminated by the first occurrence of the terminator expression.
+
+A block comment must start on a line with nothing or nothing but ghostspace before it.
+
+A block comment must end on a line with nothing or nothing but ghostspace after it.
+
+Comments are considered **ghost-tokens**, forming a **ghost-syntax**, because the comment syntax exist to human perception but does not exist in the parsed structure.
+
+A comment token is a **token that is never interpreted as a token** in the sense of relating to data.
+
+To human perception, it appears that the comment syntax relates to the comment-text itself—i.e., the comment syntax _contains_ the comment. However, the parser does not merely ignore the comment-text; it also ignores the comment syntax in the sense no structural awareness of the comment is kept. This means the parser skips the comment syntax and its data without any analysis or recording either.
+
+In all other cases of syntax, the parser analyses the tokens, perceives structure, and assigns meaning to the content within the structure, whether it is empty or not. In the case of a comment, no meaning is assigned neither to the contained data nor to the comment syntax itself.
+
+#### Ghostspace and whitespace
+
+Whitespace is by the definition of POSIX. Whitespace is treated differently and termed differently depending on where it occurs in the syntax.
+
+#### Ghostspace
+
+_Ghostspace_ is whitespace surrounding the _basic tokens_ and _composite tokens_
+
+Before and after any _basic token_ and _composite token_, there can be **any or no** amount of whitespace. This means that the syntax is not sensitive to whitespace.
+
+In other words: whitespace in syntax does not affect the meaning of the syntax or the data.
+
+These are the same `id : 123` and `id:123` and `id: 123` and `  id :123`.
+
+#### Whitespace
+
+The term _whitespace_ refers to whitespace that part of the content of an <identifier> or a <literal>.
+
+An example of whitespace would be: `id: "string with    whitespace"`.
+
+### Basic data
+
+**Semantic attribution**
+
+Using the _basic tokens_, we can discern individual fields of data which are the basis of the assignment of literals to identifiers.
+
+The concept is: `<identifier> <introducer> <literal>` and an example of an representation would be `id: value`.
+
+We have two types of data:
+
+- identifier - a unique sequence of characters used to identify the associated literal.
+- literal - the data associated with the identifier.
+
+Both of these can be _inline_ or _block_, meaning they can exist on a single line or span multiple lines.
+
+#### Inline identifier
+
+**Semantic attribution**: The acceptable character sequence is: Any character except `<delimiter>` (`"`), and `<segmenter>` (`\n`). Also that `<introducer>` (`:`) can not exist at the start or end of a sequence, and not occur twice or more directly following each other within the identifier.
+
+#### Inline literal
+
+**Semantic attribution**: A literal value is returned as-is by the parser, without any trailing newline characters.
+
+As outlined conceptually, different types of literals exist: string, number, multi-line block etc... The exact type of literal is determined by first evaluating the surrounding syntax (context) to see if it is delineated by <delimiter> (`"`). If it is, then we know it is a string. If no surrounding <delimiter> exist, then a second evaluation is preformed of the content contained, for example determining `1` is a number. It follows that, in evaluation of literal type, context has precedence over content in evaluating its type.
+
+Possible literals are:
+
+| #   | Label                   | Literal  | Example         |
+| --- | ----------------------- | -------- | --------------- |
+| 1   | <string>                | String   | `"abc def"`     |
+| 2   | <fragment>              | Fragment | `ghi a123`      |
+| 3   | <number>                | Number   | `32, 3.14, -10` |
+| 4   | <bool>                  | Bool     | `true, on, yes` |
+| 5   | <null>                  | Null     | `null, nil`     |
+| 6   | <terminator definition> | <1-5>    | <1-5>           |
+| 7   | <terminator expression> | <1-5>    | <1-5>           |
+
+Literal 6-7 are used to determine the end of block. They can be any of the previous 1-5.
+
+All primitive literals (number, bool, null) are case-insensitive. (TODO: state which are primitive)
+
+The data of all literals, except _<string>_, is considered to be the sequence that is with and from the first non-whitespace character to and with the last non-whitespace character. In case of <string> the data is considered that which is delinieated by the <delimiter>.
+
+Inline literals are always trimmed of whitespace, because whitespace is not part of the data (in case of string: it is trimmed outside its delimiter if a delimiter is given, and in case of string, the <delimiter> (`"`) itself is of course not part of the data but is excluded).
+
+##### String
+
+A sequence of characters or no characters deliniated by _<delimiter>_ (`"`) such that `<delimiter> (...) <delimiter>`. The surrounding _<delimiter>_ is not part of the literal's data. `"abc"` is `abc` but `""abc""` is `"abc"`, meaning, only the uttermost surrounding _<delimiter>_ is taken as marks of the data's boundary.
+
+The acceptable character sequence is: Any binary and non-binary character except _<segmenter>_ (`\n`) as it would contradict the essence of _inline_ in _<inline literal>_.
+
+The delimiters must be around the data, or it will be seen as part of the data. `id: "data"` gives data `data`, while `id: this "is" my data` gives as data `this "is" my data`. Works the same in all contexts where <string> can occur: <terminator definition>, <terminator expression>, <literal> with <explicit identifier> and with <implicit identifier>.
+
+> <!NOTE> > `<string>` is trimmed left and right, but is of course not trimmed within its two `<delimiter>`, e.g. the spaces within `"   this spaced string   "` are kept.
+
+##### Fragment
+
+A sequence of characters or no characters, without surrounding _<delimiter>_, with leading and trailing whitespace is trimmed.
+
+A fragment must not be any of the other types: <number>, <bool>, <null>, and can never be related to <terminator definition || expression> because those are outside the syntactical scope of where <fragment> is able to be recognized.
+
+The acceptable character sequence is: Any binary and non-binary character except, but can not start with _<delimiter>_ (`"`), or it will be an _<explicit string>_.
+
+Any unquoted literal that is not a _<number>_, _<bool>_ or _<null>_, is treated as _<fragment>_. In other words, If not a _<string>_ and not a primitive literal, then it is treated as a _<fragment>_. Thus, `&#38;`, for example, is treated as a _<fragment>_.
+
+##### Number
+
+The acceptable character sequence reflecting a number as inferred by these examples: `-1, 10, 1.2, -1.2`.
+
+##### Bool
+
+The acceptable character sequence are: `true`, `on`, `yes`, `false`, `off`, `no`, `maybe`.
+
+| Data  | Meaning       |
+| ----- | ------------- |
+| true  | true          |
+| on    | true          |
+| yes   | true          |
+| false | false         |
+| off   | false         |
+| no    | false         |
+| maybe | true or false |
+
+The _maybe_ should return true or false randomly by anything that parses the format. If serialized to another format, it may either be resolved into true or false, or it may be treated as a _<string>_ of the sequence `maybe`.
+
+##### Null
+
+The acceptable character sequence is as inferred from the example in the table above.
+
+##### Terminator definition
+
+The literal _<terminator definition>_ is a type that is used to define the end of a block of data. A terminator definition is always a _literal_ type of _inline_ format. The user defines a sequence of characters that is used as the terminator for the block.
+
+Can be a _<string>_ or a _<fragment>_, and the accepted character sequence is the same as for those.
+
+##### Terminator expression
+
+While a _<terminator definition>_ defines the terminator for a block, a _<terminator expression>_ is the actual use of the terminator to end the corresponding block.
+
+#### A note on inline fragments
+
+<number>, <bool>, <null> really are just <fragment> as there is no arithmetic or evaluation in the format, but when serializing to other formats, they are recognized as by their type in order to be serialized correctly.
+
+#### Block identifier
+
+**Semantic attribution**
+
+Block identifier is parsed and compared to user given identifier.
+
+Data of a _block identifier_ is always considered to be a series of _array elements_ or data of type <raw>. <object> is never recognized inside a _block identifier_.
+
+Inside the _block identifier_, the _<object>_ is considered serialized, as the parser never parses it as an object, but only line by line as any other data. Thus, there is no use in having an object in a block identifier for the sake of its function as an object, because it is never treated as an object. The reason is that a _<block identifier>_ is used to identify a _<literal>_ and having literals with identifiers inside an identifier serves no purpose as literals are never queried for inside identifiers.
+
+The parser does not assign zero-based index value based on position to the elements of a <block identifier> because no identifier is needed, as literals inside a <block identifier> are never queried for. Thus, no _implicit identifier_ exists for the literals.
+
+#### Block literal
+
+**Semantic attribution**
+
+Block literals are retrieved if the associated identifier matches the user given identifier.
+
+In case of <block literal> being <array>, each contained <inline literal> has an _implicit identifier_, meaning the literals are automatically assigned an zero-based index value based on the identifiers position in the array.
+
+An empty <block literal> that is not _<raw>_ is treated as empty array. If it is not <raw> it must be <object> or <array>, and in case it is empty, it is treated as an empty <array> and not empty <object>.
+
+> <!NOTE>
+>
+> Block literals were introduced to avoid having to encode the data, as for example is commonly done with with base64 when a format's literal type can only store certain characters.
+
+In case of _<array>_, each line is considered _<inline literal>_ , meaning it can be any of _value_, being _<string>_, _<number>_, etc..., (but of course, the markers _<terminator definition>_ and _<terminator expression>_ are not considered part of the arrays content).
+
+If the empty line exists within an <array>; then it is treated as an <empty> <inline literal>.
+
+A <block literal> of type <raw> is returned as-is, with all newline characters (and whitespace) included and none added to the output. In case of the content of <array> being returned, every line, including the last one, should end with a newline character, and only one. An empty line is seen as a literal with value <empty> and is returned as just a newline `\n` and nothing else. For this reason, it is important all lines of an <array> ends with one and only one '\n`. In case of content of <object> being returned, at least one <segmenter> ('\n') must follow each _binding structure_ that is contained, as to separate them.More <segmenters> can be added by the parser, but will not make a difference to the meaning of the content.
+
+#### Raw
+
+The acceptable character sequence is: Any binary and non-binary character.
+
+#### Array
+
+An <array> must consist of only one or more literals with _implicit identifiers_. Can not contain any _<literal>_ with _explicit identifiers_. The literal, as long as having _implicit identifier_ can be <inline literal> and <block literal>, and an arrays content can be a mix of these two. The array does not concern itself with the type of literal, but with how it is identified, requiring the _implicit identifier_.
+
+#### Object
+
+An <object> must consist of one or more _<literal>_ with _explicit identifiers_. Can not contain any _<literal>_ with _implicit identifiers_.
 
 ## Emergence
 
