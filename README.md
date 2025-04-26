@@ -1,14 +1,14 @@
 # F3C - Fine Format For Configuration
 
-This document serves as a quick introduction to _f3c_.
+This document serves as a quick introduction to _F3C_.
 
-The complete [F3C specification](/f3c-spec.md).
+The complete [F3C specification](/F3C-spec.md).
 
-A streaming parser for _f3c_ can be found [here].
+A streaming parser for _F3C_ can be found [here].
 
-## What is _f3c_?
+## What is _F3C_?
 
-_f3c_ is a format for configuration files.
+_F3C_ is a format for configuration files.
 
 Properties:
 
@@ -17,7 +17,7 @@ Properties:
 - Easy to read and write
 - Minimalistic syntax
 
-_f3c_ supports:
+_F3C_ supports:
 
 - Implementation in Bash
 - Key-value pairs
@@ -27,9 +27,8 @@ _f3c_ supports:
 - Multiline literals
 - Data serialization
 - Templating
-- Custom type checking
 
-_f3c_ consists of only four basic representations:
+_F3C_ consists of only four basic representations:
 
 - `:`
 - `.`
@@ -42,42 +41,16 @@ And one composite representation:
 
 //TODO: add use cases of the parser to exemplify the exmaples. Using the parser to parse the examples.
 
-## Check map
-
-    - Inline-Inline Binding (iib) (semantic attribution)
-      x- With explicit identifier
-      x- With implicit identifier
-      x- With explicit identifier and empty literal
-      x- With implicit identifier and empty literal
-    - Inline-Block Binding (ibb)
-      x- With explicit identifier with custom terminator definition
-      x- With explicit identifier with default terminator definition
-      x- With implicit identifier with default terminator definition
-      - With implicit identifier with custom terminator definition
-    - Block identifiers generally
-      x- With default terminator definition for block identifier
-      x- With custom terminator definition for block identifier
-    - Literals following block identifiers
-      - Block-Inline Binding
-      x- Block-Block Binding with default terminator definition for identifier and literal
-      x- Block-Block binding with custom terminator definition for literal
-    - Directive syntax (semantic attribution)
-      - x Defining types
-      - `Operator directive`
-        - Template directives
-        - Parser controling directives
-        - Token configuration directives
-
 ## Explanation by examples
 
 A complete showcase of all features by example from simple to complex.
 
 > [!NOTE]
-> Terminology: _key_ and _value_ are common in daily talk, and in _f3c_ corresponds to _identifier_ and _literal_, respectively. For simplicity, we will use _key_ and _value_ in this document.
+> Terminology: _key_ and _value_ are common in daily talk, and in _F3C_ corresponds to _identifier_ and _literal_, respectively. For simplicity, we will use _key_ and _value_ in this document.
 
 ### Key value pair.
 
-```f3c
+```F3C
 username: root
 password: 123
 ```
@@ -86,7 +59,7 @@ password: 123
 
 An zero-based ordered list of values.
 
-```f3c
+```F3C
 fruits::
     apple
     banana
@@ -98,7 +71,7 @@ fruits::
 
 An unordered list of key-value pairs.
 
-```f3c
+```F3C
 fruits::
     apple: 1
     banana: 2
@@ -108,7 +81,7 @@ fruits::
 
 ### Raw text
 
-```f3c
+```F3C
 some text::
 This text is
 as it is.
@@ -117,7 +90,7 @@ as it is.
 
 You can also cut the last newline:
 
-```f3c
+```F3C
 some text::
 This text is
 as it is...
@@ -127,7 +100,7 @@ as it is...
 
 ### Nested structure
 
-```f3c
+```F3C
 plants::
     fruits::
         apple: 1
@@ -146,7 +119,7 @@ plants::
 
 Both `apple` and `banana` are empty literals, even if strictly speaking, we know `apple` is not just empty, but an empty string.
 
-```f3c
+```F3C
 fruits::
         apple: ""
         banana:
@@ -161,7 +134,7 @@ This syntax is for sake of syntactical consistency, but the practical way is to 
 
 The last case is empty literal.
 
-```f3c
+```F3C
 fruits::
     .:apple
     .:banana
@@ -173,7 +146,7 @@ fruits::
 
 TODO: Does not work yet.
 
-```f3c
+```F3C
 basket::
     .::
         type: fruit
@@ -199,7 +172,7 @@ basket::
 
 ### Multiline identifier
 
-```f3c
+```F3C
 :::
 abc
 123
@@ -211,7 +184,7 @@ abc
 
 Works also with raw text for the identifier:
 
-```f3c
+```F3C
 :::
 abc
 123..
@@ -222,7 +195,7 @@ In the above cases, the identifier spans multiple lines. The value comes after t
 
 Thus, a single line literal follows like this:
 
-```f3c
+```F3C
 :::
 abc
 123
@@ -252,7 +225,7 @@ A terminator can be the default or a custom one.
 
 The default terminator of a block is `.`.
 
-```f3c
+```F3C
 key::
     value1
     value2
@@ -263,7 +236,7 @@ A custom terminator is one you define yourself, perhaps if the contained data co
 
 ``
 
-```f3c
+```F3C
 punctuation marks:END:
     ,
     .
@@ -277,7 +250,7 @@ A terminator can also occur after a `.` where the inteded end is for a block of 
 
 For exmaple: if we want raw text and do not want a trailing newline:
 
-```f3c
+```F3C
 key:MYEND:
     value1
     value2.MYEND
@@ -285,7 +258,7 @@ key:MYEND:
 
 or if we prefer the default terminator, simply use `..`.
 
-```f3c
+```F3C
 key::
     value1
     value2..
@@ -334,6 +307,83 @@ END2
 
 ### Templates
 
+A template can be defined like:
+
+```F3C
+declare::my template::
+    key1: value1
+    key2: value2
+.
+
+include::my template
+
 ```
 
+Nested templates are also possible:
+
+```F3C
+declare::my template1::
+    key1: value1
+    key2: value2
+.
+
+declare::my template2::
+    include::my template1
+    key3: value1
+    key4: value2
+.
+
+include::my template2
+```
+
+The above will map out to:
+
+```F3C
+    key1: value1
+    key2: value2
+    key3: value1
+    key4: value2
+```
+
+It will NOT map out to:
+
+```F3C
+my template2::
+    my template1::
+        key1: value1
+        key2: value2
+    .
+    key3: value1
+    key4: value2
+.
+```
+
+The template name is only used as reference to for the template for inclusion elsewhere. Inside the template, you can define whatever construct you want.
+
+### File inclusion
+
+A file can also be included:
+
+```F3C
+file::/path/to/file
+```
+
+And nested file inclusion is also possible:
+
+File 1:
+
+```F3C
+file::./file2
+```
+
+File 2:
+
+```F3C
+file::./file3
+```
+
+File 3:
+
+```F3C
+fruit: apple
 ```

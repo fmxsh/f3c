@@ -344,6 +344,9 @@ Based on the same principle of _binding structures_, a _directive_ is defined, n
 
 A directive is a command that is used to control the parser. A the structure of a directive is based on the highest organizing structure of the format, the _binding structure_. From this, as is the case for any other binding, a directive involves a kind of identifier bound to a kind of literal. The syntax in its most general form is `\<field> \<meta introducer> \<field>`.
 
+> [!NOTE]
+> Directives do not work inside a block literal.
+
 To define the directive syntax, the _\<operator>_ is introduced. The _\<operator>_ is a _\<meta introducer>_ gaining a certain function and purpose.
 
 | Label       | From basic token   | Block syntax | Description                |
@@ -364,6 +367,37 @@ Use: `\<directive> \<operator> (...)`
 Example: `file::/home/user/config.f4c`
 
 #### x Defining types
+
+NOTE: Type checking IS REMOVED. This feature is removed for now. The feature unecessarily complicates things and isn't that well of a fit conceptually.
+
+TODO: Because its a streaming format, we would have difficulty type checking multi line literals, as we would have to read the whole literal first, but what if it has nested multi-line literals and we query for an identifier in the nested structure? We would then quit with the result before the parent can be type checked. Typechecking a nested structure is, however, not of practical use, but in princpile, this is bad design, because we possibly can create the mentioned situation by what the design allows for. Alternating between streaming and non-streaming is not an option.
+
+An option is that the type checking is done not on the whole multi-line literal, but the same type checking is done on each line of the multi-line literal, as it is parsed.
+
+```
+date::tournaments::
+    2021-01-09
+    2022-01-12
+    2023-02-01
+.
+```
+
+Here, `date` type checking is preformed on each contained date.
+
+Type checking would be limited to literals themselves. The syntax is never type checked.
+
+```
+valid_name::users::
+    user1::
+        name: a
+        pass: 1
+    .
+.
+```
+
+Note for implementation: It must rely on something like an event system, accessing the read literal by event, because for example we have multi-line identifiers and thus we must be ready to evaluate the literal after having read several lines, not just the current one.
+
+However, event system fails as we would need to read the whole literal to fire the event, and this is a streaming format, meaning we may quit before all is read if we find what is queried for.
 
 For type validation etc,
 
@@ -1023,6 +1057,8 @@ The _binding structure_ binds _\<identifier>_ to _\<literal>_, not purely for or
 \<block identifier> bound to \<block literal>. The same principles for each block type applies as described in the two previous sections. The unique feature being that a block idenfities _data_ that is recognized as \<block>.
 
 ### Directive bindings
+
+[conceptual description of directive bindings...]
 
 ### Emergence and compliance
 
