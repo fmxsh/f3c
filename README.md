@@ -4,7 +4,11 @@ This document serves as a quick introduction to _F3C_.
 
 The complete [F3C specification](/F3C-spec.md).
 
-A streaming parser for _F3C_ can be found [here].
+A streaming parser written in Bash for _F3C_ can be found [bfq](https://github.com/fmxsh/bfq).
+
+## Background
+
+I set out to write a minimalistic configuration format by my own preference. It was a side project planned for 2 days but spanned two months of getting to bottom with my personal ontology of everything, upon which the specification of _F3C_ came to be framed by. More information about the background has been added [at the end](#Elaboration of the background) of this document.
 
 ## What is _F3C_?
 
@@ -39,7 +43,13 @@ And one composite representation:
 
 - `::`
 
-//TODO: add use cases of the parser to exemplify the exmaples. Using the parser to parse the examples.
+Whitespace is NOT part of the syntax and is ignored.
+
+And for comments:
+
+- `--` - Inline comment
+- `/-` - Start of block comment
+- `-/` - End of block comment
 
 ## Explanation by examples
 
@@ -53,6 +63,28 @@ A complete showcase of all features by example from simple to complex.
 ```F3C
 username: root
 password: 123
+```
+
+### Comments
+
+#### Inline comments
+
+Inline comments are on lines of their own and can not be trailing.
+
+```
+-- This is a comment
+
+fruit: banana
+
+```
+
+### Block comments
+
+Block comments must start on a line of their own and end on a line of their own.
+
+```
+/- a block
+   comment -/
 ```
 
 ### Array
@@ -387,3 +419,17 @@ File 3:
 ```F3C
 fruit: apple
 ```
+
+### Whitespace
+
+Whitespace does not matter between and around syntax.
+
+## Elaboration of the background
+
+What initially seemed like obviously simple task opened for typical but subtle complexities of configuration formats, forcing me to go from quick intuitive pussle solving to outright rigorious analytical thinking. My desire of symetry, consistency, and a sense of perfection, demanded of me nothing less than systematic approach of outlining the concepts of the format, as well as the very conceptual underpinnings of why the choosen systematic approach would be justified. Thus, I defined a configuration format in [F3C specification](/F3C-spec.md), and I defined the way I define a configuration format by outlining ([Structure of conceptual models](https://github/fmxsh/socm) (_SoCM_). The _F3C_ specification is structured by the postulation of _SoCM_, and the justification for doing such, is found in _SoCM_ itself, which is ontologically self-justifying by definition.
+
+Writing this configuration format has thus been a great experience in the conceptual analysis of building such a format, but it has also been an ontological adventure as I suddenly found myself compelled to discover a single super-fundamental concept that underlies all possible conceptual analysis---be it of configuration format or anything else. As my intellect always sought the answer to what is beneath, within, behind or above a given construct, my awareness were exposed to the fog of increasing abstractions in relentless pursuit of trying to capture the seemingly ineffable, by the structuring force of language. With many attempts and much frustration, I succeeded in avoiding the many traps in the fog of abstraction, such as meta for the same of meta or meta that mystifies conceptual shortcomings, and I found the contours of what came to be a pragmatic and functional super-foundational ontology able to structure perception of anything for sake of analysis. I defined an ontology I further use in many more things.
+
+## Todo
+
+- add use cases of the parser to exemplify the exmaples. Using the parser to parse the examples.
